@@ -1,0 +1,11 @@
+computedFields:
+  - nomVoie
+  - codeCommune
+resources:
+  default:
+    url: https://opendata.paris.fr/explore/dataset/adresse_paris/download/?format=geojson&timezone=Europe/Berlin
+    format: geojson
+    fields:
+      numeroComplet: l_nvoie
+      lon: _geometry.coordinates.0
+      lat: _geometry.coordinates.1

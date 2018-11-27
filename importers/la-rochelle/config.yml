@@ -1,0 +1,36 @@
+join:
+  - resource: indicesRepetition
+    key: _idSuffixe
+  - resource: troncons
+    key: _idTroncon
+  - resource: voies
+    key: _idVoie
+computedFields:
+  - codeCommune
+resources:
+  default:
+    url: https://opendata.larochelle.fr/dataset/voie-et-adresse-numeros-dadresse/?download=1384
+    format: shp
+    fields:
+      numero: numero_val
+      _idSuffixe: numero_ind
+      _idTroncon: numero_tro
+  indicesRepetition:
+    url: https://opendata.larochelle.fr/dataset/voie-et-adresse-indices-de-repetition/?download=1420
+    format: csv
+    fields:
+      _idSuffixe: ind_id
+      suffixe: ind_libelle
+  troncons:
+    url: https://opendata.larochelle.fr/dataset/voie-et-adresse-troncons-de-voirie/?download=1397
+    format: shp
+    fields:
+      _idTroncon: troncon_id
+      _idVoie: troncon_vo
+  voies:
+    url: https://opendata.larochelle.fr/dataset/voie-et-adresse-voies/?download=1405
+    format: shp
+    fields:
+      _idVoie: voie_id
+      nomVoie: voie_libel
+      codeVoie: voie_fanto

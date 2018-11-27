@@ -1,0 +1,51 @@
+{
+  "name": "@etalab/bases-adresse-locale",
+  "version": "0.0.0",
+  "description": "Agrégation des bases Adresse locales",
+  "repository": "git@github.com:etalab/bases-adresse-locales.git",
+  "author": "Jérôme Desboeufs <jerome.desboeufs@data.gouv.fr>",
+  "license": "MIT",
+  "private": false,
+  "scripts": {
+    "lint": "xo",
+    "build": "node --max_old_space_size=8192 build"
+  },
+  "dependencies": {
+    "@etalab/bal": "^0.14.0",
+    "@keyv/sqlite": "^2.0.0",
+    "@turf/turf": "^5.1.6",
+    "bluebird": "^3.5.3",
+    "chalk": "^2.4.1",
+    "codes-postaux": "^3.0.0",
+    "decompress": "^4.2.0",
+    "dotenv": "^6.1.0",
+    "fs-extra": "^7.0.1",
+    "gdal": "^0.9.8",
+    "got": "^9.3.2",
+    "iconv-lite": "^0.4.24",
+    "js-yaml": "^3.12.0",
+    "keyv": "^3.1.0",
+    "leven": "^2.1.0",
+    "lodash": "^4.17.11",
+    "node-xlsx": "^0.12.1",
+    "papaparse": "^4.6.2",
+    "srs": "^1.2.0",
+    "strip-bom-buf": "^1.0.0",
+    "tmp-promise": "^1.0.5",
+    "write-json-file": "^3.0.2"
+  },
+  "devDependencies": {
+    "xo": "^0.23.0"
+  },
+  "xo": {
+    "space": 2,
+    "semicolon": false,
+    "rules": {
+      "camelcase": "off",
+      "capitalized-comments": "warn"
+    }
+  },
+  "engines": {
+    "node": ">= 10"
+  }
+}

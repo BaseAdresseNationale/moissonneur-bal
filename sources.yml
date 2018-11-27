@@ -1,0 +1,137 @@
+whiteList:
+  - name: Angers
+    importer: angers-loire-metropole
+    dataset: 5a980549b59508758b84c018
+    homepage: https://data.angers.fr/explore/dataset/points-adresse-angers/
+
+  - name: Bordeaux Métropole
+    importer: bordeaux-metropole
+    dataset: 5a02bf6188ee38130d1057c9
+    homepage: https://data.bordeaux-metropole.fr/data.php?layer=FV_ADRESSE_P
+
+  - name: Châlons Agglomération
+    importer: chalons-agglomeration
+    dataset: 5bb2391a06e3e74c3c9dc602
+    homepage: http://design2-agglo-chalons.opendata.arcgis.com/datasets/ce237a8f47bc450d9abd6bfa84a44f74_3
+
+  - name: Colmar Agglomération
+    importer: colmar-agglomeration
+    slug: colmar-agglomeration
+    homepage: https://www.agglo-colmar.fr/geo
+
+  - name: Grand Nancy
+    importer: grand-nancy
+    slug: grand-nancy
+    organization: 534fff65a3a7292c64a77d73
+    homepage: http://opendata.grandnancy.eu/jeux-de-donnees/detail-dune-fiche-de-donnees/?tx_icsoddatastore_pi1%5Buid%5D=82&tx_icsoddatastore_pi1%5BreturnID%5D=447
+
+  - name: Grand Paris Seine Ouest
+    importer: grand-paris-seine-ouest
+    dataset: 55716fe9c751df588de5726a
+
+  - name: Lille Métropole
+    importer: lille-metropole
+    dataset: 58b69b21a3a7295a7d8251b5
+    homepage: https://opendata.lillemetropole.fr/explore/dataset/seuils_adresses_mel/
+
+  - name: Lorient Agglomération
+    importer: lorient-agglomeration
+    dataset: 5a09aa7288ee383b626c5ea4
+    homepage: http://geocatalogue.lorient-agglo.bzh/les-donnees/Cartographie-des-points-adresse-de-Lorient-Agglomeration/12392c369e524cc98cf4c512166c7fed
+
+  - name: Ville de Montpellier
+    importer: montpellier
+    slug: montpellier
+    organization: 5847cb5cc751df5d58c0bb7e
+    homepage: http://data.montpellier3m.fr/dataset/point-adresse-de-montpellier
+
+  - name: Mulhouse Alsace Agglomération
+    importer: mulhouse-alsace-agglomeration
+    dataset: 5be560f59ce2e72d66831010
+    homepage: https://data.mulhouse-alsace.fr/explore/dataset/m2a_base-adresse/information/
+
+  - name: Ville de Nanterre
+    importer: nanterre-ville
+    dataset: 5ad75e1dc751df42a0357f8c
+    homepage: https://www.nanterre.fr/1409-les-adresses.htm
+
+  - name: Nantes Métropole
+    importer: nantes-metropole
+    dataset: 53698e7ca3a729239d20349f
+    homepage: https://data.nantesmetropole.fr/explore/dataset/244400404_adresses-postales-nantes-metropole/information/
+
+  - name: Nice Métropole Côte d’Azur
+    importer: nice-metropole
+    dataset: 59aea7c9a3a72917d9f3fc92
+    homepage: http://opendata.nicecotedazur.org/data/dataset/adresses-sur-le-territoire-de-la-metropole-nca
+    comment: La mise à jour automatique n’est pas disponible.
+
+  - name: Ville de Paris
+    importer: paris
+    dataset: 59590cf0a3a7291dd09c7fd6
+    homepage: https://opendata.paris.fr/explore/dataset/adresse_paris/
+
+  - name: Quimper Bretagne Occidentale
+    importer: quimper-bretagne-occidentale
+    dataset: 5b5aea25c751df35616a7420
+    homepage: https://geobretagne.fr/geonetwork/srv/fre/catalog.search#/metadata/4a9179ee-1cad-49f1-9746-e2e377a8fc95
+
+  - name: Pays de Saint-Brieuc
+    url: http://datarmor.cotesdarmor.fr/data-unpaginated/dataserver/cg22/data/2200542_base_adresse_locale?&$inlinecount=allpages&$format=csv
+    slug: pays-saint-brieuc
+    organization: 5acb2f2088ee3813a476714d
+    homepage: http://datarmor.cotesdarmor.fr/data-presentation-ux/#/cg22/datasets/2200542_base_adresse_locale/views/desc
+    odbl: true
+
+  - name: Antibes - Juan-les-Pins
+    url: http://www.antibes-juanlespins.com/OpenData/Antibes_base_adresses_locales.csv
+    slug: antibes-juan-les-pins
+    organization: 566594f388ee38738640355c
+    homepage: http://www.antibes-juanlespins.com/administration/open-data/administration/base-adresses-locales-bal
+
+  - name: CARENE
+    url: https://data.agglo-carene.fr/explore/dataset/244400644_bal/download/?format=csv&timezone=Europe/Berlin&use_labels_for_header=true
+    slug: carene
+    organization: 5733009988ee3843a3d1b934
+    homepage: https://data.agglo-carene.fr/explore/dataset/244400644_bal/table/
+
+  - name: Loire Forez Agglomération
+    dataset: 5bed86a78b4c41546f05613c
+    # Liste blanche pour réécriture du titre
+
+  - name: Le Plessis-Trévise
+    dataset: 5bbcc694634f411d5e251ca6
+    # Liste blanche pour réécriture du titre
+
+  - name: Toulouse Métropole
+    dataset: 5bc6d04e9ce2e726fa422d3e
+    # Liste blanche pour réécriture du titre
+
+  - name: Grenoble
+    dataset: 5af03721b595081c1c80a8ad
+    importer: grenoble
+
+  - name: Communauté de l’Agglomération Havraise (CODAH)
+    dataset: 5a3100e188ee385a3eeb4aa0
+    importer: le-havre-agglomeration
+
+  - name: Limoges
+    dataset: 54b52ca6c751df7556ae2614
+    importer: limoges
+
+  - name: Metz Métropole
+    dataset: 542ab42f88ee382b8f22e2e4
+    importer: metz-metropole
+
+  - name: La Rochelle
+    dataset: 5bb6b4749ce2e701e12456a5
+    importer: la-rochelle
+
+blackList:
+  - name: BAL Cap Atlantique / Nantes Métropole
+    dataset: 5bc53abf06e3e76f9a88f2c4
+    # Doublon lié au moissonnage OpenDataSoft
+
+  - name: BAL Cap Atlantique / Pays de la Loire
+    dataset: 5bd9067a06e3e739998c0ebb
+    # Doublon lié au moissonnage OpenDataSoft

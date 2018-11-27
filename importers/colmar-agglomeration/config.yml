@@ -1,0 +1,12 @@
+organizationName: Agglomération de Colmar
+resources:
+  default:
+    url: http://sig.agglo-colmar.fr/web/Sig/OpenData/FR-246800726-678/FR-246800726-678.zip
+    format: shp
+    fields:
+      nomVoie: voie
+      numeroComplet: numero
+      codeCommune: com_insee_
+      codeVoie: rivoli
+      lon: _geometry.coordinates.0
+      lat: _geometry.coordinates.1

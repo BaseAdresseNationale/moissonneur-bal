@@ -1,0 +1,16 @@
+computedFields:
+  - dateMAJ
+resources:
+  default:
+    url: https://data.angers.fr/explore/dataset/points-adresse-angers/download/?format=geojson&timezone=Europe/Berlin
+    format: geojson
+    fields:
+      numeroComplet: libelle
+      nomVoie: adr_libvoi
+      codeVoie: ccoriv
+      codeCommune: code_insee
+      codePostal: code_postal
+      quartier: lib_qua_i
+      source: source
+      lon: _geometry.coordinates.0
+      lat: _geometry.coordinates.1

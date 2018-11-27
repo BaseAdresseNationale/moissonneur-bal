@@ -1,0 +1,11 @@
+resources:
+  default:
+    url: http://opendata.grandnancy.eu/?eID=ics_od_datastoredownload&file=191
+    format: shp
+    fields:
+      numeroComplet: NUMVOIE
+      nomVoie: NOMVOIE
+      codeVoie: RIVOLI
+      codeCommune: CCOCOM
+      lon: _geometry.coordinates.0
+      lat: _geometry.coordinates.1

@@ -1,0 +1,11 @@
+resources:
+  default:
+    url: https://opendata.arcgis.com/datasets/ce237a8f47bc450d9abd6bfa84a44f74_3.zip
+    format: shp
+    fields:
+      nomVoie: ETIQUETTE
+      numeroComplet: LABEL
+      codeCommune: INSEE
+      codeIris: IRIS_INSEE
+      lon: _geometry.coordinates.0
+      lat: _geometry.coordinates.1

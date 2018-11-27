@@ -1,0 +1,15 @@
+resources:
+  default:
+    url: https://data.agglo-lehavre.fr/api/v1/file/data/27/RG_ADRESSE/json
+    format: geojson
+    archivePath: OD.RG_ADRESSE.json
+    fields:
+      numero: NUM_VOIE
+      suffixe: INDREP
+      nomVoieComplement: COMPLEMENT
+      nomVoie: NOM_VOIE
+      nomLieuDit: NOM_LIEUDIT
+      codeCommune: CODCOM
+      codePostal: CODE_POSTAL
+      lon: _geometry.coordinates.0
+      lat: _geometry.coordinates.1

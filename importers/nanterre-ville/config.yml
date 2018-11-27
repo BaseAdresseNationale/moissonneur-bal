@@ -1,0 +1,20 @@
+resources:
+  default:
+    url: https://www.nanterre.fr/include/viewFile.php?idtf=11278&path=6a%2F11278_702_BDA_Adresse.zip
+    format: shp
+    fields:
+      nomVoie: TYPE_VOIE + NOM_VOIE
+      numero: NUM_DEB
+      suffixe: SUFF_DEB
+      codePostal: CODE_POST
+      quartier: QUARTIER
+      codeCommune: CODE_INSEE
+      lon: _geometry.coordinates.0
+      lat: _geometry.coordinates.1
+
+
+
+
+
+
+

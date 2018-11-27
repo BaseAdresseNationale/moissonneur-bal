@@ -1,0 +1,20 @@
+join:
+  - resource: voies
+    key: _idVoie
+resources:
+  default:
+    url: https://www.data.gouv.fr/s/resources/referentiel-adresse-de-la-ville-de-limoges-3/20161104-102453/limoges_numeros_adresse.zip
+    format: shp
+    fields:
+      numeroComplet: NUMERO
+      codePostal: CODE_POSTA
+      dateMAJ: DATE_MAJ
+      _idVoie: ID_VOIE
+  voies:
+    url: https://www.data.gouv.fr/s/resources/referentiel-adresse-de-la-ville-de-limoges-3/20161104-104302/limoges_libelles_voies.ods
+    format: sheet
+    fields:
+      _idVoie: ID_VOIE
+      nomVoie: TYPE_VOIE_ACC + NOM_ACC
+      codeVoie: RIVOLI_DGI
+      codeCommune: CODCOMM

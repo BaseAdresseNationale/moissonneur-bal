@@ -1,0 +1,13 @@
+computedFields:
+  - codeCommune
+  - codeVoie
+  - nomVoie
+  - dateMAJ
+resources:
+  default:
+    url: https://geobretagne.fr/geoserver/qbo/ows?service=wfs&version=1.0.0&request=getfeature&typename=adresse_qbo&outputformat=shape-zip
+    format: shp
+    fields:
+      numeroComplet: ADR_TEXT
+      lon: _geometry.coordinates.0
+      lat: _geometry.coordinates.1
