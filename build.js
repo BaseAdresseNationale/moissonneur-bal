@@ -81,6 +81,8 @@ async function main() {
   const population = await loadPopulation()
   const sources = await computeList()
   const globalCommunes = new Set()
+  let adressesCount = 0
+  let erroredAdressesCount = 0
   const features = []
 
   await bluebird.mapSeries(sources, async source => {
@@ -92,7 +94,9 @@ async function main() {
     console.log(chalk.gray(`    Communes : ${codesCommunes.length}`))
     if (errored) {
       console.log(chalk.red(`    Lignes avec erreurs : ${errored}`))
+      erroredAdressesCount += errored
     }
+    adressesCount += data.length
     codesCommunes.forEach(c => globalCommunes.add(c))
     features.push(createFeature(meta, codesCommunes))
   })
@@ -101,6 +105,8 @@ async function main() {
   await writeJsonFile('datasets.odbl.geojson', featureCollection(features.filter(f => f.properties.odbl)))
 
   console.log(`${globalCommunes.size} communes couvertes !`)
+  console.log(`Adresses acceptées : ${adressesCount}`)
+  console.log(`Adresses avec erreurs : ${erroredAdressesCount}`)
 
   const populationCount = [...globalCommunes].reduce((acc, codeCommune) => {
     if (population[codeCommune]) {
