@@ -10,6 +10,7 @@ const {readYamlFile} = require('./lib/util')
 const customImportData = require('./lib/importers').importData
 const balImportData = require('./lib/bal').importData
 const {createFeature} = require('./lib/meta')
+const {loadPopulation} = require('./lib/population')
 const {getEligibleBALDatasets, getDataset, getOrganization, getBALUrl} = require('./lib/datagouv')
 
 const sourcesFilePath = join(__dirname, 'sources.yml')
@@ -77,6 +78,7 @@ function computeMeta(entry) {
 }
 
 async function main() {
+  const population = await loadPopulation()
   const sources = await computeList()
   const globalCommunes = new Set()
   const features = []
@@ -99,6 +101,15 @@ async function main() {
   await writeJsonFile('datasets.odbl.geojson', featureCollection(features.filter(f => f.properties.odbl)))
 
   console.log(`${globalCommunes.size} communes couvertes !`)
+
+  const populationCount = [...globalCommunes].reduce((acc, codeCommune) => {
+    if (population[codeCommune]) {
+      return acc + population[codeCommune]
+    }
+    return acc
+  }, 0)
+
+  console.log(`Population couverte : ${populationCount}`)
 }
 
 main().catch(error => {
