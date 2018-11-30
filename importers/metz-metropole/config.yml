@@ -10,6 +10,8 @@ resources:
       _idVoie: _voie
       codeParcelle: _parc
       codeCommune: _commid
+      lon: _geometry.coordinates.0
+      lat: _geometry.coordinates.1
   voies:
     url: https://maps.metzmetropole.fr/ows?service=WFS&version=2.0.0&request=GetFeature&typeName=public:fdp_voi_voie&srsName=EPSG:4326&outputFormat=json
     format: geojson

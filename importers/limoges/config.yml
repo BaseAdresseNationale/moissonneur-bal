@@ -10,6 +10,8 @@ resources:
       codePostal: CODE_POSTA
       dateMAJ: DATE_MAJ
       _idVoie: ID_VOIE
+      lon: _geometry.coordinates.0
+      lat: _geometry.coordinates.1
   voies:
     url: https://www.data.gouv.fr/s/resources/referentiel-adresse-de-la-ville-de-limoges-3/20161104-104302/limoges_libelles_voies.ods
     format: sheet
