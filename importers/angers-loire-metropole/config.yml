@@ -1,5 +1,6 @@
 computedFields:
   - dateMAJ
+beautify: true
 resources:
   default:
     url: https://data.angers.fr/explore/dataset/points-adresse-angers/download/?format=geojson&timezone=Europe/Berlin

@@ -1,3 +1,4 @@
+beautify: true
 computedFields:
   - codeCommune
   - codeVoie

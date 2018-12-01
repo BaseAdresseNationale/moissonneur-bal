@@ -1,3 +1,4 @@
+beautify: true
 join:
   - resource: indicesRepetition
     key: _idSuffixe

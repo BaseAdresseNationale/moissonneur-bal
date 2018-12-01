@@ -1,5 +1,6 @@
 computedFields:
   - codeVoie
+beautify: true
 resources:
   default:
     url: https://www.data.gouv.fr/s/resources/point-adresse-2/20150605-114705/GPSO_MIG92_Base_PT_Adresse.zip
