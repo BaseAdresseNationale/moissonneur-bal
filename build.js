@@ -1,7 +1,6 @@
 #!/usr/bin/env node --max_old_space_size=8192
 require('dotenv').config()
 const {promisify} = require('util')
-const {join} = require('path')
 const Keyv = require('keyv')
 const bluebird = require('bluebird')
 const {uniq} = require('lodash')
@@ -10,70 +9,13 @@ const {featureCollection} = require('@turf/turf')
 const writeJsonFile = require('write-json-file')
 const finished = promisify(require('end-of-stream'))
 const {extractAsTree} = require('@etalab/bal')
-const {readYamlFile} = require('./lib/util')
-const customImportData = require('./lib/importers').importData
-const balImportData = require('./lib/bal').importData
 const {createFeature} = require('./lib/meta')
 const {loadPopulation} = require('./lib/population')
-const {getEligibleBALDatasets, getDataset, getOrganization, getBALUrl} = require('./lib/datagouv')
 const {createCSVWriteStream} = require('./lib/csv')
+const {computeList} = require('./lib/sources')
+const importData = require('./lib/import-data')
 
 const db = new Keyv('sqlite://bal.sqlite')
-
-const sourcesFilePath = join(__dirname, 'sources.yml')
-
-function importData(config) {
-  if (config.importer) {
-    return customImportData(config.importer)
-  }
-  if (config.url) {
-    return balImportData(config.url)
-  }
-  console.error('Configuration incomplète !')
-  console.error(config)
-  process.exit(1)
-}
-
-async function augmentCustomEntry(entry) {
-  let dataset
-  let organization
-
-  if (entry.dataset) {
-    dataset = await getDataset(entry.dataset)
-  }
-  if (entry.organization || (dataset && dataset.organization)) {
-    organization = await getOrganization(entry.organization || dataset.organization.id)
-  }
-
-  if (!entry.url && !entry.importer && dataset) {
-    return {...entry, dataset, organization, url: getBALUrl(dataset)}
-  }
-
-  return {...entry, dataset, organization}
-}
-
-function prepareEligibleEntry(dataset) {
-  return {
-    dataset,
-    organization: dataset.organization,
-    url: getBALUrl(dataset)
-  }
-}
-
-async function computeList() {
-  const sources = await readYamlFile(sourcesFilePath)
-
-  const blacklistedIds = sources.blackList.map(e => e.dataset)
-  const whitelistedIds = sources.whiteList.filter(e => e.dataset).map(e => e.dataset)
-
-  const eligibleBALDatasets = (await getEligibleBALDatasets())
-    .filter(d => !blacklistedIds.includes(d.id) && !whitelistedIds.includes(d.id))
-
-  return [
-    ...(await Promise.all(sources.whiteList.map(augmentCustomEntry))),
-    ...(eligibleBALDatasets.map(prepareEligibleEntry))
-  ]
-}
 
 function computeMeta(entry) {
   const odbl = Boolean(entry.odbl || (entry.dataset && entry.dataset.license === 'odc-odbl'))
