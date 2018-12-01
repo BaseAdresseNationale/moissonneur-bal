@@ -63,3 +63,4 @@ typings/
 *.sqlite
 *.geojson
 communes-100m.json
+/*.csv

@@ -1,11 +1,17 @@
 #!/usr/bin/env node --max_old_space_size=8192
 require('dotenv').config()
+const {createWriteStream} = require('fs')
+const {promisify} = require('util')
 const {join} = require('path')
 const bluebird = require('bluebird')
 const {uniq} = require('lodash')
 const chalk = require('chalk')
 const {featureCollection} = require('@turf/turf')
 const writeJsonFile = require('write-json-file')
+const csvWriter = require('csv-write-stream')
+const pumpify = require('pumpify')
+const {pick} = require('lodash')
+const finished = promisify(require('end-of-stream'))
 const {readYamlFile} = require('./lib/util')
 const customImportData = require('./lib/importers').importData
 const balImportData = require('./lib/bal').importData
@@ -77,6 +83,27 @@ function computeMeta(entry) {
   return {id, name, homepage, model, odbl}
 }
 
+const CSV_HEADERS = [
+  'id',
+  'codeCommune',
+  'nomCommune',
+  'codeVoie',
+  'nomVoie',
+  'numero',
+  'suffixe',
+  'lon',
+  'lat'
+]
+
+function asCsv(row) {
+  const result = pick(row, CSV_HEADERS)
+  if (row.position) {
+    result.lon = row.position[0]
+    result.lat = row.position[1]
+  }
+  return result
+}
+
 async function main() {
   const population = await loadPopulation()
   const sources = await computeList()
@@ -84,6 +111,11 @@ async function main() {
   let adressesCount = 0
   let erroredAdressesCount = 0
   const features = []
+
+  const csvFile = pumpify.obj(
+    csvWriter({separator: ';', headers: CSV_HEADERS}),
+    createWriteStream('adresses-locales.csv')
+  )
 
   await bluebird.mapSeries(sources, async source => {
     const meta = computeMeta(source)
@@ -96,10 +128,14 @@ async function main() {
       console.log(chalk.red(`    Lignes avec erreurs : ${errored}`))
       erroredAdressesCount += errored
     }
+    data.forEach(r => csvFile.write(asCsv(r)))
     adressesCount += data.length
     codesCommunes.forEach(c => globalCommunes.add(c))
     features.push(createFeature(meta, codesCommunes))
   })
+
+  csvFile.end()
+  await finished(csvFile)
 
   await writeJsonFile('datasets.lo.geojson', featureCollection(features.filter(f => !f.properties.odbl)))
   await writeJsonFile('datasets.odbl.geojson', featureCollection(features.filter(f => f.properties.odbl)))
