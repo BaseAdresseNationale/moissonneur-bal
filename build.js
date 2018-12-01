@@ -3,6 +3,7 @@ require('dotenv').config()
 const {createWriteStream} = require('fs')
 const {promisify} = require('util')
 const {join} = require('path')
+const Keyv = require('keyv')
 const bluebird = require('bluebird')
 const {uniq} = require('lodash')
 const chalk = require('chalk')
@@ -12,12 +13,15 @@ const csvWriter = require('csv-write-stream')
 const pumpify = require('pumpify')
 const {pick} = require('lodash')
 const finished = promisify(require('end-of-stream'))
+const {extractAsTree} = require('@etalab/bal')
 const {readYamlFile} = require('./lib/util')
 const customImportData = require('./lib/importers').importData
 const balImportData = require('./lib/bal').importData
 const {createFeature} = require('./lib/meta')
 const {loadPopulation} = require('./lib/population')
 const {getEligibleBALDatasets, getDataset, getOrganization, getBALUrl} = require('./lib/datagouv')
+
+const db = new Keyv('sqlite://bal.sqlite')
 
 const sourcesFilePath = join(__dirname, 'sources.yml')
 
@@ -117,16 +121,23 @@ async function main() {
     createWriteStream('adresses-locales.csv')
   )
 
+  await db.clear()
+
   await bluebird.mapSeries(sources, async source => {
     const meta = computeMeta(source)
     console.log(chalk.green(` * ${meta.name} (${meta.model})`))
-    const {data, errored} = await importData(source)
+    const {data, errored, report} = await importData(source)
     const codesCommunes = uniq(data.map(c => c.codeCommune))
     console.log(chalk.gray(`    Adresses trouvées : ${data.length}`))
     console.log(chalk.gray(`    Communes : ${codesCommunes.length}`))
     if (errored) {
       console.log(chalk.red(`    Lignes avec erreurs : ${errored}`))
       erroredAdressesCount += errored
+    }
+    const tree = extractAsTree(data)
+    await db.set(`${meta.id}-data`, tree)
+    if (report) {
+      await db.set(`${meta.id}-report`, report)
     }
     data.forEach(r => csvFile.write(asCsv(r)))
     adressesCount += data.length
