@@ -1,6 +1,5 @@
 #!/usr/bin/env node --max_old_space_size=8192
 require('dotenv').config()
-const {createWriteStream} = require('fs')
 const {promisify} = require('util')
 const {join} = require('path')
 const Keyv = require('keyv')
@@ -9,9 +8,6 @@ const {uniq} = require('lodash')
 const chalk = require('chalk')
 const {featureCollection} = require('@turf/turf')
 const writeJsonFile = require('write-json-file')
-const csvWriter = require('csv-write-stream')
-const pumpify = require('pumpify')
-const {pick} = require('lodash')
 const finished = promisify(require('end-of-stream'))
 const {extractAsTree} = require('@etalab/bal')
 const {readYamlFile} = require('./lib/util')
@@ -20,6 +16,7 @@ const balImportData = require('./lib/bal').importData
 const {createFeature} = require('./lib/meta')
 const {loadPopulation} = require('./lib/population')
 const {getEligibleBALDatasets, getDataset, getOrganization, getBALUrl} = require('./lib/datagouv')
+const {createCSVWriteStream} = require('./lib/csv')
 
 const db = new Keyv('sqlite://bal.sqlite')
 
@@ -87,27 +84,6 @@ function computeMeta(entry) {
   return {id, name, homepage, model, odbl}
 }
 
-const CSV_HEADERS = [
-  'id',
-  'codeCommune',
-  'nomCommune',
-  'codeVoie',
-  'nomVoie',
-  'numero',
-  'suffixe',
-  'lon',
-  'lat'
-]
-
-function asCsv(row) {
-  const result = pick(row, CSV_HEADERS)
-  if (row.position) {
-    result.lon = row.position[0]
-    result.lat = row.position[1]
-  }
-  return result
-}
-
 async function main() {
   const population = await loadPopulation()
   const sources = await computeList()
@@ -116,10 +92,7 @@ async function main() {
   let erroredAdressesCount = 0
   const features = []
 
-  const csvFile = pumpify.obj(
-    csvWriter({separator: ';', headers: CSV_HEADERS}),
-    createWriteStream('adresses-locales.csv')
-  )
+  const csvFile = createCSVWriteStream('adresses-locales.csv')
 
   await db.clear()
 
@@ -139,7 +112,7 @@ async function main() {
     if (report) {
       await db.set(`${meta.id}-report`, report)
     }
-    data.forEach(r => csvFile.write(asCsv(r)))
+    data.forEach(r => csvFile.write(r))
     adressesCount += data.length
     codesCommunes.forEach(c => globalCommunes.add(c))
     features.push(createFeature(meta, codesCommunes))
