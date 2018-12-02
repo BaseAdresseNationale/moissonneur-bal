@@ -5,11 +5,10 @@ const Keyv = require('keyv')
 const bluebird = require('bluebird')
 const {uniq} = require('lodash')
 const chalk = require('chalk')
-const {featureCollection} = require('@turf/turf')
 const writeJsonFile = require('write-json-file')
 const finished = promisify(require('end-of-stream'))
 const {extractAsTree} = require('@etalab/bal')
-const {createFeature} = require('./lib/meta')
+const {computeMetaFromSource, expandMetaWithResults, exportAsGeoJSON} = require('./lib/meta')
 const {loadPopulation} = require('./lib/population')
 const {createCSVWriteStream} = require('./lib/csv')
 const {computeList} = require('./lib/sources')
@@ -17,30 +16,20 @@ const importData = require('./lib/import-data')
 
 const db = new Keyv('sqlite://bal.sqlite')
 
-function computeMeta(entry) {
-  const odbl = Boolean(entry.odbl || (entry.dataset && entry.dataset.license === 'odc-odbl'))
-  const name = entry.name || entry.dataset.title
-  const model = entry.importer ? 'custom' : 'bal-aitf'
-  const homepage = entry.homepage || entry.dataset.page
-  const id = entry.slug || entry.dataset.id
-  return {id, name, homepage, model, odbl}
-}
-
 async function main() {
   const population = await loadPopulation()
   const sources = await computeList()
   const globalCommunes = new Set()
   let adressesCount = 0
   let erroredAdressesCount = 0
-  const features = []
 
   const csvFile = createCSVWriteStream('adresses-locales.csv')
 
   await db.clear()
 
-  await bluebird.mapSeries(sources, async source => {
-    const meta = computeMeta(source)
-    console.log(chalk.green(` * ${meta.name} (${meta.model})`))
+  const datasets = await bluebird.mapSeries(sources, async source => {
+    const meta = computeMetaFromSource(source)
+    console.log(chalk.green(` * ${meta.title} (${meta.model})`))
     const {data, errored, report} = await importData(source)
     const codesCommunes = uniq(data.map(c => c.codeCommune))
     console.log(chalk.gray(`    Adresses trouvées : ${data.length}`))
@@ -50,6 +39,7 @@ async function main() {
       erroredAdressesCount += errored
     }
     const tree = extractAsTree(data)
+    expandMetaWithResults(meta, {tree, report, errored})
     await db.set(`${meta.id}-data`, tree)
     if (report) {
       await db.set(`${meta.id}-report`, report)
@@ -57,14 +47,17 @@ async function main() {
     data.forEach(r => csvFile.write(r))
     adressesCount += data.length
     codesCommunes.forEach(c => globalCommunes.add(c))
-    features.push(createFeature(meta, codesCommunes))
+    return meta
   })
+
+  await db.set('datasets', datasets)
+
+  /* Write CSV file */
 
   csvFile.end()
   await finished(csvFile)
 
-  await writeJsonFile('datasets.lo.geojson', featureCollection(features.filter(f => !f.properties.odbl)))
-  await writeJsonFile('datasets.odbl.geojson', featureCollection(features.filter(f => f.properties.odbl)))
+  /* Compute and display metrics */
 
   console.log(`${globalCommunes.size} communes couvertes !`)
   console.log(`Adresses acceptées : ${adressesCount}`)
@@ -78,6 +71,10 @@ async function main() {
   }, 0)
 
   console.log(`Population couverte : ${populationCount}`)
+
+  /* Write GeoJSON file */
+
+  await writeJsonFile('datasets.geojson', exportAsGeoJSON(datasets))
 }
 
 main().catch(error => {
