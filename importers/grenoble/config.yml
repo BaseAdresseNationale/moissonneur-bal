@@ -8,6 +8,6 @@ resources:
     fields:
       codePostal: ADRES_CODEPOST
       numeroComplet: ADRES_LIBEL
-      codeVoie: VOIR_FANTOIR
+      codeVoie: VOIE_FANTOIR
       lon: _geometry.coordinates.0
       lat: _geometry.coordinates.1
