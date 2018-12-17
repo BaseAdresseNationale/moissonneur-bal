@@ -11,8 +11,8 @@ whiteList:
 
   - name: Châlons Agglomération
     importer: chalons-agglomeration
-    dataset: 5bb2391a06e3e74c3c9dc602
-    homepage: http://design2-agglo-chalons.opendata.arcgis.com/datasets/ce237a8f47bc450d9abd6bfa84a44f74_3
+    dataset: 5c14547606e3e7530604ccef
+    homepage: http://opendata.chalons-agglo.fr/datasets/ce237a8f47bc450d9abd6bfa84a44f74_3
 
   - name: Colmar Agglomération
     importer: colmar-agglomeration
