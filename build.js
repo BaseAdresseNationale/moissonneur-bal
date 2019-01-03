@@ -1,20 +1,21 @@
 #!/usr/bin/env node --max_old_space_size=8192
 require('dotenv').config()
-const {promisify} = require('util')
+const {join} = require('path')
+const {emptyDir} = require('fs-extra')
 const Keyv = require('keyv')
 const bluebird = require('bluebird')
 const {uniq} = require('lodash')
 const chalk = require('chalk')
 const writeJsonFile = require('write-json-file')
-const finished = promisify(require('end-of-stream'))
 const {extractAsTree} = require('@etalab/bal')
 const {computeMetaFromSource, expandMetaWithResults, exportAsGeoJSON} = require('./lib/meta')
 const {loadPopulation} = require('./lib/population')
-const {createCSVWriteStream} = require('./lib/csv')
+const {createCsvFilesWriter} = require('./lib/csv')
 const {computeList} = require('./lib/sources')
 const importData = require('./lib/import-data')
 
 const db = new Keyv('sqlite://bal.sqlite')
+const distPath = join(__dirname, 'dist')
 
 async function main() {
   const population = await loadPopulation()
@@ -23,7 +24,8 @@ async function main() {
   let adressesCount = 0
   let erroredAdressesCount = 0
 
-  const csvFile = createCSVWriteStream('adresses-locales.csv')
+  await emptyDir(distPath)
+  const csvFiles = createCsvFilesWriter(distPath)
 
   await db.clear()
 
@@ -44,7 +46,7 @@ async function main() {
     if (report) {
       await db.set(`${meta.id}-report`, report)
     }
-    data.forEach(r => csvFile.write(r))
+    data.forEach(r => csvFiles.writeRow(r))
     adressesCount += data.length
     codesCommunes.forEach(c => globalCommunes.add(c))
     return meta
@@ -52,10 +54,7 @@ async function main() {
 
   await db.set('datasets', datasets)
 
-  /* Write CSV file */
-
-  csvFile.end()
-  await finished(csvFile)
+  await csvFiles.finish()
 
   /* Compute and display metrics */
 
