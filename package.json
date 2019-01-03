@@ -12,6 +12,7 @@
     "build": "node --max_old_space_size=8192 build"
   },
   "dependencies": {
+    "@etalab/adresses-util": "^0.2.0",
     "@etalab/bal": "^0.14.0",
     "@etalab/cog": "^0.1.0",
     "@keyv/sqlite": "^2.0.0",
