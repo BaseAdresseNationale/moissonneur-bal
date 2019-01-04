@@ -1,8 +1,8 @@
 {
-  "name": "@etalab/bases-adresse-locale",
+  "name": "@etalab/adresses-locales",
   "version": "0.0.0",
   "description": "Agrégation des bases Adresse locales",
-  "repository": "git@github.com:etalab/bases-adresse-locales.git",
+  "repository": "git@github.com:etalab/adresses-locales.git",
   "author": "Jérôme Desboeufs <jerome.desboeufs@data.gouv.fr>",
   "license": "MIT",
   "private": false,
