@@ -141,3 +141,7 @@ blackList:
   - name: BAL Cap Atlantique / Pays de la Loire
     dataset: 5bd9067a06e3e739998c0ebb
     # Doublon lié au moissonnage OpenDataSoft
+
+  - name: Bayonne
+    dataset: 5b0c070dc751df3203606268
+    # Fichier expérimental qui n'est plus mis à jour mais non supprimé à la source
