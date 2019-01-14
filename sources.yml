@@ -127,6 +127,11 @@ whiteList:
     dataset: 5bb6b4749ce2e701e12456a5
     importer: la-rochelle
 
+  - name: Arles-Crau-Camargue-Montagnette
+    homepage: https://trouver.datasud.fr/dataset/base-locale-dadresses-accm
+    importer: accm
+    slug: accm
+
 blackList:
   - name: BAL Cap Atlantique / Nantes Métropole
     dataset: 5bc53abf06e3e76f9a88f2c4

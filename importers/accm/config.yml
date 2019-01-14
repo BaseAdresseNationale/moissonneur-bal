@@ -1,0 +1,14 @@
+resources:
+  default:
+    url: https://trouver.datasud.fr/dataset/4c3c3e85-2e53-4c22-938f-0d5ed5efde84/resource/471d295a-3b33-49c3-b051-93d49241afc8/download/accm_adresses.zip
+    format: shp
+    fields:
+      numero: num_voi
+      suffixe: suf_voi
+      nomVoie: nom_reel
+      codeVoie: rivoli
+      codeCommune: codcomm
+      codePostal: code_posta
+      dateMAJ: date_maj
+      lon: _geometry.coordinates.0
+      lat: _geometry.coordinates.1
