@@ -1,3 +1,5 @@
+computedFields:
+  - codeCommune
 beautify: true
 resources:
   default:
@@ -7,6 +9,5 @@ resources:
       numeroComplet: NUMVOIE
       nomVoie: NOMVOIE
       codeVoie: RIVOLI
-      codeCommune: CCOCOM
       lon: _geometry.coordinates.0
       lat: _geometry.coordinates.1
