@@ -1,0 +1,11 @@
+resources:
+  default:
+    url: https://adresse.data.gouv.fr/data/sources-locales/64100-bassussarry/referentiel_adresse__64100_2019.zip
+    format: shp
+    fields:
+      numero: numero_sel
+      nomVoie: libelle_vo
+      codeVoie: rivoli
+      codeCommune: code_insee
+      lon: _geometry.coordinates.0
+      lat: _geometry.coordinates.1

@@ -133,6 +133,10 @@ whiteList:
     importer: accm
     slug: accm
 
+  - name: Bassussarry
+    importer: bassussarry
+    slug: bassussarry
+
 blackList:
   - name: BAL Cap Atlantique / Nantes Métropole
     dataset: 5bc53abf06e3e76f9a88f2c4
