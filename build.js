@@ -33,6 +33,9 @@ async function main() {
     const meta = computeMetaFromSource(source)
     console.log(chalk.green(` * ${meta.title} (${meta.model})`))
     const {data, errored, report} = await importData(source)
+    data.forEach(r => {
+      r.licence = meta.license
+    })
     const codesCommunes = uniq(data.map(c => c.codeCommune))
     console.log(chalk.gray(`    Adresses trouvées : ${data.length}`))
     console.log(chalk.gray(`    Communes : ${codesCommunes.length}`))
