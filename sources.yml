@@ -137,6 +137,10 @@ whiteList:
     importer: bassussarry
     slug: bassussarry
 
+  - name: Dordogne
+    importer: dordogne
+    dataset: 5c4b12068b4c41486162c728
+
 blackList:
   - name: BAL Cap Atlantique / Nantes Métropole
     dataset: 5bc53abf06e3e76f9a88f2c4
