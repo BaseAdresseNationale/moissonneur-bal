@@ -1,6 +1,6 @@
 resources:
   default:
-    url: https://static.data.gouv.fr/resources/base-adresse-locale-de-la-dordogne/20190125-144132/20190125-adresses-atd24.csv
+    url: https://static.data.gouv.fr/resources/base-adresse-locale-de-la-dordogne/20190125-155010/20190125-adresses-atd24.csv
     format: csv
     fields:
       codeCommune: code_insee
