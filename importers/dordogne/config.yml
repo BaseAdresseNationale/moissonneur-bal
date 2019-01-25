@@ -10,5 +10,5 @@ resources:
       position: position
       source: source
       dateMAJ: date_der_maj
-      lon: lat
-      lat: long
+      lon: long
+      lat: lat
