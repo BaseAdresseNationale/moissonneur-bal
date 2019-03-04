@@ -57,7 +57,7 @@ whiteList:
 
   - name: Nantes Métropole
     importer: nantes-metropole
-    dataset: 53698e7ca3a729239d20349f
+    dataset: 5b4ee8c8b595087918d496d2
     homepage: https://data.nantesmetropole.fr/explore/dataset/244400404_adresses-postales-nantes-metropole/information/
 
   - name: Nice Métropole Côte d’Azur
