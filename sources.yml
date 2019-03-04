@@ -161,3 +161,15 @@ blackList:
   - name: Ville de Lorient - Rattachement des secteurs
     dataset: 5c70a7f99ce2e760225908e1
     # Non pertinent
+
+  - name: Ville de Lorient - Rattachement des îlots IRIS
+    dataset: 5c76daa09ce2e727161da1ae
+    # Non pertinent
+
+  - name: Ville de Lorient - Rattachement des établissements scolaires
+    dataset: 5c70a7f706e3e755537bb84b
+    # Non pertinent
+
+  - name: Ville de Lorient - Rattachement des bureaux de vote
+    dataset: 5c70a7f806e3e755537bb84c
+    # Non pertinent
