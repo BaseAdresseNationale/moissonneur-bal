@@ -154,10 +154,6 @@ blackList:
     dataset: 5b0c070dc751df3203606268
     # Fichier expérimental qui n'est plus mis à jour mais non supprimé à la source
 
-  - name: Ville de Lorient
-    dataset: 5c682f3d9ce2e723535908de
-    # BAL non valide
-
   - name: Ville de Lorient - Rattachement des secteurs
     dataset: 5c70a7f99ce2e760225908e1
     # Non pertinent
