@@ -141,6 +141,11 @@ whiteList:
     importer: dordogne
     dataset: 5c4b12068b4c41486162c728
 
+  - name: Base Adresse Locale de Digne-les-Bains
+    url: https://trouver.datasud.fr/dataset/e198ead6-047b-4608-b1d7-7d488a773193/resource/a7a05846-037e-42cc-8f66-0197c64f4f5c/download/digne-bal-2018.csv
+    homepage: https://trouver.datasud.fr/dataset/base-adresse-locale-de-digne-les-bains
+    slug: digne-les-bains
+
 blackList:
   - name: BAL Cap Atlantique / Nantes Métropole
     dataset: 5bc53abf06e3e76f9a88f2c4
