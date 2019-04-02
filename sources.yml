@@ -146,6 +146,12 @@ whiteList:
     homepage: https://trouver.datasud.fr/dataset/base-adresse-locale-de-digne-les-bains
     slug: digne-les-bains
 
+  - name: Grand Poitiers
+    url: https://data.grandpoitiers.fr/explore/dataset/referentiel-geographique-adresses-ban-gpcu-grand-poitiers-donnees-de-reference/download/?format=csv&timezone=Europe/Berlin&use_labels_for_header=true
+    organization: 54da1f52c751df59f7467389
+    slug: grand-poitiers
+    homepage: https://data.grandpoitiers.fr/explore/dataset/referentiel-geographique-adresses-ban-gpcu-grand-poitiers-donnees-de-reference/information/
+
 blackList:
   - name: BAL Cap Atlantique / Nantes Métropole
     dataset: 5bc53abf06e3e76f9a88f2c4
