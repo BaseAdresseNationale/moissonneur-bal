@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "@etalab/adresses-util": "^0.2.0",
-    "@etalab/bal": "^0.15.0",
+    "@etalab/bal": "^0.16.0",
     "@etalab/cog": "^0.1.0",
     "@keyv/sqlite": "^2.0.0",
     "@turf/turf": "^5.1.6",
