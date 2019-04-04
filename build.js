@@ -43,12 +43,14 @@ async function main() {
       console.log(chalk.red(`    Lignes avec erreurs : ${errored}`))
       erroredAdressesCount += errored
     }
+
     const tree = extractAsTree(data)
     expandMetaWithResults(meta, {tree, report, errored})
     await db.set(`${meta.id}-data`, tree)
     if (report) {
       await db.set(`${meta.id}-report`, report)
     }
+
     data.forEach(r => csvFiles.writeRow(r))
     adressesCount += data.length
     codesCommunes.forEach(c => globalCommunes.add(c))
@@ -69,6 +71,7 @@ async function main() {
     if (population[codeCommune]) {
       return acc + population[codeCommune]
     }
+
     return acc
   }, 0)
 

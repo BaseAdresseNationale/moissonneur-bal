@@ -3,6 +3,7 @@ function codeVoie(data) {
   if (!FANTOIR) {
     return undefined
   }
+
   return FANTOIR.substr(0, 4)
 }
 

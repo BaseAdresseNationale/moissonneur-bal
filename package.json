@@ -44,7 +44,7 @@
     "write-json-file": "^3.0.2"
   },
   "devDependencies": {
-    "xo": "^0.23.0"
+    "xo": "^0.24.0"
   },
   "xo": {
     "space": 2,
