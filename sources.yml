@@ -107,6 +107,9 @@ whiteList:
     dataset: 5bc6d04e9ce2e726fa422d3e
     # Liste blanche pour réécriture du titre
 
+  # Commune d'Anglet
+  - dataset: 5cac5d4c9ce2e71425bc8896
+
   - name: Grenoble
     dataset: 5af03721b595081c1c80a8ad
     importer: grenoble
