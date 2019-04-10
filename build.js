@@ -6,9 +6,8 @@ const Keyv = require('keyv')
 const bluebird = require('bluebird')
 const {uniq} = require('lodash')
 const chalk = require('chalk')
-const writeJsonFile = require('write-json-file')
 const {extractAsTree} = require('@etalab/bal')
-const {computeMetaFromSource, expandMetaWithResults, exportAsGeoJSON} = require('./lib/meta')
+const {computeMetaFromSource, expandMetaWithResults} = require('./lib/meta')
 const {loadPopulation} = require('./lib/population')
 const {createCsvFilesWriter} = require('./lib/csv')
 const {computeList} = require('./lib/sources')
@@ -76,10 +75,6 @@ async function main() {
   }, 0)
 
   console.log(`Population couverte : ${populationCount}`)
-
-  /* Write GeoJSON file */
-
-  await writeJsonFile('datasets.geojson', exportAsGeoJSON(datasets))
 }
 
 main().catch(error => {
