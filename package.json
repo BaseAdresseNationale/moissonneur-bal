@@ -14,7 +14,7 @@
   "dependencies": {
     "@etalab/adresses-util": "^0.2.0",
     "@etalab/bal": "^0.17.0",
-    "@etalab/cog": "^0.1.0",
+    "@etalab/decoupage-administratif": "^0.5.0",
     "@keyv/sqlite": "^2.0.0",
     "@turf/turf": "^5.1.6",
     "bluebird": "^3.5.4",

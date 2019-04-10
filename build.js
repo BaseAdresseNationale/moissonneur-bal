@@ -8,7 +8,7 @@ const {uniq} = require('lodash')
 const chalk = require('chalk')
 const {extractAsTree} = require('@etalab/bal')
 const {computeMetaFromSource, expandMetaWithResults} = require('./lib/meta')
-const {loadPopulation} = require('./lib/population')
+const {getCommune} = require('./lib/cog')
 const {createCsvFilesWriter} = require('./lib/csv')
 const {computeList} = require('./lib/sources')
 const importData = require('./lib/import-data')
@@ -17,7 +17,6 @@ const db = new Keyv('sqlite://bal.sqlite')
 const distPath = join(__dirname, 'dist')
 
 async function main() {
-  const population = await loadPopulation()
   const sources = await computeList()
   const globalCommunes = new Set()
   let adressesCount = 0
@@ -67,8 +66,9 @@ async function main() {
   console.log(`Adresses avec erreurs : ${erroredAdressesCount}`)
 
   const populationCount = [...globalCommunes].reduce((acc, codeCommune) => {
-    if (population[codeCommune]) {
-      return acc + population[codeCommune]
+    const commune = getCommune(codeCommune)
+    if (commune && commune.population) {
+      return acc + commune.population
     }
 
     return acc
