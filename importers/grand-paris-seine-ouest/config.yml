@@ -1,15 +1,14 @@
 computedFields:
-  - codeVoie
+  - nomVoie
 beautify: true
 resources:
   default:
-    url: https://www.data.gouv.fr/s/resources/point-adresse-2/20150605-114705/GPSO_MIG92_Base_PT_Adresse.zip
-    format: shp
+    url: https://data.seineouest.fr/explore/dataset/base-adresse/download/?format=geojson&timezone=Europe/Berlin
+    format: geojson
     fields:
-      numero: NUMERO
-      suffixe: NUMERO_EXT
-      nomVoie: TYPE_VOIE + PREFIXE_VO + NOM_VOIE
-      codePostal: CODE_POSTA
-      codeCommune: CODE_INSEE
+      numero: num
+      suffixe: rep
+      codePostal: cp
+      codeCommune: insee
       lon: _geometry.coordinates.0
       lat: _geometry.coordinates.1
