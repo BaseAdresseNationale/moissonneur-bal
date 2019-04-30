@@ -12,6 +12,7 @@
     "build": "node --max_old_space_size=8192 build"
   },
   "dependencies": {
+    "@etalab/adresses-util": "^0.6.0",
     "@etalab/bal": "^0.17.0",
     "@etalab/decoupage-administratif": "^0.5.0",
     "@etalab/fantoir": "^0.7.0",
