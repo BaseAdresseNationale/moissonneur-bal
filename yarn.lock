@@ -18,17 +18,16 @@
     esutils "^2.0.2"
     js-tokens "^4.0.0"
 
-"@etalab/adresses-util@^0.2.0":
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/@etalab/adresses-util/-/adresses-util-0.2.0.tgz#e98daa69ac7cb5b6b91e1620abf8f9d64b1146b9"
-  integrity sha512-Oo5TMIyK2nCaOBNN5S+iNIbyeHjzxYPTa22L/xAWuOsaWLVIr5pCSg8H5ahPasWrq1HMvZpBO1J/IshN2tJ6SA==
+"@etalab/adresses-util@^0.6.0":
+  version "0.6.0"
+  resolved "https://registry.yarnpkg.com/@etalab/adresses-util/-/adresses-util-0.6.0.tgz#2841bc13196b02787bcc1088626ad843aab80d8f"
+  integrity sha512-iuGzP6HxxwENNpWjVPKxUfcjQUgcYL7UbWNIxeBCxeSrUqVKlChUouH867kvu3NIdiC8xbCqe5bufmwKDKhqLQ==
   dependencies:
-    "@etalab/fantoir-parser" "^0.1.1"
-    keyv "^3.1.0"
-    leven "^2.1.0"
+    "@turf/distance" "^6.0.1"
+    leven "^3.1.0"
     lodash "^4.17.11"
     talisman "^0.21.0"
-    written-number "^0.8.1"
+    written-number "^0.9.1"
 
 "@etalab/bal@^0.17.0":
   version "0.17.0"
@@ -48,15 +47,16 @@
   resolved "https://registry.yarnpkg.com/@etalab/decoupage-administratif/-/decoupage-administratif-0.5.0.tgz#38a2bb0cd39887724b41c6883af5aff41d5507a3"
   integrity sha512-M8r6vNqIzTY9E2Is0QK444dVRMluDY2El9Y/qqeFPktMzagN/gkM+jWHV7cirmAd3WVS4bvo4ne3ESkkJYWfYQ==
 
-"@etalab/fantoir-parser@^0.1.1":
-  version "0.1.1"
-  resolved "https://registry.yarnpkg.com/@etalab/fantoir-parser/-/fantoir-parser-0.1.1.tgz#317fb4db7ace739276837f8b38de8bb14f88df7e"
-  integrity sha512-zz00YsdGvwziULLyERm/wOV2qzhV8FiyJMF3DJTunmWnQBk3v0kX/+pMz+WqiJz2Tl7vOmTGYpJZbGYi059LYQ==
+"@etalab/fantoir@^0.7.0":
+  version "0.7.0"
+  resolved "https://registry.yarnpkg.com/@etalab/fantoir/-/fantoir-0.7.0.tgz#3a2c3bf440c91d2cff5324aab2ab86846e1328f6"
+  integrity sha512-rT+VEDYPhfz860iqi2cItX3ZfCvb4tsgj6qVFzVc1J7T46aqHPwdKE5QzU2Lg0zw9Q3xRwkWQMhND0esTQJM8A==
   dependencies:
-    get-stream "^4.1.0"
-    pumpify "^1.5.1"
-    split2 "^3.0.0"
-    through2 "^3.0.0"
+    "@etalab/adresses-util" "^0.6.0"
+    "@keyv/sqlite" "^2.0.0"
+    keyv "^3.1.0"
+    leven "^3.1.0"
+    lodash "^4.17.11"
 
 "@keyv/sql@1.1.2":
   version "1.1.2"
@@ -469,7 +469,7 @@
     "@turf/helpers" "^5.1.5"
     "@turf/invariant" "^5.1.5"
 
-"@turf/distance@6.x":
+"@turf/distance@6.x", "@turf/distance@^6.0.1":
   version "6.0.1"
   resolved "https://registry.yarnpkg.com/@turf/distance/-/distance-6.0.1.tgz#0761f28784286e7865a427c4e7e3593569c2dea8"
   integrity sha512-q7t7rWIWfkg7MP1Vt4uLjSEhe5rPfCO2JjpKmk7JC+QZKEQkuvHEqy3ejW1iC7Kw5ZcZNR3qdMGGz+6HnVwqvg==
@@ -3639,11 +3639,6 @@ lcid@^2.0.0:
   dependencies:
     invert-kv "^2.0.0"
 
-leven@^2.1.0:
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/leven/-/leven-2.1.0.tgz#c2e7a9f772094dee9d34202ae8acce4687875580"
-  integrity sha1-wuep93IJTe6dNCAq6KzORoeHVYA=
-
 leven@^3.1.0:
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/leven/-/leven-3.1.0.tgz#77891de834064cccba82ae7842bb6b14a13ed7f2"
@@ -4697,15 +4692,6 @@ readable-stream@^2.0.0, readable-stream@^2.0.6, readable-stream@^2.3.0, readable
     string_decoder "~1.1.1"
     util-deprecate "~1.0.1"
 
-readable-stream@^3.0.0:
-  version "3.1.1"
-  resolved "https://registry.yarnpkg.com/readable-stream/-/readable-stream-3.1.1.tgz#ed6bbc6c5ba58b090039ff18ce670515795aeb06"
-  integrity sha512-DkN66hPyqDhnIQ6Jcsvx9bFjhw214O4poMBcIMgPVpQvNy9a0e0Uhg5SqySyDKAmUlwt8LonTBz1ezOnM8pUdA==
-  dependencies:
-    inherits "^2.0.3"
-    string_decoder "^1.1.1"
-    util-deprecate "^1.0.1"
-
 redent@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/redent/-/redent-2.0.0.tgz#c1b2007b42d57eb1389079b3c8333639d5e1ccaa"
@@ -5115,13 +5101,6 @@ split2@^2.1.0:
   dependencies:
     through2 "^2.0.2"
 
-split2@^3.0.0:
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/split2/-/split2-3.1.0.tgz#064bbfac70cdb66f77827870d42f159a8b442201"
-  integrity sha512-ePE1otNQVMnBRyqf3INbZvZwBPGsdBDThgrOWZ6z8zXGNVQNVCSEoOO9aBMTzDN1mXoNSZJ2kHSFH7AA5SPWww==
-  dependencies:
-    readable-stream "^3.0.0"
-
 sprintf-js@~1.0.2:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/sprintf-js/-/sprintf-js-1.0.3.tgz#04e6926f662895354f3dd015203633b857297e2c"
@@ -5367,14 +5346,6 @@ through2@^2.0.2, through2@^2.0.3:
   integrity sha512-/mrRod8xqpA+IHSLyGCQ2s8SPHiCDEeQJSep1jqLYeEUClOFG2Qsh+4FU6G9VeqpZnGW/Su8LQGc4YKni5rYSQ==
   dependencies:
     readable-stream "~2.3.6"
-    xtend "~4.0.1"
-
-through2@^3.0.0:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/through2/-/through2-3.0.0.tgz#468b461df9cd9fcc170f22ebf6852e467e578ff2"
-  integrity sha512-8B+sevlqP4OiCjonI1Zw03Sf8PuV1eRsYQgLad5eonILOdyeRsY27A/2Ze8IlvlMvq31OH+3fz/styI7Ya62yQ==
-  dependencies:
-    readable-stream "2 || 3"
     xtend "~4.0.1"
 
 through2@^3.0.1:
@@ -5717,10 +5688,10 @@ write@1.0.3:
   dependencies:
     mkdirp "^0.5.1"
 
-written-number@^0.8.1:
-  version "0.8.1"
-  resolved "https://registry.yarnpkg.com/written-number/-/written-number-0.8.1.tgz#6ca4f248e06f929b46ce3ce9bb4779d18fc95426"
-  integrity sha512-/JsYGK+h7t1aPtaxlm2dMXVsyJTaT0bakDHjdgrpuie3KLjF55J0Qx9u38o2Kt9eMUMuCfsZDwJnjntl0crYUw==
+written-number@^0.9.1:
+  version "0.9.1"
+  resolved "https://registry.yarnpkg.com/written-number/-/written-number-0.9.1.tgz#a400a4d2d6ca2575ad2afc62dc28d2d9f94f5e7e"
+  integrity sha512-tl2EquIdCYnEeGu3p71GRsEJSqnD15CXjVtR6Hl0AFO0PrQ+SATIe3Sf4phaaKwLIuGRzWmA4+sThjJCZqwK1A==
 
 xdg-basedir@^3.0.0:
   version "3.0.0"
