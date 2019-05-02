@@ -155,6 +155,10 @@ whiteList:
     slug: grand-poitiers
     homepage: https://data.grandpoitiers.fr/explore/dataset/referentiel-geographique-adresses-ban-gpcu-grand-poitiers-donnees-de-reference/information/
 
+  - name: Référentiel Adresses du Pays Compiégnois
+    url: http://geo.compiegnois.fr/documents/referentiel/adresse/bal/payscompiegnois_bal.csv
+    dataset: 5bf2b569634f410e3285adda
+
 blackList:
   - name: BAL Cap Atlantique / Nantes Métropole
     dataset: 5bc53abf06e3e76f9a88f2c4
