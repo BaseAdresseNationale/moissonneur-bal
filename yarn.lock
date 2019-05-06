@@ -42,10 +42,10 @@
     papaparse "^4.6.3"
     yargs "^13.2.2"
 
-"@etalab/decoupage-administratif@^0.5.0":
-  version "0.5.0"
-  resolved "https://registry.yarnpkg.com/@etalab/decoupage-administratif/-/decoupage-administratif-0.5.0.tgz#38a2bb0cd39887724b41c6883af5aff41d5507a3"
-  integrity sha512-M8r6vNqIzTY9E2Is0QK444dVRMluDY2El9Y/qqeFPktMzagN/gkM+jWHV7cirmAd3WVS4bvo4ne3ESkkJYWfYQ==
+"@etalab/decoupage-administratif@^0.5.1":
+  version "0.5.1"
+  resolved "https://registry.yarnpkg.com/@etalab/decoupage-administratif/-/decoupage-administratif-0.5.1.tgz#292e0686225fb1d94b4e8c989b728d6f8727a07b"
+  integrity sha512-W1IOVpPNlCRLN2W+ImKX98qaBO1mEyWl01u7uifKF7+KUcPdXMQv8RkE/xNYJ+RVD13W4Px8ycBlP/N6yb6n9g==
 
 "@etalab/fantoir@^0.7.0":
   version "0.7.0"
@@ -1796,12 +1796,12 @@ codepage@~1.14.0:
     commander "~2.14.1"
     exit-on-epipe "~1.0.1"
 
-codes-postaux@^3.0.0:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/codes-postaux/-/codes-postaux-3.0.0.tgz#1c5bf7824c8df7f17b2c26ac7c72f2770912a8fd"
-  integrity sha512-sytW/ZXwPDMQsoBKvzIAMj7TilHVA3z+IkSp5HLt0G04OjR6NXM13JxquYFbmUZW71zI0+LZN4dGhxKA26PPxQ==
+codes-postaux@^3.2.0:
+  version "3.2.0"
+  resolved "https://registry.yarnpkg.com/codes-postaux/-/codes-postaux-3.2.0.tgz#0cb958a42d1d0e7a61c4822e3f1dc90aa4f43335"
+  integrity sha512-3P82zaJK4p+PsUhLpxLFR3aLqvDhCioutb0/5eGtfSwRGz5bHWV/3GXw2Y7AghGkUOQ4aMsEpmBG/9Q0PK25gQ==
   dependencies:
-    lodash "^4.17.5"
+    lodash "^4.17.11"
 
 collection-visit@^1.0.0:
   version "1.0.0"
@@ -2215,10 +2215,10 @@ dot-prop@^4.1.0:
   dependencies:
     is-obj "^1.0.0"
 
-dotenv@^7.0.0:
-  version "7.0.0"
-  resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-7.0.0.tgz#a2be3cd52736673206e8a85fb5210eea29628e7c"
-  integrity sha512-M3NhsLbV1i6HuGzBUH8vXrtxOk+tWmzWKDMbAVSUp3Zsjm7ywFeuwrUXhmhQyRK1q5B5GGy7hcXPbj3bnfZg2g==
+dotenv@^8.0.0:
+  version "8.0.0"
+  resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-8.0.0.tgz#ed310c165b4e8a97bb745b0a9d99c31bda566440"
+  integrity sha512-30xVGqjLjiUOArT4+M5q9sYdvuR4riM6yK9wMcas9Vbp6zZa+ocC9dp6QoftuhTPhFAiLK/0C5Ni2nou/Bk8lg==
 
 duplexer3@^0.1.4:
   version "0.1.4"
@@ -3751,7 +3751,7 @@ lodash@4.1.x:
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.1.0.tgz#299894283de01a9eefbedff4c4b9b00a6a2e6e96"
   integrity sha1-KZiUKD3gGp7vvt/0xLmwCmoubpY=
 
-lodash@^4.13.1, lodash@^4.17.11, lodash@^4.17.4, lodash@^4.17.5, lodash@^4.6.1:
+lodash@^4.13.1, lodash@^4.17.11, lodash@^4.17.4, lodash@^4.6.1:
   version "4.17.11"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.11.tgz#b39ea6229ef607ecd89e2c8df12536891cac9b8d"
   integrity sha512-cQKh8igo5QUhZ7lg38DYWAxMvjSAKG0A8wGSVimP07SIUEK2UO+arSRKbRZWtelMtN5V0Hkwh5ryOto/SshYIg==
