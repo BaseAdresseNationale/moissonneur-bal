@@ -14,8 +14,8 @@
   "dependencies": {
     "@etalab/adresses-util": "^0.6.0",
     "@etalab/bal": "^0.17.0",
-    "@etalab/decoupage-administratif": "^0.5.1",
-    "@etalab/fantoir": "^0.7.0",
+    "@etalab/decoupage-administratif": "^0.6.2",
+    "@etalab/fantoir": "^0.7.1",
     "@keyv/sqlite": "^2.0.0",
     "@turf/turf": "^5.1.6",
     "bluebird": "^3.5.4",
@@ -34,14 +34,14 @@
     "keyv": "^3.1.0",
     "leven": "^3.1.0",
     "lodash": "^4.17.11",
-    "node-xlsx": "^0.14.1",
+    "node-xlsx": "^0.15.0",
     "papaparse": "^4.6.3",
     "proj4": "^2.5.0",
     "pumpify": "^1.5.1",
     "srs": "^1.2.0",
     "strip-bom-buf": "^2.0.0",
     "through2": "^3.0.1",
-    "tmp-promise": "^1.0.5"
+    "tmp-promise": "^1.1.0"
   },
   "devDependencies": {
     "xo": "^0.24.0"
