@@ -1,5 +1,6 @@
 computedFields:
   - codeVoie
+  - codeCommune
 resources:
   default:
     url: https://data.bordeaux-metropole.fr/files.php?gid=866&format=2
@@ -8,7 +9,6 @@ resources:
       numero: NUMERO
       suffixe: REP
       nomVoie: NOM_VOIE
-      codeCommune: CINSEE
       codePostal: CPOSTAL
       lon: _geometry.coordinates.0
       lat: _geometry.coordinates.1

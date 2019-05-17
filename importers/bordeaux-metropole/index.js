@@ -7,4 +7,9 @@ function codeVoie(data) {
   return FANTOIR.substr(0, 4)
 }
 
-module.exports = {codeVoie}
+function codeCommune(data) {
+  const {CINSEE} = data._default
+  return CINSEE.length === 3 ? '33' + CINSEE : CINSEE
+}
+
+module.exports = {codeVoie, codeCommune}
