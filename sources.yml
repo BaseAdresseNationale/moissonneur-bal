@@ -159,6 +159,10 @@ whiteList:
     url: http://geo.compiegnois.fr/documents/referentiel/adresse/bal/payscompiegnois_bal.csv
     dataset: 5bf2b569634f410e3285adda
 
+  - name: Ville de Marseille
+    url: https://adresse.data.gouv.fr/data/sources-locales/marseille/bal.csv
+    slug: marseille
+
 blackList:
   - name: BAL Cap Atlantique / Nantes Métropole
     dataset: 5bc53abf06e3e76f9a88f2c4
