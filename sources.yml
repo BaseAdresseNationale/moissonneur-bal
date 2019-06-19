@@ -163,6 +163,11 @@ whiteList:
     url: https://adresse.data.gouv.fr/data/sources-locales/marseille/bal.csv
     slug: marseille
 
+  - name: BAL de la Communauté d'Agglomération du Puy-en-Velay
+    url: https://opendata.agglo-lepuyenvelay.fr/geoadressage/opendata/adresses/bal
+    organization: 5cd531978b4c41605df23b89
+    slug: agglo-lepuyenvelay
+
 blackList:
   - name: BAL Cap Atlantique / Nantes Métropole
     dataset: 5bc53abf06e3e76f9a88f2c4
