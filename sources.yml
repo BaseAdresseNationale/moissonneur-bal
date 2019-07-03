@@ -200,3 +200,7 @@ blackList:
   - name: Ville de Nancy
     dataset: 5ce6b0ea8b4c414941e1d2d5
     # Inversion latitude et longitude, licence ODbL alors que les données Grand Nancy sont disponibles en LO
+
+  - name: Sixt-sur-Aff
+    dataset: 5d1b155b634f41553150048e
+    # Non valide
