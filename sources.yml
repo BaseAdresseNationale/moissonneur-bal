@@ -1,8 +1,9 @@
 whiteList:
-  - name: Angers
-    importer: angers-loire-metropole
-    dataset: 5a980549b59508758b84c018
-    homepage: https://data.angers.fr/explore/dataset/points-adresse-angers/
+  - name: Base adresse locale - Angers
+    slug: angers
+    url: https://data.angers.fr/explore/dataset/base-adresse-locale-angers/download/?format=csv&timezone=Europe/Berlin&use_labels_for_header=true
+    organization: 538346d6a3a72906c7ec5c36
+    homepage: https://data.angers.fr/explore/dataset/base-adresse-locale-angers/
 
   - name: Bordeaux Métropole
     importer: bordeaux-metropole
