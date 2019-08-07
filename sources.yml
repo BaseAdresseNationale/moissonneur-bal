@@ -169,6 +169,10 @@ whiteList:
     organization: 5cd531978b4c41605df23b89
     slug: agglo-lepuyenvelay
 
+  - name: BAL du Grand Belfort
+    url: http://belfort-cab.opendata.arcgis.com/datasets/1475ecd2d6fb4f83bb8cd78b17b6dd10_0.csv
+    dataset: 5d4a150b9ce2e72797fae2e2
+
 blackList:
   - name: BAL Cap Atlantique / Nantes Métropole
     dataset: 5bc53abf06e3e76f9a88f2c4
