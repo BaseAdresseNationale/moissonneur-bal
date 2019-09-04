@@ -206,3 +206,7 @@ blackList:
   - name: Sixt-sur-Aff
     dataset: 5d1b155b634f41553150048e
     # Non valide
+
+  - name: Pirae (Polynésie française)
+    dataset: 5d5f25846f444112e0dfc2cd
+    # Non supporté à ce stade
