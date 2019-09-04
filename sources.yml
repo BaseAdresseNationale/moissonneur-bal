@@ -91,10 +91,7 @@ whiteList:
     homepage: http://www.antibes-juanlespins.com/administration/open-data/administration/base-adresses-locales-bal
 
   - name: CARENE
-    url: https://data.agglo-carene.fr/explore/dataset/244400644_bal/download/?format=csv&timezone=Europe/Berlin&use_labels_for_header=true
-    slug: carene
-    organization: 5733009988ee3843a3d1b934
-    homepage: https://data.agglo-carene.fr/explore/dataset/244400644_bal/table/
+    dataset: 5d69b8bb9ce2e735f2d005b6
 
   - name: Loire Forez Agglomération
     dataset: 5bed86a78b4c41546f05613c
