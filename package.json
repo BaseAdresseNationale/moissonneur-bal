@@ -32,7 +32,6 @@
     "iconv-lite": "^0.5.0",
     "js-yaml": "^3.13.1",
     "keyv": "^3.1.0",
-    "leven": "^3.1.0",
     "lodash": "^4.17.13",
     "node-xlsx": "^0.15.0",
     "papaparse": "^5.0.0",
