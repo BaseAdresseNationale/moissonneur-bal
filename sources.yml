@@ -46,11 +46,6 @@ whiteList:
     organization: 5847cb5cc751df5d58c0bb7e
     homepage: http://data.montpellier3m.fr/dataset/point-adresse-de-montpellier
 
-  - name: Mulhouse Alsace Agglomération
-    importer: mulhouse-alsace-agglomeration
-    dataset: 5be560f59ce2e72d66831010
-    homepage: https://data.mulhouse-alsace.fr/explore/dataset/m2a_base-adresse/information/
-
   - name: Ville de Nanterre
     importer: nanterre-ville
     dataset: 5ad75e1dc751df42a0357f8c
