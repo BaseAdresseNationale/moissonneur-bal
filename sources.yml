@@ -163,6 +163,10 @@ whiteList:
   - name: Base Adresse Locale de Mulhouse Alsace Agglomération
     dataset: 5d72f6789ce2e74868d00585
 
+  - name: Base Adresse Locale SMICA
+    importer: smica
+    dataset: 5d7f3dd3634f41251f71d68a
+
 blackList:
   - name: BAL Cap Atlantique / Nantes Métropole
     dataset: 5bc53abf06e3e76f9a88f2c4

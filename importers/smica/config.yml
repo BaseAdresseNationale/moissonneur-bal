@@ -1,0 +1,11 @@
+resources:
+  default:
+    url: https://static.data.gouv.fr/resources/base-adresse-locale-smica-16-09-2019/20190916-095749/bal-smica-2019-09-16.csv
+    format: csv
+    fields:
+      nomVoie: nom_voie
+      numero: numero
+      suffixe: rep
+      codeCommune: insee
+      lon: lon
+      lat: lat
