@@ -1,0 +1,12 @@
+computedFields:
+  - codeCommune
+resources:
+  default:
+    url: http://opendata-sig.saintdenis.re/datasets/8d1ecea8c2ec48e2911004e309f96e4f_33.geojson
+    format: geojson
+    fields:
+      nomVoie: index_
+      numero: num_voi
+      suffixe: num_suf
+      lon: _geometry.coordinates.0
+      lat: _geometry.coordinates.1

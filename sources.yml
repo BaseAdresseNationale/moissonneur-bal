@@ -167,6 +167,10 @@ whiteList:
     importer: smica
     dataset: 5d7f3dd3634f41251f71d68a
 
+  - name: Adresses de Saint-Denis (La Réunion)
+    importer: saint-denis-reunion
+    dataset: 5d2e6b939ce2e7643a90b663
+
 blackList:
   - name: BAL Cap Atlantique / Nantes Métropole
     dataset: 5bc53abf06e3e76f9a88f2c4
