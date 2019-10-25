@@ -171,6 +171,10 @@ whiteList:
     importer: saint-denis-reunion
     dataset: 5d2e6b939ce2e7643a90b663
 
+  - name: Adresses d’Innimond
+    importer: innimond
+    slug: innimond
+
 blackList:
   - name: BAL Cap Atlantique / Nantes Métropole
     dataset: 5bc53abf06e3e76f9a88f2c4

@@ -1,0 +1,12 @@
+
+computedFields:
+  - codeCommune
+resources:
+  default:
+    url: https://adresse.data.gouv.fr/data/sources-locales/01190-innimond/adresses INNIMOND 2019.xlsx
+    format: sheet
+    fields:
+      numero: Num
+      nomVoie: Rue
+      lon: longitude
+      lat: latitude
