@@ -171,6 +171,10 @@ whiteList:
     importer: innimond
     slug: innimond
 
+  - name: Référentiel Adresse Ville et Eurométropole de Strasbourg
+    dataset: 5dc58eed06e3e769e8832c5e
+    importer: strasbourg-metropole
+
 blackList:
   - name: BAL Cap Atlantique / Nantes Métropole
     dataset: 5bc53abf06e3e76f9a88f2c4
