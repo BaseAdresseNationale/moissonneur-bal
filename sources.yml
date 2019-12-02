@@ -134,7 +134,7 @@ whiteList:
     slug: digne-les-bains
 
   - name: Grand Poitiers
-    url: https://data.grandpoitiers.fr/explore/dataset/referentiel-geographique-adresses-ban-gpcu-grand-poitiers-donnees-de-reference/download/?format=csv&timezone=Europe/Berlin&use_labels_for_header=true
+    importer: grand-poitiers
     organization: 54da1f52c751df59f7467389
     slug: grand-poitiers
     homepage: https://data.grandpoitiers.fr/explore/dataset/referentiel-geographique-adresses-ban-gpcu-grand-poitiers-donnees-de-reference/information/
