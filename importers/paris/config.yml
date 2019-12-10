@@ -13,8 +13,8 @@ resources:
       lon: _geometry.coordinates.0
       lat: _geometry.coordinates.1
   voies:
-    url: https://opendata.paris.fr/explore/dataset/voie/download/?format=csv&timezone=Europe/Berlin
-    format: csv
+    url: https://opendata.paris.fr/explore/dataset/voie/download/?format=geojson&timezone=Europe/Berlin
+    format: geojson
     fields:
       _idVoie: n_sq_vo
       nomVoie: l_longmin
