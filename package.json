@@ -27,7 +27,7 @@
     "end-of-stream": "^1.4.4",
     "epsg-index": "^1.0.0",
     "fs-extra": "^8.1.0",
-    "gdal": "^0.9.9",
+    "gdal-next": "^0.10.0",
     "got": "^10.0.3",
     "iconv-lite": "^0.5.0",
     "js-yaml": "^3.13.1",
@@ -53,6 +53,6 @@
     }
   },
   "engines": {
-    "node": ">=10 <12"
+    "node": "12.x"
   }
 }
