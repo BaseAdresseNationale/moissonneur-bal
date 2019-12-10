@@ -2882,14 +2882,6 @@ gdal@^0.9.9:
     nan "~2.10.0"
     node-pre-gyp "^0.13.0"
 
-gdal@~0.9.2:
-  version "0.9.8"
-  resolved "https://registry.yarnpkg.com/gdal/-/gdal-0.9.8.tgz#d482fbcdca47d388325903c9aa342b09fb21319b"
-  integrity sha512-qSG8/W8qyJbKkmc1/B9mJwRZPbKEGkqlipsAfVMch/R2Qi9Wl1bpkLv7cAHd1urUA1d3MowpovHmSwQq4ZyvUw==
-  dependencies:
-    nan "~2.10.0"
-    node-pre-gyp "^0.11.0"
-
 generate-object-property@^1.0.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/generate-object-property/-/generate-object-property-1.2.0.tgz#9c0e1c40308ce804f4783618b937fa88f99d50d0"
@@ -5168,13 +5160,6 @@ sqlite3@4.0.8:
     nan "^2.12.1"
     node-pre-gyp "^0.11.0"
     request "^2.87.0"
-
-srs@^1.2.0:
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/srs/-/srs-1.2.0.tgz#ecb447854df76ceb12b4529032be23e9e18eecdc"
-  integrity sha1-7LRHhU33bOsStFKQMr4j6eGO7Nw=
-  dependencies:
-    gdal "~0.9.2"
 
 ssf@~0.10.2:
   version "0.10.2"
