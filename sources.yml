@@ -220,6 +220,9 @@ blackList:
     dataset: 5cae8d809ce2e728debc8895
     # Extraction BAN
 
+  - name: BAL Occitanie
+    dataset: 5cf8590f9ce2e754d646d40a
+
   - name: Base Adresse Locale sur le territoire de la Métropole NCA
     dataset: 5c2459b206e3e7551204ccef
     # Alternative moins complète au format BAL, et invalide
