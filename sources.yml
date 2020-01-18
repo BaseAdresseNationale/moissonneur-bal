@@ -171,9 +171,8 @@ whiteList:
     importer: innimond
     slug: innimond
 
-  - name: Référentiel Adresse Ville et Eurométropole de Strasbourg
-    dataset: 5dc58eed06e3e769e8832c5e
-    importer: strasbourg-metropole
+  - name: Base Adresse Locale Ville et Eurométropole de Strasbourg
+    dataset: 5e1db6f58b4c412993c89f08
 
 blackList:
   - name: BAL Cap Atlantique / Nantes Métropole
@@ -226,3 +225,7 @@ blackList:
   - name: Base Adresse Locale sur le territoire de la Métropole NCA
     dataset: 5c2459b206e3e7551204ccef
     # Alternative moins complète au format BAL, et invalide
+
+  - name: BAL Ville de Strasbourg
+    dataset: 5a1d7bfac751df78b0abff7d
+    # BAL désormais obsolète. Remplacée par BAL de la métropole
