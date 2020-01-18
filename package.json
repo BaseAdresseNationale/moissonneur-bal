@@ -42,14 +42,15 @@
     "tmp-promise": "^2.0.2"
   },
   "devDependencies": {
-    "xo": "^0.24.0"
+    "xo": "^0.25.3"
   },
   "xo": {
     "space": 2,
     "semicolon": false,
     "rules": {
       "camelcase": "off",
-      "capitalized-comments": "warn"
+      "unicorn/prefer-string-slice": "off",
+      "prefer-named-capture-group": "off"
     }
   },
   "engines": {
