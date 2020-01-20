@@ -5,7 +5,7 @@ resources:
     fields:
       nomVoie: nom_voie
       numero: numero
-      suffixe: rep
+      suffixe: suffixe
       codeCommune: insee
       lon: lon
       lat: lat
