@@ -1,10 +1,4 @@
 whiteList:
-  - name: Base adresse locale - Angers
-    slug: angers
-    url: https://data.angers.fr/explore/dataset/base-adresse-locale-angers/download/?format=csv&timezone=Europe/Berlin&use_labels_for_header=true
-    organization: 538346d6a3a72906c7ec5c36
-    homepage: https://data.angers.fr/explore/dataset/base-adresse-locale-angers/
-
   - name: Bordeaux Métropole
     importer: bordeaux-metropole
     dataset: 5a02bf6188ee38130d1057c9
@@ -73,30 +67,14 @@ whiteList:
     organization: 5acb2f2088ee3813a476714d
     homepage: http://datarmor.cotesdarmor.fr/data-presentation-ux/#/cg22/datasets/2200542_base_adresse_locale/views/desc
     odbl: true
+    # Non référencé sur data.gouv.fr à ce jour
 
   - name: Antibes - Juan-les-Pins
     url: http://www.antibes-juanlespins.com/OpenData/Antibes_base_adresses_locales.csv
     slug: antibes-juan-les-pins
     organization: 566594f388ee38738640355c
     homepage: http://www.antibes-juanlespins.com/administration/open-data/administration/base-adresses-locales-bal
-
-  - name: CARENE
-    dataset: 5d69b8bb9ce2e735f2d005b6
-
-  - name: Loire Forez Agglomération
-    dataset: 5bed86a78b4c41546f05613c
-    # Liste blanche pour réécriture du titre
-
-  - name: Le Plessis-Trévise
-    dataset: 5bbcc694634f411d5e251ca6
-    # Liste blanche pour réécriture du titre
-
-  - name: Toulouse Métropole
-    dataset: 5bc6d04e9ce2e726fa422d3e
-    # Liste blanche pour réécriture du titre
-
-  # Commune d'Anglet
-  - dataset: 5cac5d4c9ce2e71425bc8896
+    # Non référencé sur data.gouv.fr à ce jour
 
   - name: Grenoble
     dataset: 5af03721b595081c1c80a8ad
@@ -128,36 +106,25 @@ whiteList:
     importer: bassussarry
     slug: bassussarry
 
-  - name: Base Adresse Locale de Digne-les-Bains
-    url: https://trouver.datasud.fr/dataset/e198ead6-047b-4608-b1d7-7d488a773193/resource/a7a05846-037e-42cc-8f66-0197c64f4f5c/download/digne-bal-2018.csv
-    homepage: https://trouver.datasud.fr/dataset/base-adresse-locale-de-digne-les-bains
-    slug: digne-les-bains
-
   - name: Grand Poitiers
     importer: grand-poitiers
-    organization: 54da1f52c751df59f7467389
-    slug: grand-poitiers
-    homepage: https://data.grandpoitiers.fr/explore/dataset/referentiel-geographique-adresses-ban-gpcu-grand-poitiers-donnees-de-reference/information/
+    dataset: 5513078dc751df0cfbcea12b
 
   - name: Référentiel Adresses du Pays Compiégnois
     url: http://geo.compiegnois.fr/documents/referentiel/adresse/bal/payscompiegnois_bal.csv
     dataset: 5bf2b569634f410e3285adda
+    # By-pass de geo.data.gouv.fr (cache non pertinent)
 
   - name: Ville de Marseille
     url: https://adresse.data.gouv.fr/data/sources-locales/marseille/bal.csv
     slug: marseille
+    # Non référencé sur data.gouv.fr
 
   - name: BAL de la Communauté d'Agglomération du Puy-en-Velay
     url: https://opendata.agglo-lepuyenvelay.fr/geoadressage/opendata/adresses/bal
     organization: 5cd531978b4c41605df23b89
     slug: agglo-lepuyenvelay
-
-  - name: BAL du Grand Belfort
-    url: http://belfort-cab.opendata.arcgis.com/datasets/1475ecd2d6fb4f83bb8cd78b17b6dd10_0.csv
-    dataset: 5d4a150b9ce2e72797fae2e2
-
-  - name: Base Adresse Locale de Mulhouse Alsace Agglomération
-    dataset: 5d72f6789ce2e74868d00585
+    # Non référencé sur data.gouv.fr
 
   - name: Base Adresse Locale SMICA
     importer: smica
@@ -171,22 +138,7 @@ whiteList:
     importer: innimond
     slug: innimond
 
-  - name: Base Adresse Locale Ville et Eurométropole de Strasbourg
-    dataset: 5e1db6f58b4c412993c89f08
-
 blackList:
-  - name: BAL Cap Atlantique / Nantes Métropole
-    dataset: 5bc53abf06e3e76f9a88f2c4
-    # Doublon lié au moissonnage OpenDataSoft
-
-  - name: BAL Cap Atlantique / Pays de la Loire
-    dataset: 5bd9067a06e3e739998c0ebb
-    # Doublon lié au moissonnage OpenDataSoft
-
-  - name: Bayonne
-    dataset: 5b0c070dc751df3203606268
-    # Fichier expérimental qui n'est plus mis à jour mais non supprimé à la source
-
   - name: Ville de Lorient - Rattachement des secteurs
     dataset: 5c70a7f99ce2e760225908e1
     # Non pertinent
@@ -203,10 +155,6 @@ blackList:
     dataset: 5c70a7f806e3e755537bb84c
     # Non pertinent
 
-  - name: Ville de Nancy
-    dataset: 5ce6b0ea8b4c414941e1d2d5
-    # Inversion latitude et longitude, licence ODbL alors que les données Grand Nancy sont disponibles en LO
-
   - name: Sixt-sur-Aff
     dataset: 5d1b155b634f41553150048e
     # Non valide
@@ -221,6 +169,7 @@ blackList:
 
   - name: BAL Occitanie
     dataset: 5cf8590f9ce2e754d646d40a
+    # Extraction BAN
 
   - name: Base Adresse Locale sur le territoire de la Métropole NCA
     dataset: 5c2459b206e3e7551204ccef
