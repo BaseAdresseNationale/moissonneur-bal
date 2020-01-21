@@ -126,10 +126,6 @@ whiteList:
     slug: agglo-lepuyenvelay
     # Non référencé sur data.gouv.fr
 
-  - name: Base Adresse Locale SMICA
-    importer: smica
-    dataset: 5d7f3dd3634f41251f71d68a
-
   - name: Adresses de Saint-Denis (La Réunion)
     importer: saint-denis-reunion
     dataset: 5d2e6b939ce2e7643a90b663
