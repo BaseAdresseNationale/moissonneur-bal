@@ -29,10 +29,10 @@
     talisman "^0.21.0"
     written-number "^0.9.1"
 
-"@etalab/bal@^0.20.3":
-  version "0.20.3"
-  resolved "https://registry.yarnpkg.com/@etalab/bal/-/bal-0.20.3.tgz#9414a656aa5ff4937df04dd4b9122ce65d89753b"
-  integrity sha512-NRTrepkmT0wPMSsaxQ95QLGvbsCBzzNWIfli2y1+lwz58icjRPdp4WC4QbJZ7GD+6dKJDtRp3UmxfTyDBkmM5w==
+"@etalab/bal@^0.20.4":
+  version "0.20.4"
+  resolved "https://registry.yarnpkg.com/@etalab/bal/-/bal-0.20.4.tgz#6104bd3c44a9f2eb8386ab00e38c328b6865f00c"
+  integrity sha512-PZYk3yHSPPmsPAwsaoUUJI1QzNkCbCOap9BANE4LuuSE/Jr2bBlgpIE5jVgfnKysz8zO1C/3AFQ2l9UpRtdleA==
   dependencies:
     blob-to-buffer "^1.2.8"
     date-fns "^2.9.0"
