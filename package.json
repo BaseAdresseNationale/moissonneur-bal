@@ -39,7 +39,8 @@
     "pumpify": "^2.0.1",
     "strip-bom-buf": "^2.0.0",
     "through2": "^3.0.1",
-    "tmp-promise": "^2.0.2"
+    "tmp-promise": "^2.0.2",
+    "worker-farm": "^1.7.0"
   },
   "devDependencies": {
     "xo": "^0.25.3"

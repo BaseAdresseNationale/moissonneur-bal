@@ -12,6 +12,7 @@ const {getCommune} = require('./lib/cog')
 const {createCsvFilesWriter} = require('./lib/csv')
 const {computeList} = require('./lib/sources')
 const importData = require('./lib/import-data')
+const {endFarms} = require('./lib/farms')
 
 const db = new Keyv('sqlite://bal.sqlite')
 const distPath = join(__dirname, 'dist')
@@ -75,9 +76,12 @@ async function main() {
   }, 0)
 
   console.log(`Population couverte : ${populationCount}`)
+
+  endFarms()
 }
 
 main().catch(error => {
   console.error(error)
+  endFarms()
   process.exit(1)
 })
