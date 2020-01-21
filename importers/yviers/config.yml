@@ -1,0 +1,12 @@
+beautify: true
+computedFields:
+  - codeCommune
+resources:
+  default:
+    url: https://static.data.gouv.fr/resources/adresses-de-la-commune-dyviers/20200121-173938/adresses-2019-12.csv
+    format: csv
+    fields:
+      numeroComplet: Numéro
+      nomVoie: Nom de la voie
+      lon: Longitude (WGS 84)
+      lat: Latitude (WGS 84)

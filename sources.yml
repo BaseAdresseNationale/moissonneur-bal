@@ -138,6 +138,10 @@ whiteList:
     importer: innimond
     slug: innimond
 
+  - name: Adresses d’Yviers
+    importer: yviers
+    dataset: 5e2729468b4c410cadcd7407
+
 blackList:
   - name: Ville de Lorient - Rattachement des secteurs
     dataset: 5c70a7f99ce2e760225908e1
