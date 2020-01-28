@@ -106,9 +106,9 @@ whiteList:
     importer: bassussarry
     slug: bassussarry
 
-  - name: Grand Poitiers
+  - name: BAL du Grand Poitiers
     importer: grand-poitiers
-    dataset: 5513078dc751df0cfbcea12b
+    dataset: 5e3007a28b4c416184143179
 
   - name: Référentiel Adresses du Pays Compiégnois
     url: http://geo.compiegnois.fr/documents/referentiel/adresse/bal/payscompiegnois_bal.csv
