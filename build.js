@@ -11,7 +11,7 @@ const {computeMetaFromSource, expandMetaWithResults} = require('./lib/meta')
 const {getCommune} = require('./lib/cog')
 const {createCsvFilesWriter} = require('./lib/csv')
 const {computeList} = require('./lib/sources')
-const importData = require('./lib/import-data')
+const importData = require('./lib/importers')
 const {endFarms} = require('./lib/util/farms')
 
 const db = new Keyv('sqlite://bal.sqlite')
