@@ -29,10 +29,10 @@ async function main() {
   await db.clear()
 
   const datasets = await bluebird.mapSeries(sources, async source => {
-    console.log(chalk.green(` * ${source.title} (${source.model})`))
+    console.log(chalk.green(` * ${source.meta.title} (${source.meta.model})`))
     const {data, errored, report} = await importData(source)
     data.forEach(r => {
-      r.licence = source.license
+      r.licence = source.meta.license
     })
     const codesCommunes = uniq(data.map(c => c.codeCommune))
     console.log(chalk.gray(`    Adresses trouvées : ${data.length}`))
@@ -43,16 +43,16 @@ async function main() {
     }
 
     const tree = extractAsTree(data)
-    expandMetaWithResults(source, {tree, report, errored})
-    await db.set(`${source.id}-data`, tree)
+    expandMetaWithResults(source.meta, {tree, report, errored})
+    await db.set(`${source.meta.id}-data`, tree)
     if (report) {
-      await db.set(`${source.id}-report`, report)
+      await db.set(`${source.meta.id}-report`, report)
     }
 
     data.forEach(r => csvFiles.writeRow(r))
     adressesCount += data.length
     codesCommunes.forEach(c => globalCommunes.add(c))
-    return source
+    return source.meta
   })
 
   await db.set('datasets', datasets)
