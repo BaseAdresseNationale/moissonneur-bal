@@ -7,7 +7,7 @@ const bluebird = require('bluebird')
 const {uniq} = require('lodash')
 const chalk = require('chalk')
 const {extractAsTree} = require('@etalab/bal')
-const {computeMetaFromSource, expandMetaWithResults} = require('./lib/meta')
+const {expandMetaWithResults} = require('./lib/meta')
 const {getCommune} = require('./lib/cog')
 const {createCsvFilesWriter} = require('./lib/csv')
 const {computeList} = require('./lib/sources')
@@ -29,11 +29,10 @@ async function main() {
   await db.clear()
 
   const datasets = await bluebird.mapSeries(sources, async source => {
-    const meta = computeMetaFromSource(source)
-    console.log(chalk.green(` * ${meta.title} (${meta.model})`))
+    console.log(chalk.green(` * ${source.title} (${source.model})`))
     const {data, errored, report} = await importData(source)
     data.forEach(r => {
-      r.licence = meta.license
+      r.licence = source.license
     })
     const codesCommunes = uniq(data.map(c => c.codeCommune))
     console.log(chalk.gray(`    Adresses trouvées : ${data.length}`))
@@ -44,16 +43,16 @@ async function main() {
     }
 
     const tree = extractAsTree(data)
-    expandMetaWithResults(meta, {tree, report, errored})
-    await db.set(`${meta.id}-data`, tree)
+    expandMetaWithResults(source, {tree, report, errored})
+    await db.set(`${source.id}-data`, tree)
     if (report) {
-      await db.set(`${meta.id}-report`, report)
+      await db.set(`${source.id}-report`, report)
     }
 
     data.forEach(r => csvFiles.writeRow(r))
     adressesCount += data.length
     codesCommunes.forEach(c => globalCommunes.add(c))
-    return meta
+    return source
   })
 
   await db.set('datasets', datasets)
