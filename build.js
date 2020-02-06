@@ -11,6 +11,7 @@ const {expandMetaWithResults} = require('./lib/meta')
 const {getCommune} = require('./lib/cog')
 const {createCsvFilesWriter} = require('./lib/exports/csv')
 const {computeList} = require('./lib/sources')
+const {fetchResources} = require('./lib/fetch')
 const importData = require('./lib/importers')
 const {endFarms} = require('./lib/util/farms')
 
@@ -30,6 +31,7 @@ async function main() {
 
   const datasets = await bluebird.mapSeries(sources, async source => {
     console.log(chalk.green(` * ${source.meta.title} (${source.meta.model})`))
+    await fetchResources(source.resources)
     const {data, errored, report} = await importData(source)
     data.forEach(r => {
       r.licence = source.meta.license
