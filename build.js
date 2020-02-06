@@ -18,6 +18,21 @@ const {endFarms} = require('./lib/util/farms')
 const db = new Keyv('sqlite://bal.sqlite')
 const distPath = join(__dirname, 'dist')
 
+const processedDataCache = new Keyv('sqlite://processed-data.cache.sqlite')
+
+async function getData(source) {
+  const {meta, resourcesHash} = source
+  const cacheEntry = await processedDataCache.get(meta.id)
+
+  if (cacheEntry && cacheEntry.resourcesHash === resourcesHash) {
+    return cacheEntry.processedData
+  }
+
+  const processedData = await importData(source)
+  await processedDataCache.set(meta.id, {processedData, resourcesHash})
+  return processedData
+}
+
 async function main() {
   const sources = await computeList()
   const globalCommunes = new Set()
@@ -31,9 +46,11 @@ async function main() {
 
   const datasets = await bluebird.mapSeries(sources, async source => {
     console.log(chalk.green(` * ${source.meta.title} (${source.meta.model})`))
+
     await fetchResources(source.resources)
-    source.resourcesHash = hashResources(source.resources)
-    const {data, errored, report} = await importData(source)
+    source.resourcesHash = await hashResources(source.resources)
+
+    const {data, errored, report} = await getData(source)
     data.forEach(r => {
       r.licence = source.meta.license
     })
