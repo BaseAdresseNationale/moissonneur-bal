@@ -11,7 +11,7 @@ const {expandMetaWithResults} = require('./lib/meta')
 const {getCommune} = require('./lib/cog')
 const {createCsvFilesWriter} = require('./lib/exports/csv')
 const {computeList} = require('./lib/sources')
-const {fetchResources} = require('./lib/fetch')
+const {fetchResources} = require('./lib/resources')
 const importData = require('./lib/importers')
 const {endFarms} = require('./lib/util/farms')
 
