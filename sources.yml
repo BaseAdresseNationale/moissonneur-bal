@@ -70,10 +70,10 @@ whiteList:
     # Non référencé sur data.gouv.fr à ce jour
 
   - name: Antibes - Juan-les-Pins
-    url: http://www.antibes-juanlespins.com/OpenData/Antibes_base_adresses_locales.csv
+    url: https://trouver.datasud.fr/dataset/413f3916-a2ea-473b-bd66-dc280ada961e/resource/b2a55c3e-c878-4a06-ab49-a441a67fb949/download/antibes_base_adresses_locales.csv
     slug: antibes-juan-les-pins
     organization: 566594f388ee38738640355c
-    homepage: http://www.antibes-juanlespins.com/administration/open-data/administration/base-adresses-locales-bal
+    homepage: https://trouver.datasud.fr/dataset/base-adresse-locale-de-la-ville-dantibes-juan-les-pins
     # Non référencé sur data.gouv.fr à ce jour
 
   - name: Grenoble
