@@ -44,9 +44,7 @@ async function main() {
 
   await db.clear()
 
-  const datasets = await bluebird.mapSeries(sources, async source => {
-    console.log(chalk.green(` * ${source.meta.title} (${source.meta.model})`))
-
+  const datasets = await bluebird.map(sources, async source => {
     await fetchResources(source.resources)
     source.resourcesHash = await hashResources(source.resources)
 
@@ -55,6 +53,8 @@ async function main() {
       r.licence = source.meta.license
     })
     const codesCommunes = uniq(data.map(c => c.codeCommune))
+
+    console.log(chalk.green(` * ${source.meta.title} (${source.meta.model})`))
     console.log(chalk.gray(`    Adresses trouvées : ${data.length}`))
     console.log(chalk.gray(`    Communes : ${codesCommunes.length}`))
     if (errored) {
@@ -73,7 +73,7 @@ async function main() {
     adressesCount += data.length
     codesCommunes.forEach(c => globalCommunes.add(c))
     return source.meta
-  })
+  }, {concurrency: 8})
 
   await db.set('datasets', datasets)
 
