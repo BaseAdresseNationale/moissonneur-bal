@@ -12,26 +12,11 @@ const {getCommune} = require('./lib/cog')
 const {createCsvFilesWriter} = require('./lib/exports/csv')
 const {computeList} = require('./lib/sources')
 const {fetchResources, hashResources} = require('./lib/resources')
-const importData = require('./lib/importers')
+const {getData} = require('./lib/processing')
 const {endFarms} = require('./lib/util/farms')
 
 const db = new Keyv('sqlite://bal.sqlite')
 const distPath = join(__dirname, 'dist')
-
-const processedDataCache = new Keyv('sqlite://processed-data.cache.sqlite')
-
-async function getData(source) {
-  const {meta, resourcesHash} = source
-  const cacheEntry = await processedDataCache.get(meta.id)
-
-  if (cacheEntry && cacheEntry.resourcesHash === resourcesHash) {
-    return cacheEntry.processedData
-  }
-
-  const processedData = await importData(source)
-  await processedDataCache.set(meta.id, {processedData, resourcesHash})
-  return processedData
-}
 
 async function main() {
   const sources = await computeList()
