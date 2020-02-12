@@ -11,8 +11,7 @@ const {expandMetaWithResults} = require('./lib/meta')
 const {getCommune} = require('./lib/cog')
 const {createCsvFilesWriter} = require('./lib/exports/csv')
 const {computeList} = require('./lib/sources')
-const {fetchResources, hashResources} = require('./lib/resources')
-const {getData} = require('./lib/processing')
+const {processSource} = require('./lib/processing')
 const {endFarms} = require('./lib/util/farms')
 
 const db = new Keyv('sqlite://bal.sqlite')
@@ -30,10 +29,8 @@ async function main() {
   await db.clear()
 
   const datasets = await bluebird.map(sources, async source => {
-    await fetchResources(source.resources)
-    source.resourcesHash = await hashResources(source.resources)
+    const {data, errored, report} = await processSource(source)
 
-    const {data, errored, report} = await getData(source)
     data.forEach(r => {
       r.licence = source.meta.license
     })
