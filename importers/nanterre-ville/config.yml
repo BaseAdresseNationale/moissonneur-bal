@@ -1,6 +1,6 @@
 resources:
   default:
-    url: https://www.nanterre.fr/include/viewFile.php?idtf=11278&path=6a%2F11278_702_BDA_Adresse.zip
+    url: https://www.data.gouv.fr/fr/datasets/r/bb8de5fd-75c0-45b2-83ee-3ee1565d54ce
     format: shp
     fields:
       nomVoie: TYPE_VOIE + NOM_VOIE
