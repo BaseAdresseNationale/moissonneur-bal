@@ -138,6 +138,8 @@ whiteList:
     importer: yviers
     dataset: 5e2729468b4c410cadcd7407
 
+  - dataset: 5e5da5b706e3e705430a0bf6
+
 blackList:
   - name: Ville de Lorient - Rattachement des secteurs
     dataset: 5c70a7f99ce2e760225908e1
