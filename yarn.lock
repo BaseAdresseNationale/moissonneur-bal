@@ -3058,10 +3058,10 @@ gauge@~2.7.3:
     strip-ansi "^3.0.1"
     wide-align "^1.1.0"
 
-gdal-next@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/gdal-next/-/gdal-next-1.0.0.tgz#8b2e5ed03a05ee555eb5be3392ab5e343535c675"
-  integrity sha512-bK5j3vguDOEtFqa2pQ46AxzapE0SnZTh5RXG7VvflzPAfcnjIROp/YexVa5dWGUOUrKSaBNDVigLpFwplae07A==
+gdal-next@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/gdal-next/-/gdal-next-1.0.2.tgz#592adf6a2c386a68d1baa4ada44699536a4bd10d"
+  integrity sha512-BdtyCuFi32R2mz13AGwxFSZv12b14RSYY57gw0nU1LS2e6217u4Au8nV2ZP0KkA96Q2ZOo4RoKCUf7LuDz/Pnw==
   dependencies:
     nan "^2.14.0"
     node-pre-gyp "^0.14.0"
