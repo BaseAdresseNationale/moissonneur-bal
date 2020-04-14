@@ -3,13 +3,13 @@ computedFields:
   - codeCommune
 resources:
   default:
-    url: https://data.bordeaux-metropole.fr/files.php?gid=866&format=2
-    format: shp
+    url: https://opendata.bordeaux-metropole.fr/explore/dataset/fv_adresse_p/download/?format=geojson&timezone=Europe/Berlin&lang=fr
+    format: geojson
     fields:
-      numero: NUMERO
-      suffixe: REP
-      nomVoie: NOM_VOIE
-      codePostal: CPOSTAL
+      numero: numero
+      suffixe: rep
+      nomVoie: nom_voie
+      codePostal: cpostal
       lon: _geometry.coordinates.0
       lat: _geometry.coordinates.1
 

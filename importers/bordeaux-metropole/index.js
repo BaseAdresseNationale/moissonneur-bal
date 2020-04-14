@@ -1,15 +1,15 @@
 function codeVoie(data) {
-  const {FANTOIR} = data._default
-  if (!FANTOIR) {
+  const {fantoir} = data._default
+  if (!fantoir) {
     return undefined
   }
 
-  return FANTOIR.substr(0, 4)
+  return fantoir.substr(0, 4)
 }
 
 function codeCommune(data) {
-  const {CINSEE} = data._default
-  return CINSEE.length === 3 ? '33' + CINSEE : CINSEE
+  const {cinsee} = data._default
+  return cinsee.length === 3 ? '33' + cinsee : cinsee
 }
 
 module.exports = {codeVoie, codeCommune}
