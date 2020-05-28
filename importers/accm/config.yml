@@ -2,6 +2,7 @@ resources:
   default:
     url: http://webcarto.agglo-accm.fr/ressources/donnees_ouvertes/adresse.adr_accm_adresse.zip
     format: shp
+    encoding: utf-8
     fields:
       numero: NUM_VOI
       suffixe: SUF_VOI
