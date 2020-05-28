@@ -3383,12 +3383,12 @@ gauge@~2.7.3:
     strip-ansi "^3.0.1"
     wide-align "^1.1.0"
 
-gdal-next@^1.0.3:
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/gdal-next/-/gdal-next-1.0.3.tgz#97e24d01648126080b3f0b8302f2ddad918cb14e"
-  integrity sha512-L6QenrQcSR2ae/vheNZ7ZqI72ZidgsKYdDwol/J6rhVRGcvwLmbbasHGFfT3Df8jbEhhkdm2yi4Ui4t3RCmncg==
+gdal-next@0.10.0:
+  version "0.10.0"
+  resolved "https://registry.yarnpkg.com/gdal-next/-/gdal-next-0.10.0.tgz#e6c508a202833e3cde8bd7ecef25ea1695892c0a"
+  integrity sha512-3VIIASNoYO0wdbWFvw/x7ebgzSwQgTGmMxlZEJaB0nr9woAYtFu8qEUKNzUS6aGRAeeUcIGjjWHqQdbWFoHDmg==
   dependencies:
-    nan "^2.14.0"
+    nan "~2.14.0"
     node-pre-gyp "^0.14.0"
 
 generate-object-property@^1.0.0:
@@ -4771,7 +4771,7 @@ nan@^2.12.1:
   resolved "https://registry.yarnpkg.com/nan/-/nan-2.14.0.tgz#7818f722027b2459a86f0295d434d1fc2336c52c"
   integrity sha512-INOFj37C7k3AfaNTtX8RhsTw7qRy7eLET14cROi9+5HAVbbHuIWUHEauBv5qT4Av2tWasiTY1Jw6puUNqRJXQg==
 
-nan@^2.14.0:
+nan@~2.14.0:
   version "2.14.1"
   resolved "https://registry.yarnpkg.com/nan/-/nan-2.14.1.tgz#d7be34dfa3105b91494c3147089315eff8874b01"
   integrity sha512-isWHgVjnFjh2x2yuJ/tj3JbwoHu3UC2dX5G/88Cm24yB6YopVgxvBObDY7n5xW6ExmFhJpSEQqFPvq9zaXc8Jw==

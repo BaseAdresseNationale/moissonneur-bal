@@ -3,7 +3,7 @@ join:
     key: _idVoie
 resources:
   default:
-    url: https://www.data.gouv.fr/s/resources/referentiel-adresse-de-la-ville-de-limoges-3/20161104-102453/limoges_numeros_adresse.zip
+    url: https://www.data.gouv.fr/fr/datasets/r/1cbb1e3a-b915-4103-95ad-6a9feb3c8187
     format: shp
     fields:
       numeroComplet: NUMERO
@@ -13,7 +13,7 @@ resources:
       lon: _geometry.coordinates.0
       lat: _geometry.coordinates.1
   voies:
-    url: https://www.data.gouv.fr/s/resources/referentiel-adresse-de-la-ville-de-limoges-3/20161104-104302/limoges_libelles_voies.ods
+    url: https://www.data.gouv.fr/fr/datasets/r/8389185c-8e81-42ad-8565-9d78bb79a120
     format: sheet
     fields:
       _idVoie: ID_VOIE
