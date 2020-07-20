@@ -10,8 +10,21 @@ Agrégation des bases Adresse locales
 
 ## Utilisation
 
+### Installer les dépendances
+
 ```bash
 yarn
+```
+
+### Téléchargement des contours administrations
+
+```bash
+yarn contours:download
+```
+
+### Production des fichiers
+
+```bash
 yarn build
 ```
 
