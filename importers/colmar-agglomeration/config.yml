@@ -1,4 +1,3 @@
-organizationName: Agglomération de Colmar
 resources:
   default:
     url: http://sig.agglo-colmar.fr/web/Sig/OpenData/FR-246800726-678/FR-246800726-678.zip
