@@ -134,22 +134,6 @@ whiteList:
   - dataset: 5e5da5b706e3e705430a0bf6
 
 blackList:
-  - name: Ville de Lorient - Rattachement des secteurs
-    dataset: 5c70a7f99ce2e760225908e1
-    # Non pertinent
-
-  - name: Ville de Lorient - Rattachement des îlots IRIS
-    dataset: 5c76daa09ce2e727161da1ae
-    # Non pertinent
-
-  - name: Ville de Lorient - Rattachement des établissements scolaires
-    dataset: 5c70a7f706e3e755537bb84b
-    # Non pertinent
-
-  - name: Ville de Lorient - Rattachement des bureaux de vote
-    dataset: 5c70a7f806e3e755537bb84c
-    # Non pertinent
-
   - name: Sixt-sur-Aff
     dataset: 5d1b155b634f41553150048e
     # Non valide
@@ -158,18 +142,6 @@ blackList:
     dataset: 5d5f25846f444112e0dfc2cd
     # Non supporté à ce stade
 
-  - name: BAL Occitanie
-    dataset: 5cae8d809ce2e728debc8895
-    # Extraction BAN
-
-  - name: BAL Occitanie
-    dataset: 5cf8590f9ce2e754d646d40a
-    # Extraction BAN
-
   - name: Base Adresse Locale sur le territoire de la Métropole NCA
     dataset: 5c2459b206e3e7551204ccef
     # Alternative moins complète au format BAL, et invalide
-
-  - name: BAL Ville de Strasbourg
-    dataset: 5a1d7bfac751df78b0abff7d
-    # BAL désormais obsolète. Remplacée par BAL de la métropole
