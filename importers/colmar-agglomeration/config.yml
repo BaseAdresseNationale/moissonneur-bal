@@ -1,11 +1,13 @@
 resources:
   default:
     url: http://sig.agglo-colmar.fr/web/Sig/OpenData/FR-246800726-678/FR-246800726-678.zip
-    format: shp
+    archivePath: FR-246800726-678.json
+    format: geojson
+    fromEPSG: 3948
     fields:
       nomVoie: voie
       numeroComplet: numero
-      codeCommune: com_insee_
+      codeCommune: com_insee_num
       codeVoie: rivoli
       lon: _geometry.coordinates.0
       lat: _geometry.coordinates.1
