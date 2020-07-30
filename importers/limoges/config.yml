@@ -5,6 +5,7 @@ resources:
   default:
     url: https://www.data.gouv.fr/fr/datasets/r/1cbb1e3a-b915-4103-95ad-6a9feb3c8187
     format: shp
+    fromEPSG: 3946
     fields:
       numeroComplet: NUMERO
       codePostal: CODE_POSTA
