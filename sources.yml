@@ -125,7 +125,7 @@ whiteList:
 
   - name: Adresses d’Innimond
     importer: innimond
-    slug: innimond
+    dataset: 5f22ad7bd878f3976265af48
 
   - name: Adresses d’Yviers
     importer: yviers

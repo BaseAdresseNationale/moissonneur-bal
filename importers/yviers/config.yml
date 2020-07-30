@@ -3,7 +3,7 @@ computedFields:
   - codeCommune
 resources:
   default:
-    url: https://static.data.gouv.fr/resources/adresses-de-la-commune-dyviers/20200121-173938/adresses-2019-12.csv
+    url: https://www.data.gouv.fr/fr/datasets/r/38331d09-874b-4a80-8fba-a2a63a9f68aa
     format: csv
     fields:
       numeroComplet: Numéro

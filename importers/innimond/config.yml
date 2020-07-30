@@ -3,7 +3,7 @@ computedFields:
   - codeCommune
 resources:
   default:
-    url: https://adresse.data.gouv.fr/data/sources-locales/01190-innimond/adresses INNIMOND 2019.xlsx
+    url: https://www.data.gouv.fr/fr/datasets/r/e3353d4e-6c09-4561-bf6c-1805c86a7d29
     format: sheet
     fields:
       numero: Num
