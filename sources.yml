@@ -145,3 +145,6 @@ blackList:
   - name: Base Adresse Locale sur le territoire de la Métropole NCA
     dataset: 5c2459b206e3e7551204ccef
     # Alternative moins complète au format BAL, et invalide
+
+  - dataset: 5d7f3dd3634f41251f71d68a
+    # BAL SMICA non valide. Discussion en cours.
