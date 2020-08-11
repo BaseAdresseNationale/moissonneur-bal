@@ -17,6 +17,7 @@
     "@etalab/decoupage-administratif": "^0.8.0",
     "@etalab/fantoir": "^0.8.3",
     "@keyv/sqlite": "^2.0.2",
+    "@slack/web-api": "^5.11.0",
     "@turf/turf": "^5.1.6",
     "bluebird": "^3.7.2",
     "chalk": "^4.0.0",

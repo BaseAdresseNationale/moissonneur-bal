@@ -13,6 +13,7 @@ const {createCsvFilesWriter} = require('./lib/exports/csv')
 const {computeList} = require('./lib/sources')
 const {processSource} = require('./lib/processing')
 const {endFarms} = require('./lib/util/farms')
+const {notify} = require('./lib/util/slack')
 
 const db = new Keyv('sqlite://bal.sqlite')
 const distPath = join(__dirname, 'dist')
@@ -66,6 +67,13 @@ async function main() {
   console.log(`${globalCommunes.size} communes couvertes !`)
   console.log(`Adresses acceptées : ${adressesCount}`)
   console.log(`Adresses avec erreurs : ${erroredAdressesCount}`)
+
+  notify({
+    balCount: sources.length,
+    communesCount: globalCommunes.size,
+    adressesCount,
+    erroredAdressesCount
+  })
 
   const populationCount = [...globalCommunes].reduce((acc, codeCommune) => {
     const commune = getCommune(codeCommune)
