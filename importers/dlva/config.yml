@@ -1,0 +1,11 @@
+computedFields:
+  - codeCommune
+  - numeroComplet
+resources:
+  default:
+    url: https://www.data.gouv.fr/fr/datasets/r/503a939c-2d17-455c-b1de-937aa98b0dc4
+    format: shp
+    fields:
+      nomVoie: voie
+      lon: _geometry.coordinates.0.0 # MultiPoint
+      lat: _geometry.coordinates.0.1 # MultiPoint
