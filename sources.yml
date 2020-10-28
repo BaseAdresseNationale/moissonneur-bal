@@ -131,9 +131,10 @@ whiteList:
     importer: yviers
     dataset: 5e2729468b4c410cadcd7407
 
-  - name: Base Adresse Locale de Durance-Luberon-Verdon Agglomération
-    importer: dlva
-    dataset: 5f8e9b24e5cf95adcc819c48
+  # Dépublication temporaire le temps d'améliorer la qualité des données
+  # - name: Base Adresse Locale de Durance-Luberon-Verdon Agglomération
+  #   importer: dlva
+  #   dataset: 5f8e9b24e5cf95adcc819c48
 
   - dataset: 5e5da5b706e3e705430a0bf6
 
