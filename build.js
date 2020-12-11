@@ -30,6 +30,7 @@ async function main() {
   await db.clear()
 
   const datasets = await bluebird.map(sources, async source => {
+    const interval = setInterval(() => console.log(`processing ${source.meta.title}`), 60000)
     const {data, errored, report} = await processSource(source)
 
     data.forEach(r => {
@@ -55,6 +56,7 @@ async function main() {
     data.forEach(r => csvFiles.writeRow(r))
     adressesCount += data.length
     codesCommunes.forEach(c => globalCommunes.add(c))
+    clearInterval(interval)
     return source.meta
   }, {concurrency: 8})
 
