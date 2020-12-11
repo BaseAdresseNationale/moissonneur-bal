@@ -4,6 +4,7 @@ resources:
     format: geojson
     fields:
       cleInterop: cle_interop
+      codeCommune: code_insee
       nomVoie: voie_nom
       numero: numero
       suffixe: suffixe
@@ -11,5 +12,5 @@ resources:
       lat: _geometry.coordinates.1
       dateMAJ: date_der_maj
       source: source
-      position: position_adr
+      position: position
 
