@@ -99,8 +99,8 @@ whiteList:
     importer: bassussarry
     slug: bassussarry
 
-  - name: Base Adresse Locale du Grand Poitiers
-    url: https://data.grandpoitiers.fr/explore/dataset/referentiel-geographique-adresses-ban-gpcu-grand-poitiers-donnees-de-reference/download/?format=csv&timezone=Europe/Berlin&lang=fr&use_labels_for_header=true&csv_separator=%3B
+  - name: BAL du Grand Poitiers
+    importer: grand-poitiers
     dataset: 5e3007a28b4c416184143179
 
   - name: Référentiel Adresses du Pays Compiégnois
