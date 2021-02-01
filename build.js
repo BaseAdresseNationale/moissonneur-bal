@@ -34,6 +34,7 @@ async function main() {
     const {data, errored, report} = await processSource(source)
 
     if (data.length === 0) {
+      clearInterval(interval)
       return
     }
 
