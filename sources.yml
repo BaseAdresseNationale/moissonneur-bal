@@ -89,12 +89,6 @@ whiteList:
     dataset: 5bb6b4749ce2e701e12456a5
     importer: la-rochelle
 
-  - name: Arles-Crau-Camargue-Montagnette
-    homepage: https://trouver.datasud.fr/dataset/base-locale-dadresses-accm
-    organization: 534fff55a3a7292c64a77cde
-    importer: accm
-    slug: accm
-
   - name: Bassussarry
     importer: bassussarry
     slug: bassussarry
