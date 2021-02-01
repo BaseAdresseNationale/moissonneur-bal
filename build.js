@@ -4,7 +4,7 @@ const {join} = require('path')
 const {emptyDir} = require('fs-extra')
 const Keyv = require('keyv')
 const bluebird = require('bluebird')
-const {uniq} = require('lodash')
+const {uniq, compact} = require('lodash')
 const chalk = require('chalk')
 const {extractAsTree} = require('@etalab/bal')
 const {expandMetaWithResults} = require('./lib/meta')
@@ -33,6 +33,10 @@ async function main() {
     const interval = setInterval(() => console.log(`processing ${source.meta.title}`), 60000)
     const {data, errored, report} = await processSource(source)
 
+    if (data.length === 0) {
+      return
+    }
+
     data.forEach(r => {
       r.licence = source.meta.license
     })
@@ -60,7 +64,7 @@ async function main() {
     return source.meta
   }, {concurrency: 8})
 
-  await db.set('datasets', datasets)
+  await db.set('datasets', compact(datasets))
 
   await csvFiles.finish()
 
