@@ -6,7 +6,6 @@ const Keyv = require('keyv')
 const bluebird = require('bluebird')
 const {uniq, compact} = require('lodash')
 const chalk = require('chalk')
-const {extractAsTree} = require('@etalab/bal')
 const {expandMetaWithResults} = require('./lib/meta')
 const {getCommune} = require('./lib/cog')
 const {createCsvFilesWriter} = require('./lib/exports/csv')
@@ -51,9 +50,8 @@ async function main() {
       erroredAdressesCount += errored
     }
 
-    const tree = extractAsTree(data)
-    expandMetaWithResults(source.meta, {tree, report, errored})
-    await db.set(`${source.meta.id}-data`, tree)
+    expandMetaWithResults(source.meta, {data, report, errored})
+
     if (report) {
       await db.set(`${source.meta.id}-report`, report)
     }
