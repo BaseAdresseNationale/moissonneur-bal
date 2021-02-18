@@ -50,17 +50,6 @@
   dependencies:
     lodash "^4.17.15"
 
-"@etalab/fantoir@^0.8.3":
-  version "0.8.3"
-  resolved "https://registry.yarnpkg.com/@etalab/fantoir/-/fantoir-0.8.3.tgz#1dd20cc06037e586bc30858d0d53105f0f479a48"
-  integrity sha512-DxKpu6rYlj8KpnLqV0v9sJgAoNg+c+ilNItSPLVifEkByhzXiCpQNNA1sV45YNASRcSJkmEXixqE7AFQQTitcA==
-  dependencies:
-    "@etalab/adresses-util" "^0.7.0"
-    "@keyv/sqlite" "^2.0.2"
-    keyv "^4.0.0"
-    leven "^3.1.0"
-    lodash "^4.17.15"
-
 "@keyv/sql@1.1.2":
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/@keyv/sql/-/sql-1.1.2.tgz#1dd84a5c5ad2384df8934f0ddfe20ab81dc2a75d"
