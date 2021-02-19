@@ -30,7 +30,7 @@
     "got": "^11.8.1",
     "hasha": "^5.2.2",
     "iconv-lite": "^0.6.2",
-    "js-yaml": "^3.14.0",
+    "js-yaml": "^4.0.0",
     "json-stable-stringify": "^1.0.1",
     "keyv": "^4.0.3",
     "lodash": "^4.17.20",
