@@ -37,9 +37,6 @@ async function main() {
       return
     }
 
-    data.forEach(r => {
-      r.licence = source.meta.license
-    })
     const codesCommunes = uniq(data.map(c => c.codeCommune))
 
     console.log(chalk.green(` * ${source.meta.title} (${source.meta.model})`))
