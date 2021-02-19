@@ -12,5 +12,5 @@ resources:
       lat: _geometry.coordinates.1
       dateMAJ: date_der_maj
       source: source
-      typePosition: position
+      position: position
 
