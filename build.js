@@ -5,12 +5,10 @@ const bluebird = require('bluebird')
 const {uniq, compact} = require('lodash')
 const chalk = require('chalk')
 const {expandMetaWithResults} = require('./lib/meta')
-const {getCommune} = require('./lib/cog')
 const {computeList} = require('./lib/sources')
 const {processSource} = require('./lib/processing')
 const mongo = require('./lib/util/mongo')
 const {endFarms} = require('./lib/util/farms')
-const {notify} = require('./lib/util/slack')
 
 const db = new Keyv('sqlite://bal.sqlite')
 
@@ -18,9 +16,6 @@ async function main() {
   await mongo.connect()
 
   const sources = await computeList()
-  const globalCommunes = new Set()
-  let adressesCount = 0
-  let erroredAdressesCount = 0
 
   await db.clear()
 
@@ -40,7 +35,6 @@ async function main() {
     console.log(chalk.gray(`    Communes : ${codesCommunes.length}`))
     if (errored) {
       console.log(chalk.red(`    Lignes avec erreurs : ${errored}`))
-      erroredAdressesCount += errored
     }
 
     expandMetaWithResults(source.meta, {data, report, errored})
@@ -49,37 +43,11 @@ async function main() {
       await db.set(`${source.meta.id}-report`, report)
     }
 
-    adressesCount += data.length
-    codesCommunes.forEach(c => globalCommunes.add(c))
     clearInterval(interval)
     return source.meta
   }, {concurrency: 8})
 
   await db.set('datasets', compact(datasets))
-
-  /* Compute and display metrics */
-
-  console.log(`${globalCommunes.size} communes couvertes !`)
-  console.log(`Adresses acceptées : ${adressesCount}`)
-  console.log(`Adresses avec erreurs : ${erroredAdressesCount}`)
-
-  notify({
-    balCount: sources.length,
-    communesCount: globalCommunes.size,
-    adressesCount,
-    erroredAdressesCount
-  })
-
-  const populationCount = [...globalCommunes].reduce((acc, codeCommune) => {
-    const commune = getCommune(codeCommune)
-    if (commune && commune.population) {
-      return acc + commune.population
-    }
-
-    return acc
-  }, 0)
-
-  console.log(`Population couverte : ${populationCount}`)
 
   endFarms()
   await mongo.disconnect()
