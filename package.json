@@ -20,10 +20,8 @@
     "@turf/turf": "^5.1.6",
     "bluebird": "^3.7.2",
     "chalk": "^4.1.0",
-    "csv-write-stream": "^2.0.0",
     "decompress": "^4.2.1",
     "dotenv": "^8.2.0",
-    "end-of-stream": "^1.4.4",
     "epsg-index": "^1.1.0",
     "fs-extra": "^9.1.0",
     "gdal-next": "^1.0.3",
@@ -38,7 +36,6 @@
     "node-xlsx": "^0.16.1",
     "papaparse": "^5.3.0",
     "proj4": "^2.7.0",
-    "pumpify": "^2.0.1",
     "strip-bom-buf": "^2.0.0",
     "tmp-promise": "^3.0.2",
     "worker-farm": "^1.7.0"
