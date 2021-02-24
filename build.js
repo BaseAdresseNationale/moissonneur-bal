@@ -11,6 +11,7 @@ const {getCommune} = require('./lib/cog')
 const {createCsvFilesWriter} = require('./lib/exports/csv')
 const {computeList} = require('./lib/sources')
 const {processSource} = require('./lib/processing')
+const mongo = require('./lib/util/mongo')
 const {endFarms} = require('./lib/util/farms')
 const {notify} = require('./lib/util/slack')
 
@@ -18,6 +19,8 @@ const db = new Keyv('sqlite://bal.sqlite')
 const distPath = join(__dirname, 'dist')
 
 async function main() {
+  await mongo.connect()
+
   const sources = await computeList()
   const globalCommunes = new Set()
   let adressesCount = 0
@@ -89,6 +92,7 @@ async function main() {
   console.log(`Population couverte : ${populationCount}`)
 
   endFarms()
+  await mongo.disconnect()
 }
 
 main().catch(error => {
