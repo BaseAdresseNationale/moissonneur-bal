@@ -144,3 +144,6 @@ blackList:
   - name: Base Adresse Locale sur le territoire de la Métropole NCA
     dataset: 5c2459b206e3e7551204ccef
     # Alternative moins complète au format BAL, et invalide
+
+  - name: dlva
+    dataset: 5f8e9b24e5cf95adcc819c48
