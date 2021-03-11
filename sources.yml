@@ -61,12 +61,12 @@ whiteList:
     dataset: 5b5aea25c751df35616a7420
     homepage: https://geobretagne.fr/geonetwork/srv/fre/catalog.search#/metadata/4a9179ee-1cad-49f1-9746-e2e377a8fc95
 
-  - name: Pays de Saint-Brieuc
-    url: http://datarmor.cotesdarmor.fr/data-unpaginated/dataserver/cg22/data/2200542_base_adresse_locale?&$inlinecount=allpages&$format=csv
-    slug: pays-saint-brieuc
-    organization: 5acb2f2088ee3813a476714d
-    homepage: http://datarmor.cotesdarmor.fr/data-presentation-ux/#/cg22/datasets/2200542_base_adresse_locale/views/desc
-    odbl: true
+  # - name: Pays de Saint-Brieuc
+  #   url: http://datarmor.cotesdarmor.fr/data-unpaginated/dataserver/cg22/data/2200542_base_adresse_locale?&$inlinecount=allpages&$format=csv
+  #   slug: pays-saint-brieuc
+  #   organization: 5acb2f2088ee3813a476714d
+  #   homepage: http://datarmor.cotesdarmor.fr/data-presentation-ux/#/cg22/datasets/2200542_base_adresse_locale/views/desc
+  #   odbl: true
     # Non référencé sur data.gouv.fr à ce jour
 
   - name: Grenoble
@@ -147,3 +147,6 @@ blackList:
 
   - name: dlva
     dataset: 5f8e9b24e5cf95adcc819c48
+
+  - name: Points Adresse de Lannion-Trégor Communauté
+    dataset: 59c3a54388ee38019cc19cbc
