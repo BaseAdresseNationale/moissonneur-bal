@@ -28,7 +28,7 @@ async function main() {
       return
     }
 
-    const codesCommunes = uniq(data.map(c => c.codeCommune))
+    const codesCommunes = uniq(data.map(c => c.commune_insee))
 
     console.log(chalk.green(` * ${source.meta.title} (${source.meta.model})`))
     console.log(chalk.gray(`    Adresses trouvées : ${data.length}`))

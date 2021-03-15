@@ -1,7 +1,6 @@
-beautify: true
 computedFields:
-  - nomVoie
-  - codeVoie
+  - voie_nom
+  - voie_code
 resources:
   default:
     url: https://opendata.lillemetropole.fr/explore/dataset/seuils_adresses_mel/download/?format=geojson&timezone=Europe/Berlin
@@ -9,7 +8,7 @@ resources:
     fields:
       numero: numero
       suffixe: suffixe
-      codeCommune: comm_id
-      codePostal: cpostal
-      lon: _geometry.coordinates.0
+      commune_insee: comm_id
+      code_postal: cpostal
+      long: _geometry.coordinates.0
       lat: _geometry.coordinates.1

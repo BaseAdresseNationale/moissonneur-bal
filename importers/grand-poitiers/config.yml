@@ -3,14 +3,14 @@ resources:
     url: https://data.grandpoitiers.fr/explore/dataset/referentiel-geographique-adresses-ban-gpcu-grand-poitiers-donnees-de-reference/download/?format=geojson&timezone=Europe/Berlin
     format: geojson
     fields:
-      cleInterop: cle_interop
-      codeCommune: code_insee
-      nomVoie: voie_nom
+      cle_interop: cle_interop
+      commune_insee: code_insee
+      voie_nom: voie_nom
       numero: numero
       suffixe: suffixe
-      lon: _geometry.coordinates.0
+      long: _geometry.coordinates.0
       lat: _geometry.coordinates.1
-      dateMAJ: date_der_maj
+      date_der_maj: date_der_maj
       source: source
       position: position
 

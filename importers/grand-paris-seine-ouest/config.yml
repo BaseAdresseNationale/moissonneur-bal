@@ -1,6 +1,5 @@
 computedFields:
-  - nomVoie
-beautify: true
+  - voie_nom
 resources:
   default:
     url: https://data.seineouest.fr/explore/dataset/base-adresse/download/?format=geojson&timezone=Europe/Berlin
@@ -8,7 +7,7 @@ resources:
     fields:
       numero: num
       suffixe: rep
-      codePostal: cp
-      codeCommune: insee
+      code_postal: cp
+      commune_insee: insee
       lon: _geometry.coordinates.0
       lat: _geometry.coordinates.1

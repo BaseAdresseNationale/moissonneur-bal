@@ -5,7 +5,7 @@ resources:
     fields:
       numero: SIGNCA_IG_BASE_ADRESSES_NUM
       suffixe: SIGNCA_IG_BASE_ADRESSES_IND_REP
-      nomVoie: SIGNCA_IG_AXEVOIE_NOM_MINU
-      codeCommune: SIGNCA_IG_BASE_ADRESSES_CODE_INSEE
-      lon: _geometry.coordinates.0
+      voie_nom: SIGNCA_IG_AXEVOIE_NOM_MINU
+      commune_insee: SIGNCA_IG_BASE_ADRESSES_CODE_INSEE
+      long: _geometry.coordinates.0
       lat: _geometry.coordinates.1

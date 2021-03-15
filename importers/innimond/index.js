@@ -1,5 +1,5 @@
-function codeCommune() {
+function commune_insee() {
   return '01190'
 }
 
-module.exports = {codeCommune}
+module.exports = {commune_insee}

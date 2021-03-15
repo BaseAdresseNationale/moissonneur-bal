@@ -1,6 +1,6 @@
 computedFields:
-  - codeVoie
-  - codeCommune
+  - voie_code
+  - commune_insee
 resources:
   default:
     url: https://opendata.bordeaux-metropole.fr/explore/dataset/fv_adresse_p/download/?format=geojson&timezone=Europe/Berlin&lang=fr
@@ -8,9 +8,9 @@ resources:
     fields:
       numero: numero
       suffixe: rep
-      nomVoie: nom_voie
-      codePostal: cpostal
-      lon: _geometry.coordinates.0
+      voie_nom: nom_voie
+      code_postal: cpostal
+      long: _geometry.coordinates.0
       lat: _geometry.coordinates.1
 
 

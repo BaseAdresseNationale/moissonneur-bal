@@ -3,13 +3,12 @@ resources:
     url: https://www.data.gouv.fr/fr/datasets/r/bb8de5fd-75c0-45b2-83ee-3ee1565d54ce
     format: shp
     fields:
-      nomVoie: TYPE_VOIE + NOM_VOIE
+      voie_nom: TYPE_VOIE + NOM_VOIE
       numero: NUM_DEB
       suffixe: SUFF_DEB
-      codePostal: CODE_POST
-      quartier: QUARTIER
-      codeCommune: CODE_INSEE
-      lon: _geometry.coordinates.0
+      code_postal: CODE_POSTAL
+      commune_insee: CODE_INSEE
+      long: _geometry.coordinates.0
       lat: _geometry.coordinates.1
 
 

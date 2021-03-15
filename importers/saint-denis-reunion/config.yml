@@ -1,12 +1,12 @@
 computedFields:
-  - codeCommune
+  - commune_insee
 resources:
   default:
     url: https://opendata.arcgis.com/datasets/0a455c7fa2204bad98cd0f8c3c01b39c_1.csv
     format: csv
     fields:
-      nomVoie: index_
+      voie_nom: index_
       numero: num_voi
       suffixe: num_suf
-      lon: X
+      long: X
       lat: Y

@@ -4,8 +4,8 @@ resources:
     format: shp
     fields:
       numero: numero_sel
-      nomVoie: libelle_vo
-      codeVoie: rivoli
-      codeCommune: code_insee
-      lon: _geometry.coordinates.0
+      voie_nom: libelle_vo
+      voie_code: rivoli
+      commune_insee: code_insee
+      long: _geometry.coordinates.0
       lat: _geometry.coordinates.1

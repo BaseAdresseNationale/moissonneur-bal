@@ -3,11 +3,13 @@ resources:
     url: http://geoservices.lorient-agglo.fr/documents/ref_voirie/adresses/shapefile/cc48/la/plaque_adr_ban_aitf.zip
     format: shp
     fields:
-      cleInterop: cle_intero
-      nomVoie: voie_nom
+      cle_interop: cle_intero
+      voie_nom: voie_nom
+      commune_nom: commune_no
       numero: numero
       suffixe: suffixe
-      lon: _geometry.coordinates.0
+      long: _geometry.coordinates.0
       lat: _geometry.coordinates.1
-      dateMAJ: date_der_m
+      date_der_maj: date_der_m
+      source: source
 

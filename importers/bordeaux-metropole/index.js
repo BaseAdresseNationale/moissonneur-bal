@@ -1,4 +1,4 @@
-function codeVoie(data) {
+function voie_code(data) {
   const {fantoir} = data._default
   if (!fantoir) {
     return undefined
@@ -7,9 +7,9 @@ function codeVoie(data) {
   return fantoir.substr(0, 4)
 }
 
-function codeCommune(data) {
+function commune_insee(data) {
   const {cinsee} = data._default
   return cinsee.length === 3 ? '33' + cinsee : cinsee
 }
 
-module.exports = {codeVoie, codeCommune}
+module.exports = {voie_code, commune_insee}

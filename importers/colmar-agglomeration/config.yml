@@ -5,9 +5,9 @@ resources:
     format: geojson
     fromEPSG: 3948
     fields:
-      nomVoie: voie
-      numeroComplet: numero
-      codeCommune: com_insee_num
-      codeVoie: rivoli
-      lon: _geometry.coordinates.0
+      voie_nom: voie
+      _numeroComplet: numero
+      commune_insee: com_insee_num
+      voie_code: rivoli
+      long: _geometry.coordinates.0
       lat: _geometry.coordinates.1

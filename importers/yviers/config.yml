@@ -1,12 +1,11 @@
-beautify: true
 computedFields:
-  - codeCommune
+  - commune_insee
 resources:
   default:
     url: https://www.data.gouv.fr/fr/datasets/r/38331d09-874b-4a80-8fba-a2a63a9f68aa
     format: csv
     fields:
-      numeroComplet: Numéro
-      nomVoie: Nom de la voie
-      lon: Longitude (WGS 84)
+      _numeroComplet: Numéro
+      voie_nom: Nom de la voie
+      long: Longitude (WGS 84)
       lat: Latitude (WGS 84)

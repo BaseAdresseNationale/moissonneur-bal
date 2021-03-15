@@ -1,4 +1,3 @@
-beautify: true
 join:
   - resource: indicesRepetition
     key: _idSuffixe
@@ -7,7 +6,7 @@ join:
   - resource: voies
     key: _idVoie
 computedFields:
-  - codeCommune
+  - commune_insee
 resources:
   default:
     url: https://opendata.larochelle.fr/dataset/voie-et-adresse-numeros-dadresse/?download=1384
@@ -16,7 +15,7 @@ resources:
       numero: numero_val
       _idSuffixe: numero_ind
       _idTroncon: numero_tro
-      lon: _geometry.coordinates.0
+      long: _geometry.coordinates.0
       lat: _geometry.coordinates.1
   indicesRepetition:
     url: https://opendata.larochelle.fr/dataset/voie-et-adresse-indices-de-repetition/?download=1420
@@ -35,5 +34,5 @@ resources:
     format: shp
     fields:
       _idVoie: voie_id
-      nomVoie: voie_libel
-      codeVoie: voie_fanto
+      voie_nom: voie_libel
+      voie_code: voie_fanto

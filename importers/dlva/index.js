@@ -13,7 +13,7 @@ const customMapping = {
   corbieres: '04063'
 }
 
-function codeCommune(data) {
+function commune_insee(data) {
   const {ville} = data._default
   const normalizedVille = normalize(ville)
 
@@ -34,7 +34,7 @@ function codeCommune(data) {
   console.log(`Correspondance non trouvée pour la commune ${ville}`)
 }
 
-function numeroComplet(data) {
+function _numeroComplet(data) {
   const {numero, complt} = data._default
 
   if (numero && complt.match(/^\d/)) {
@@ -45,4 +45,4 @@ function numeroComplet(data) {
   return (numero || '') + (complt || '')
 }
 
-module.exports = {codeCommune, numeroComplet}
+module.exports = {commune_insee, _numeroComplet}

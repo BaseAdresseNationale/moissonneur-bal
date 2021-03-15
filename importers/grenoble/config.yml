@@ -1,13 +1,13 @@
 computedFields:
-  - nomVoie
-  - codeCommune
+  - voie_nom
+  - commune_insee
 resources:
   default:
     url: http://entrepot.metropolegrenoble.fr/opendata/38185-GRE/PlanDeVille/json/PLANDEVILLE_ADRES_VDG_EPSG4326.json
     format: geojson
     fields:
-      codePostal: ADRES_CODEPOST
-      numeroComplet: ADRES_LIBEL
-      codeVoie: VOIE_FANTOIR
-      lon: _geometry.coordinates.0
+      code_postal: ADRES_CODEPOST
+      _numeroComplet: ADRES_LIBEL
+      voie_code: VOIE_FANTOIR
+      long: _geometry.coordinates.0
       lat: _geometry.coordinates.1

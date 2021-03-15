@@ -1,8 +1,8 @@
-function codeCommune() {
+function commune_insee() {
   return '38185'
 }
 
-function nomVoie(data) {
+function voie_nom(data) {
   return [data._default.VOIE_TYPE, data._default.VOIE_ARTICLE, data._default.VOIE_LIBEL]
     .filter(p => Boolean(p))
     .join(' ')
@@ -10,4 +10,4 @@ function nomVoie(data) {
     .replace(/’\s/g, '’')
 }
 
-module.exports = {codeCommune, nomVoie}
+module.exports = {commune_insee, voie_nom}
