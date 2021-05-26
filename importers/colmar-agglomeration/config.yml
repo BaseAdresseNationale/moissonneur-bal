@@ -1,6 +1,6 @@
 resources:
   default:
-    url: http://sig.agglo-colmar.fr/web/Sig/OpenData/FR-246800726-678/FR-246800726-678.zip
+    url: https://www.agglo-colmar.fr/data/geo/OpenData/FR-246800726-678/FR-246800726-678.zip
     archivePath: FR-246800726-678.json
     format: geojson
     fromEPSG: 3948
