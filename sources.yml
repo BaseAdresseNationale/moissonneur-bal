@@ -92,9 +92,10 @@ whiteList:
     dataset: 542ab42f88ee382b8f22e2e4
     importer: metz-metropole
 
-  # - name: La Rochelle
-  #   dataset: 5bb6b4749ce2e701e12456a5
-  #   importer: la-rochelle
+  - name: La Rochelle
+    organization: 5821930b88ee386862c65bb3
+    slug: la-rochelle
+    importer: la-rochelle
 
   - name: Bassussarry
     importer: bassussarry

@@ -10,30 +10,30 @@ computedFields:
   - codeCommune
 resources:
   default:
-    url: https://opendata.larochelle.fr/dataset/voie-et-adresse-numeros-dadresse/?download=1384
-    format: shp
+    url: https://opendata.agglo-larochelle.fr/api/records/2.0/downloadfile/format=geojson&resource_id=f55cc411-646c-4c80-bc34-013cbf7e5077
+    format: geojson
     fields:
-      numero: numero_val
-      _idSuffixe: numero_ind
-      _idTroncon: numero_tro
+      numero: numero_valeur
+      _idSuffixe: numero_indice_repetition_id
+      _idTroncon: numero_id_troncon
       lon: _geometry.coordinates.0
       lat: _geometry.coordinates.1
   indicesRepetition:
-    url: https://opendata.larochelle.fr/dataset/voie-et-adresse-indices-de-repetition/?download=1420
+    url: https://opendata.agglo-larochelle.fr/api/records/2.0/downloadfile/format=csv&resource_id=bd7c9491-14ab-48d5-9baa-a65bf2309ca6&use_labels_for_header=true&user_defined_fields=true
     format: csv
     fields:
       _idSuffixe: ind_id
       suffixe: ind_libelle
   troncons:
-    url: https://opendata.larochelle.fr/dataset/voie-et-adresse-troncons-de-voirie/?download=1397
-    format: shp
+    url: https://opendata.agglo-larochelle.fr/api/records/2.0/downloadfile/format=csv&resource_id=7e04daba-2f0e-4284-a063-6d3e7e9896db&use_labels_for_header=true&user_defined_fields=true
+    format: csv
     fields:
       _idTroncon: troncon_id
-      _idVoie: troncon_vo
+      _idVoie: troncon_voie_id
   voies:
-    url: https://opendata.larochelle.fr/dataset/voie-et-adresse-voies/?download=1405
-    format: shp
+    url: https://opendata.agglo-larochelle.fr/api/records/2.0/downloadfile/format=csv&resource_id=1c8f1ff3-c96a-4e41-bc7e-fce4e6a364c8&use_labels_for_header=true&user_defined_fields=true
+    format: csv
     fields:
       _idVoie: voie_id
-      nomVoie: voie_libel
-      codeVoie: voie_fanto
+      nomVoie: voie_libelle
+      codeVoie: voie_code_fantoir
