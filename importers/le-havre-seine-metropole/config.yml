@@ -1,6 +1,6 @@
 resources:
   default:
-    url: https://data.agglo-lehavre.fr/api/v1/file/data/27/RG_ADRESSE/json
+    url: https://data.lehavreseinemetropole.fr/api/v1/file/data/27/RG_ADRESSE/json
     format: geojson
     archivePath: OD.RG_ADRESSE.json
     fromEPSG: 3950
