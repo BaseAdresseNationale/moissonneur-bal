@@ -1,4 +1,8 @@
 whiteList:
+  - name: Angers Loire Métropole
+    importer: angers-loire-metropole
+    dataset: 5a980549b59508758b84c018
+
   - name: Bordeaux Métropole
     importer: bordeaux-metropole
     dataset: 5a02bf6188ee38130d1057c9
