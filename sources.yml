@@ -163,3 +163,6 @@ blackList:
   - name: Points Adresse de Lannion-Trégor Communauté
     dataset: 59c3a54388ee38019cc19cbc
     # Ancien jeu de données non retiré de data.gouv.fr
+
+  - dataset: 5e322303dee7e71547f5c8ec
+    # Doublon moissonnage ODS Pays de la Loire
