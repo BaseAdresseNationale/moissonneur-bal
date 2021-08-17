@@ -1,4 +1,8 @@
 whiteList:
+  - name: Base Adresse Locale de la Métropole de Lyon
+    dataset: 5be174928b4c412c5b8cc23f
+    url: https://download.data.grandlyon.com/files/grandlyon/localisation/bal/bal_200046977.csv
+
   - name: Bordeaux Métropole
     importer: bordeaux-metropole
     dataset: 5a02bf6188ee38130d1057c9
