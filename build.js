@@ -2,7 +2,7 @@
 require('dotenv').config()
 const {join} = require('path')
 const {emptyDir} = require('fs-extra')
-const Keyv = require('keyv')
+const Keyv = require('@livingdata/keyv')
 const bluebird = require('bluebird')
 const {uniq, compact} = require('lodash')
 const chalk = require('chalk')
