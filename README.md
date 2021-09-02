@@ -6,7 +6,7 @@ Agrégation des bases Adresse locales
 
 ## Pré-requis
 
-* Node.js 12 uniquement
+* Node.js 14+
 
 ## Utilisation
 
