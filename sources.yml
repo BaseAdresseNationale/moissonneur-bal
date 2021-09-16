@@ -82,10 +82,6 @@ whiteList:
     dataset: 5a3100e188ee385a3eeb4aa0
     importer: le-havre-seine-metropole
 
-  - name: Limoges
-    dataset: 54b52ca6c751df7556ae2614
-    importer: limoges
-
   - name: Metz Métropole
     dataset: 542ab42f88ee382b8f22e2e4
     importer: metz-metropole
