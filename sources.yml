@@ -78,10 +78,6 @@ whiteList:
     dataset: 5af03721b595081c1c80a8ad
     importer: grenoble
 
-  - name: Le Havre Seine Métropole
-    dataset: 5a3100e188ee385a3eeb4aa0
-    importer: le-havre-seine-metropole
-
   - name: Metz Métropole
     dataset: 542ab42f88ee382b8f22e2e4
     importer: metz-metropole
