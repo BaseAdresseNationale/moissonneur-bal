@@ -19,6 +19,13 @@ const distPath = join(__dirname, 'dist')
 
 async function main() {
   const sources = await computeList()
+
+  const communesApi = new Set(
+    sources
+      .filter(s => s.source === 'api')
+      .map(s => s.commune)
+  )
+
   const globalCommunes = new Set()
   let adressesCount = 0
   let erroredAdressesCount = 0
@@ -50,14 +57,16 @@ async function main() {
       erroredAdressesCount += errored
     }
 
-    expandMetaWithResults(source.meta, {data, report, errored})
+    expandMetaWithResults(source.meta, {data, report, errored, communesApi})
+
+    const filteredData = source.source === 'api' ? data : data.filter(d => !communesApi.has(d.codeCommune))
 
     if (report) {
       await db.set(`${source.meta.id}-report`, report)
     }
 
-    data.forEach(r => csvFiles.writeRow(r))
-    adressesCount += data.length
+    filteredData.forEach(r => csvFiles.writeRow(r))
+    adressesCount += filteredData.length
     codesCommunes.forEach(c => globalCommunes.add(c))
     clearInterval(interval)
     return source.meta
