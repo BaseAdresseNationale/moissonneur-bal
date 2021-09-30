@@ -1,7 +1,7 @@
 #!/usr/bin/env node --max_old_space_size=8192
 require('dotenv').config()
 const {join} = require('path')
-const Keyv = require('keyv')
+const Keyv = require('@livingdata/keyv')
 const bluebird = require('bluebird')
 const {uniq, compact} = require('lodash')
 const chalk = require('chalk')

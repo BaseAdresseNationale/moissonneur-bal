@@ -14,7 +14,8 @@
   "dependencies": {
     "@etalab/bal": "^1.1.1",
     "@etalab/decoupage-administratif": "^0.8.0",
-    "@keyv/sqlite": "^2.0.2",
+    "@livingdata/keyv": "^4.1.0",
+    "@livingdata/keyv-sqlite": "^2.1.0",
     "@slack/web-api": "^6.0.0",
     "@turf/turf": "^5.1.6",
     "bluebird": "^3.7.2",
@@ -29,7 +30,6 @@
     "iconv-lite": "^0.6.2",
     "js-yaml": "^4.0.0",
     "json-stable-stringify": "^1.0.1",
-    "keyv": "^4.0.3",
     "lodash": "^4.17.20",
     "mongodb": "^3.6.4",
     "node-xlsx": "^0.16.1",
