@@ -17,13 +17,7 @@ async function main() {
   const sources = await computeList()
 
   await bluebird.map(sources, async source => {
-    const interval = setInterval(() => console.log(`processing ${source.meta.title}`), 60000)
     const {originalFile, rows, errored, report} = await processSource(source)
-
-    if (rows.length === 0) {
-      clearInterval(interval)
-      return
-    }
 
     await outputFile(join(__dirname, 'dist', `${source.meta.id}.csv`), originalFile)
 
@@ -42,7 +36,6 @@ async function main() {
 
     expandMetaWithResults(source.meta, {rows, report, errored})
 
-    clearInterval(interval)
     return source.meta
   }, {concurrency: 8})
 
