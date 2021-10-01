@@ -1,15 +1,15 @@
 #!/usr/bin/env node --max_old_space_size=8192
 require('dotenv').config()
 const {join} = require('path')
+const {outputFile} = require('fs-extra')
 const bluebird = require('bluebird')
-const {uniq} = require('lodash')
+const {groupBy} = require('lodash')
 const chalk = require('chalk')
 const {expandMetaWithResults} = require('./lib/meta')
 const {computeList} = require('./lib/sources')
 const {processSource} = require('./lib/processing')
 const mongo = require('./lib/util/mongo')
 const {endFarms} = require('./lib/util/farms')
-const {outputFile} = require('fs-extra')
 
 async function main() {
   await mongo.connect()
@@ -21,11 +21,14 @@ async function main() {
 
     await outputFile(join(__dirname, 'dist', `${source.meta.id}.csv`), originalFile)
 
-    const codesCommunes = uniq(
-      rows
-        .filter(r => r.isValid)
-        .map(c => c.parsedValues.commune_insee || c.additionalValues.cle_interop.codeCommune)
+    const communesRows = groupBy(
+      rows,
+      r => r.parsedValues.commune_insee || r.additionalValues?.cle_interop?.codeCommune || 'unknown'
     )
+
+    const codesCommunes = Object.keys(communesRows)
+      .filter(codeCommune => codeCommune !== 'unknown')
+      .filter(codeCommune => communesRows[codeCommune].some(r => r.isValid))
 
     console.log(chalk.green(` * ${source.meta.title} (${source.meta.source}|${source.meta.model})`))
     console.log(chalk.gray(`    Adresses trouvées : ${rows.length}`))
