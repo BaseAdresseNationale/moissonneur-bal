@@ -43,12 +43,6 @@ whiteList:
     dataset: 5ad75e1dc751df42a0357f8c
     homepage: https://www.nanterre.fr/1409-les-adresses.htm
 
-  - name: Nice Métropole Côte d’Azur
-    importer: nice-metropole
-    dataset: 59aea7c9a3a72917d9f3fc92
-    homepage: http://opendata.nicecotedazur.org/data/dataset/adresses-sur-le-territoire-de-la-metropole-nca
-    comment: La mise à jour automatique n’est pas disponible.
-
   - name: Ville de Paris
     importer: paris
     dataset: 59590cf0a3a7291dd09c7fd6
@@ -138,10 +132,6 @@ blackList:
   - name: Pirae (Polynésie française)
     dataset: 5d5f25846f444112e0dfc2cd
     # Non supporté à ce stade
-
-  - name: Base Adresse Locale sur le territoire de la Métropole NCA
-    dataset: 5c2459b206e3e7551204ccef
-    # Alternative moins complète au format BAL, et invalide
 
   - name: dlva
     dataset: 5f8e9b24e5cf95adcc819c48
