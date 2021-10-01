@@ -38,7 +38,7 @@ async function main() {
         .map(c => c.parsedValues.commune_insee || c.additionalValues.cle_interop.codeCommune)
     )
 
-    console.log(chalk.green(` * ${source.meta.title} (${source.meta.model})`))
+    console.log(chalk.green(` * ${source.meta.title} (${source.meta.source}|${source.meta.model})`))
     console.log(chalk.gray(`    Adresses trouvées : ${rows.length}`))
     console.log(chalk.gray(`    Communes : ${codesCommunes.length}`))
     if (errored) {
