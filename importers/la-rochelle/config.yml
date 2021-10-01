@@ -34,5 +34,5 @@ resources:
     format: csv
     fields:
       _idVoie: voie_id
-      voie_nom: voie_libel
-      voie_code: voie_fanto
+      voie_nom: voie_libelle
+      voie_code: voie_fantoir
