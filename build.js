@@ -10,6 +10,7 @@ const {computeList} = require('./lib/sources')
 const {processSource} = require('./lib/processing')
 const mongo = require('./lib/util/mongo')
 const {endFarms} = require('./lib/util/farms')
+const {writeCsv} = require('./lib/util/csv')
 
 async function main() {
   await mongo.connect()
@@ -19,7 +20,9 @@ async function main() {
   await bluebird.map(sources, async source => {
     const {originalFile, rows, errored, report} = await processSource(source)
 
-    await outputFile(join(__dirname, 'dist', `${source.meta.id}.csv`), originalFile)
+    const datasetPath = join(__dirname, 'dist', source.meta.id)
+
+    await outputFile(join(datasetPath, 'original.csv'), originalFile)
 
     const communesRows = groupBy(
       rows,
@@ -29,6 +32,13 @@ async function main() {
     const codesCommunes = Object.keys(communesRows)
       .filter(codeCommune => codeCommune !== 'unknown')
       .filter(codeCommune => communesRows[codeCommune].some(r => r.isValid))
+
+    await bluebird.map(Object.keys(communesRows), async key => {
+      await writeCsv(
+        join(datasetPath, `${key}.csv`),
+        communesRows[key].map(r => r.rawValues)
+      )
+    }, {concurrency: 4})
 
     console.log(chalk.green(` * ${source.meta.title} (${source.meta.source}|${source.meta.model})`))
     console.log(chalk.gray(`    Adresses trouvées : ${rows.length}`))
