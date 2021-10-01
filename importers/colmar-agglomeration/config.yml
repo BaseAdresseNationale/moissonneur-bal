@@ -1,3 +1,5 @@
+computedFields:
+  - voie_code
 resources:
   default:
     url: https://www.agglo-colmar.fr/data/geo/OpenData/FR-246800726-0678/FR-246800726-0678.zip
@@ -8,6 +10,5 @@ resources:
       voie_nom: voie
       _numeroComplet: numero
       commune_insee: com_insee_num
-      voie_code: rivoli
       long: _geometry.coordinates.0
       lat: _geometry.coordinates.1
