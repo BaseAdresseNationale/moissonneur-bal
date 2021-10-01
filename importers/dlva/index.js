@@ -1,6 +1,7 @@
 const {keyBy, deburr} = require('lodash')
 const communes = require('@etalab/decoupage-administratif/data/communes.json')
 const epci = require('@etalab/decoupage-administratif/data/epci.json')
+
 const communesIndex = keyBy(communes, 'code')
 const dlva = epci.find(e => e.code === '200034700')
 const communesDlva = dlva.membres.map(m => communesIndex[m.code])
@@ -37,7 +38,7 @@ function commune_insee(data) {
 function _numeroComplet(data) {
   const {numero, complt} = data._default
 
-  if (numero && complt.match(/^\d/)) {
+  if (numero && /^\d/.test(complt)) {
     console.log(`Numéro complet impossible à constituer : ${numero} ${complt}`)
     return
   }
