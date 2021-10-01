@@ -30,7 +30,7 @@ async function main() {
       return
     }
 
-    outputFile(join(__dirname, 'dist', `${source.meta.id}.csv`), originalFile)
+    await outputFile(join(__dirname, 'dist', `${source.meta.id}.csv`), originalFile)
 
     const codesCommunes = uniq(
       rows
