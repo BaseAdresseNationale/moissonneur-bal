@@ -32,7 +32,11 @@ async function main() {
 
     outputFile(join(__dirname, 'dist', `${source.meta.id}.csv`), originalFile)
 
-    const codesCommunes = uniq(rows.map(c => c.commune_insee || c.cle_interop.slice(0, 5)))
+    const codesCommunes = uniq(
+      rows
+        .filter(r => r.isValid)
+        .map(c => c.parsedValues.commune_insee || c.additionalValues.cle_interop.codeCommune)
+    )
 
     console.log(chalk.green(` * ${source.meta.title} (${source.meta.model})`))
     console.log(chalk.gray(`    Adresses trouvées : ${rows.length}`))
