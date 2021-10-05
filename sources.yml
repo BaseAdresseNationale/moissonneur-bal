@@ -119,10 +119,6 @@ whiteList:
     importer: innimond
     dataset: 5f22ad7bd878f3976265af48
 
-  - name: Adresses d’Yviers
-    importer: yviers
-    dataset: 5e2729468b4c410cadcd7407
-
   # Dépublication temporaire le temps d'améliorer la qualité des données
   # - name: Base Adresse Locale de Durance-Luberon-Verdon Agglomération
   #   importer: dlva
