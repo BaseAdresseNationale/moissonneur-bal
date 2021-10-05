@@ -124,8 +124,6 @@ whiteList:
   #   importer: dlva
   #   dataset: 5f8e9b24e5cf95adcc819c48
 
-  - dataset: 5e5da5b706e3e705430a0bf6
-
 blackList:
   - name: Sixt-sur-Aff
     dataset: 5d1b155b634f41553150048e
@@ -149,8 +147,9 @@ blackList:
   - dataset: 5e322303dee7e71547f5c8ec
     # Doublon moissonnage ODS Pays de la Loire
 
-  - dataset: 5fc07ab374b847735471eb96
-    # Source supprimée
-
-  - dataset: 5d26b53806e3e774dd614a75
-    # Source supprimée
+  - dataset: 5d72f45106e3e76febd78afd
+  - dataset: 60a3c6c477ced898a49a7035
+  - dataset: 5d72f45106e3e76fa1d78afd
+  - dataset: 604f15cce08ecc08b88f5617
+  - dataset: 612904755f59b6818346ea4e
+  - dataset: 6129047508917df8f846ea4f
