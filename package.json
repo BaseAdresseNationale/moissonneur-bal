@@ -7,7 +7,6 @@
   "license": "MIT",
   "private": false,
   "scripts": {
-    "contours:download": "curl http://etalab-datasets.geo.data.gouv.fr/contours-administratifs/2019/geojson/communes-100m.geojson.gz | gunzip > communes-100m.json",
     "lint": "xo",
     "build": "node --max_old_space_size=8192 build"
   },
@@ -17,7 +16,6 @@
     "@livingdata/keyv": "^4.1.0",
     "@livingdata/keyv-sqlite": "^2.1.0",
     "@slack/web-api": "^6.4.0",
-    "@turf/turf": "^5.1.6",
     "bluebird": "^3.7.2",
     "chalk": "^4.1.2",
     "decompress": "^4.2.1",

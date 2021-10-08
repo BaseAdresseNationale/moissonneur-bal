@@ -16,12 +16,6 @@ Agrégation des bases Adresse locales
 yarn
 ```
 
-### Téléchargement des contours administrations
-
-```bash
-yarn contours:download
-```
-
 ### Production des fichiers
 
 ```bash
