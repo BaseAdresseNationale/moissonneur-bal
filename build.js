@@ -35,7 +35,7 @@ async function main() {
 
     await bluebird.map(Object.keys(communesRows), async key => {
       await writeCsv(
-        join(datasetPath, `${key}.csv`),
+        join(datasetPath, `${key}.csv.gz`),
         communesRows[key].map(r => r.rawValues)
       )
     }, {concurrency: 4})
