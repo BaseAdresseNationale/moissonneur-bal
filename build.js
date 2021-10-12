@@ -5,7 +5,6 @@ const {outputFile} = require('fs-extra')
 const bluebird = require('bluebird')
 const {groupBy} = require('lodash')
 const chalk = require('chalk')
-const {expandMetaWithResults} = require('./lib/meta')
 const {computeList} = require('./lib/sources')
 const {processSource} = require('./lib/processing')
 const mongo = require('./lib/util/mongo')
@@ -18,7 +17,7 @@ async function main() {
   const sources = await computeList()
 
   await bluebird.map(sources, async source => {
-    const {originalFile, rows, errored, report} = await processSource(source)
+    const {originalFile, rows, errored} = await processSource(source)
 
     const datasetPath = join(__dirname, 'dist', source.meta.id)
 
@@ -46,8 +45,6 @@ async function main() {
     if (errored) {
       console.log(chalk.red(`    Lignes avec erreurs : ${errored}`))
     }
-
-    expandMetaWithResults(source.meta, {rows, report, errored})
 
     return source.meta
   }, {concurrency: 8})
