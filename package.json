@@ -12,7 +12,6 @@
   },
   "dependencies": {
     "@etalab/bal": "^1.5.1",
-    "@etalab/decoupage-administratif": "^0.9.0-0",
     "@livingdata/keyv": "^4.1.0",
     "@livingdata/keyv-sqlite": "^2.1.0",
     "@slack/web-api": "^6.4.0",

@@ -284,13 +284,6 @@
     papaparse "^5.3.0"
     yargs "^16.2.0"
 
-"@etalab/decoupage-administratif@^0.9.0-0":
-  version "0.9.0-0"
-  resolved "https://registry.yarnpkg.com/@etalab/decoupage-administratif/-/decoupage-administratif-0.9.0-0.tgz#cfd86089db66c1fe90c0322fd8ef85148164e856"
-  integrity sha512-TeAq6muzeqqs8/D9Ca+ZFSeGOLGIrod8UGTaM5KxAFRcu5Q7wIQ0cXSwY4NUFlmHT6Y2Ud023QNJFjq9Wy1ANw==
-  dependencies:
-    lodash "^4.17.15"
-
 "@humanwhocodes/config-array@^0.5.0":
   version "0.5.0"
   resolved "https://registry.yarnpkg.com/@humanwhocodes/config-array/-/config-array-0.5.0.tgz#1407967d4c6eecd7388f83acf1eaf4d0c6e58ef9"
@@ -3252,11 +3245,6 @@ lodash@^4.13.1:
   version "4.17.11"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.11.tgz#b39ea6229ef607ecd89e2c8df12536891cac9b8d"
   integrity sha512-cQKh8igo5QUhZ7lg38DYWAxMvjSAKG0A8wGSVimP07SIUEK2UO+arSRKbRZWtelMtN5V0Hkwh5ryOto/SshYIg==
-
-lodash@^4.17.15:
-  version "4.17.15"
-  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.15.tgz#b447f6670a0455bbfeedd11392eff330ea097548"
-  integrity sha512-8xOcRHvCjnocdS5cpwXQXVzmmh5e5+saE2QGoeQmbKmRS6J3VQppPOIt0MnmE+4xlZoumy0GPG0D0MVIQbNA1A==
 
 lodash@^4.17.21, lodash@^4.7.0:
   version "4.17.21"
