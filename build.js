@@ -7,6 +7,7 @@ const {computeList} = require('./lib/sources')
 const {processSource} = require('./lib/processing')
 const mongo = require('./lib/util/mongo')
 const {endFarms} = require('./lib/util/farms')
+const {gzip} = require('./lib/util/gzip')
 
 async function main() {
   await mongo.connect()
@@ -16,9 +17,10 @@ async function main() {
   await bluebird.map(sources, async source => {
     const {originalFile} = await processSource(source)
 
-    const datasetPath = join(__dirname, 'dist', source.meta.id)
-
-    await outputFile(join(datasetPath, 'original.csv'), originalFile)
+    await outputFile(
+      join(__dirname, 'dist', `${source.meta.id}.csv.gz`),
+      await gzip(originalFile)
+    )
 
     return source.meta
   }, {concurrency: 8})
