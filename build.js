@@ -4,7 +4,6 @@ const {join} = require('path')
 const {outputFile} = require('fs-extra')
 const bluebird = require('bluebird')
 const {groupBy} = require('lodash')
-const chalk = require('chalk')
 const {computeList} = require('./lib/sources')
 const {processSource} = require('./lib/processing')
 const mongo = require('./lib/util/mongo')
@@ -17,7 +16,7 @@ async function main() {
   const sources = await computeList()
 
   await bluebird.map(sources, async source => {
-    const {originalFile, rows, errored} = await processSource(source)
+    const {originalFile, rows} = await processSource(source)
 
     const datasetPath = join(__dirname, 'dist', source.meta.id)
 
@@ -28,23 +27,12 @@ async function main() {
       r => r.parsedValues.commune_insee || r.additionalValues?.cle_interop?.codeCommune || 'unknown'
     )
 
-    const codesCommunes = Object.keys(communesRows)
-      .filter(codeCommune => codeCommune !== 'unknown')
-      .filter(codeCommune => communesRows[codeCommune].some(r => r.isValid))
-
     await bluebird.map(Object.keys(communesRows), async key => {
       await writeCsv(
         join(datasetPath, `${key}.csv.gz`),
         communesRows[key].map(r => r.rawValues)
       )
     }, {concurrency: 4})
-
-    console.log(chalk.green(` * ${source.meta.title} (${source.meta.source}|${source.meta.model})`))
-    console.log(chalk.gray(`    Adresses trouvées : ${rows.length}`))
-    console.log(chalk.gray(`    Communes : ${codesCommunes.length}`))
-    if (errored) {
-      console.log(chalk.red(`    Lignes avec erreurs : ${errored}`))
-    }
 
     return source.meta
   }, {concurrency: 8})
