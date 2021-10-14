@@ -10,7 +10,7 @@ const mongo = require('./lib/util/mongo')
 const {endFarms} = require('./lib/util/farms')
 const {gzip} = require('./lib/util/gzip')
 const {fetchAllIfUpdated} = require('./lib/resources')
-const extractAdressesCustom = require('./lib/converters/custom').importData
+const convert = require('./lib/convert')
 
 async function processSource(source) {
   try {
@@ -22,7 +22,7 @@ async function processSource(source) {
 
     // Conversion éventuelle des adresses au format BAL
     if (source.converter) {
-      return await extractAdressesCustom(source)
+      return await convert(source)
     }
 
     return {originalFile: source.resources.default.data}
