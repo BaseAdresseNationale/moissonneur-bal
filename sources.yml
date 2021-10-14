@@ -4,52 +4,52 @@ whiteList:
     url: https://download.data.grandlyon.com/files/grandlyon/localisation/bal/bal_200046977.csv
 
   - name: Bordeaux Métropole
-    importer: bordeaux-metropole
+    converter: bordeaux-metropole
     dataset: 5a02bf6188ee38130d1057c9
     homepage: https://data.bordeaux-metropole.fr/data.php?layer=FV_ADRESSE_P
 
   - name: Châlons Agglomération
-    importer: chalons-agglomeration
+    converter: chalons-agglomeration
     dataset: 5c14547606e3e7530604ccef
     homepage: http://opendata.chalons-agglo.fr/datasets/ce237a8f47bc450d9abd6bfa84a44f74_3
 
   - name: Colmar Agglomération
-    importer: colmar-agglomeration
+    converter: colmar-agglomeration
     slug: colmar-agglomeration
     homepage: https://www.agglo-colmar.fr/geo
 
   - name: Grand Paris Seine Ouest
-    importer: grand-paris-seine-ouest
+    converter: grand-paris-seine-ouest
     dataset: 55716fe9c751df588de5726a
 
   - name: Lille Métropole
-    importer: lille-metropole
+    converter: lille-metropole
     dataset: 58b69b21a3a7295a7d8251b5
     homepage: https://opendata.lillemetropole.fr/explore/dataset/seuils_adresses_mel/
 
   - name: Lorient Agglomération
-    importer: lorient-agglomeration
+    converter: lorient-agglomeration
     dataset: 5a09aa7288ee383b626c5ea4
     homepage: http://geocatalogue.lorient-agglo.bzh/les-donnees/Cartographie-des-points-adresse-de-Lorient-Agglomeration/12392c369e524cc98cf4c512166c7fed
 
   - name: Ville de Montpellier
-    importer: montpellier
+    converter: montpellier
     slug: montpellier
     organization: 5847cb5cc751df5d58c0bb7e
     homepage: http://data.montpellier3m.fr/dataset/point-adresse-de-montpellier
 
   - name: Ville de Nanterre
-    importer: nanterre-ville
+    converter: nanterre-ville
     dataset: 5ad75e1dc751df42a0357f8c
     homepage: https://www.nanterre.fr/1409-les-adresses.htm
 
   - name: Ville de Paris
-    importer: paris
+    converter: paris
     dataset: 59590cf0a3a7291dd09c7fd6
     homepage: https://opendata.paris.fr/explore/dataset/adresse_paris/
 
   - name: Quimper Bretagne Occidentale
-    importer: quimper-bretagne-occidentale
+    converter: quimper-bretagne-occidentale
     dataset: 5b5aea25c751df35616a7420
     homepage: https://geobretagne.fr/geonetwork/srv/fre/catalog.search#/metadata/4a9179ee-1cad-49f1-9746-e2e377a8fc95
 
@@ -70,23 +70,23 @@ whiteList:
 
   - name: Grenoble
     dataset: 5af03721b595081c1c80a8ad
-    importer: grenoble
+    converter: grenoble
 
   - name: Metz Métropole
     dataset: 542ab42f88ee382b8f22e2e4
-    importer: metz-metropole
+    converter: metz-metropole
 
   - name: La Rochelle
     organization: 5821930b88ee386862c65bb3
     slug: la-rochelle
-    importer: la-rochelle
+    converter: la-rochelle
 
   - name: Bassussarry
-    importer: bassussarry
+    converter: bassussarry
     slug: bassussarry
 
   - name: BAL du Grand Poitiers
-    importer: grand-poitiers
+    converter: grand-poitiers
     dataset: 5e3007a28b4c416184143179
 
   - name: Référentiel Adresses du Pays Compiégnois
@@ -106,11 +106,11 @@ whiteList:
     # Non référencé sur data.gouv.fr
 
   - name: Adresses de Saint-Denis (La Réunion)
-    importer: saint-denis-reunion
+    converter: saint-denis-reunion
     dataset: 5d2e6b939ce2e7643a90b663
 
   - name: Adresses d’Innimond
-    importer: innimond
+    converter: innimond
     dataset: 5f22ad7bd878f3976265af48
 
 blackList:
