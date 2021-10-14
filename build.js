@@ -11,7 +11,6 @@ const {endFarms} = require('./lib/util/farms')
 const {gzip} = require('./lib/util/gzip')
 const {fetchAllIfUpdated} = require('./lib/resources')
 const extractAdressesCustom = require('./lib/converters/custom').importData
-const extractAdressesBAL = require('./lib/converters/bal').importData
 
 async function processSource(source) {
   try {
@@ -26,7 +25,7 @@ async function processSource(source) {
       return await extractAdressesCustom(source)
     }
 
-    return await extractAdressesBAL(source)
+    return {originalFile: source.resources.default.data}
   } catch (error) {
     console.log(chalk.red(`${source.meta.title} - Impossible d’accéder aux adresses`))
     console.log(error)
