@@ -31,7 +31,7 @@ async function processSource(source) {
     const resource = await fetchIfUpdated({url: source.url})
     return {originalFile: resource.data}
   } catch (error) {
-    console.log(chalk.red(`${source.meta.title} - Impossible d’accéder aux adresses`))
+    console.log(chalk.red(`${source.title} - Impossible d’accéder aux adresses`))
     console.log(error)
     return {}
   }
@@ -50,7 +50,7 @@ async function main() {
     }
 
     await outputFile(
-      join(__dirname, 'dist', `${source.meta.id}.csv.gz`),
+      join(__dirname, 'dist', `${source.id}.csv.gz`),
       await gzip(originalFile)
     )
   }, {concurrency: 8})
