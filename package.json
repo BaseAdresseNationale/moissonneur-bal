@@ -11,8 +11,6 @@
     "build": "node --max_old_space_size=8192 build"
   },
   "dependencies": {
-    "@livingdata/keyv": "^4.1.0",
-    "@livingdata/keyv-sqlite": "^2.1.0",
     "bluebird": "^3.7.2",
     "chalk": "^4.1.2",
     "decompress": "^4.2.1",
