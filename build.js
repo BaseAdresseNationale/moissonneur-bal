@@ -30,6 +30,7 @@ async function processSource(source) {
   } catch (error) {
     console.log(chalk.red(`${source.meta.title} - Impossible d’accéder aux adresses`))
     console.log(error)
+    return {}
   }
 }
 
@@ -41,12 +42,14 @@ async function main() {
   await bluebird.map(sources, async source => {
     const {originalFile} = await processSource(source)
 
+    if (!originalFile) {
+      return
+    }
+
     await outputFile(
       join(__dirname, 'dist', `${source.meta.id}.csv.gz`),
       await gzip(originalFile)
     )
-
-    return source.meta
   }, {concurrency: 8})
 
   endFarms()
