@@ -5,14 +5,16 @@ const {keyBy} = require('lodash')
 const chalk = require('chalk')
 const {outputFile} = require('fs-extra')
 const bluebird = require('bluebird')
-const {computeList} = require('./lib/sources')
+
 const mongo = require('./lib/util/mongo')
 const {endFarms} = require('./lib/util/farms')
 const {gzip} = require('./lib/util/gzip')
+
+const {computeList} = require('./lib/sources')
 const {fetchAllIfUpdated, fetchIfUpdated} = require('./lib/resources')
 const {convert, getResourcesDefinitions} = require('./lib/convert')
 
-async function fetchAndConvert(source) {
+async function fetchIfUpdatedAndConvert(source) {
   const {converter} = source
   // Téléchargement des ressources
   const resourcesDefinitions = getResourcesDefinitions(converter)
@@ -25,7 +27,7 @@ async function fetchAndConvert(source) {
 async function processSource(source) {
   try {
     if (source.converter) {
-      return await fetchAndConvert(source)
+      return await fetchIfUpdatedAndConvert(source)
     }
 
     const resource = await fetchIfUpdated({url: source.url})
