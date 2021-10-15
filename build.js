@@ -56,11 +56,12 @@ async function main() {
   console.log(`${sourcesToHarvest.length} sources à moissonner`)
 
   await bluebird.map(sourcesToHarvest, async source => {
-    const harvestDate = new Date()
+    await Source.startHarvesting(source._id)
+
     const {originalFile} = await processSource(source)
 
     if (!originalFile) {
-      await Source.finishedHarvesting(source._id, harvestDate, 'unavailable')
+      await Source.finishHarvesting(source._id, 'failed')
       return
     }
 
@@ -69,7 +70,7 @@ async function main() {
       await gzip(originalFile)
     )
 
-    await Source.finishedHarvesting(source._id, harvestDate, 'completed')
+    await Source.finishHarvesting(source._id, 'completed')
   }, {concurrency: 8})
 
   endFarms()
