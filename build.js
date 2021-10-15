@@ -36,12 +36,13 @@ async function processSource(source) {
     return {originalFile: resource.data}
   } catch (error) {
     console.log(chalk.red(`${source.title} - Impossible d’accéder aux adresses`))
-    console.log(error)
+    console.log(error.message)
     return {}
   }
 }
 
-async function updateSources(sources) {
+async function updateSources() {
+  const sources = await computeList()
   await Promise.all(sources.map(async source => Source.upsert(source)))
   await Source.setOthersAsDeleted(sources.map(s => s._id))
 }
@@ -49,13 +50,17 @@ async function updateSources(sources) {
 async function main() {
   await mongo.connect()
 
-  const sources = await computeList()
-  await updateSources(sources)
+  await updateSources()
 
-  await bluebird.map(sources, async source => {
+  const sourcesToHarvest = await Source.findSourcesToHarvest()
+  console.log(`${sourcesToHarvest.length} sources à moissonner`)
+
+  await bluebird.map(sourcesToHarvest, async source => {
+    const harvestDate = new Date()
     const {originalFile} = await processSource(source)
 
     if (!originalFile) {
+      await Source.finishedHarvesting(source._id, harvestDate, 'unavailable')
       return
     }
 
@@ -63,6 +68,8 @@ async function main() {
       join(__dirname, 'dist', `${source._id}.csv.gz`),
       await gzip(originalFile)
     )
+
+    await Source.finishedHarvesting(source._id, harvestDate, 'completed')
   }, {concurrency: 8})
 
   endFarms()
