@@ -14,6 +14,8 @@ const {computeList} = require('./lib/sources')
 const {fetchAllIfUpdated, fetchIfUpdated} = require('./lib/resources')
 const {convert, getResourcesDefinitions} = require('./lib/convert')
 
+const Source = require('./lib/models/source')
+
 async function fetchIfUpdatedAndConvert(source) {
   const {converter} = source
   // Téléchargement des ressources
@@ -39,10 +41,16 @@ async function processSource(source) {
   }
 }
 
+async function updateSources(sources) {
+  await Promise.all(sources.map(async source => Source.upsert(source)))
+  await Source.setOthersAsDeleted(sources.map(s => s._id))
+}
+
 async function main() {
   await mongo.connect()
 
   const sources = await computeList()
+  await updateSources(sources)
 
   await bluebird.map(sources, async source => {
     const {originalFile} = await processSource(source)
@@ -52,7 +60,7 @@ async function main() {
     }
 
     await outputFile(
-      join(__dirname, 'dist', `${source.id}.csv.gz`),
+      join(__dirname, 'dist', `${source._id}.csv.gz`),
       await gzip(originalFile)
     )
   }, {concurrency: 8})
