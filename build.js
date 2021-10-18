@@ -28,7 +28,7 @@ async function handleNewFile({sourceId, newFile, newFileHash, currentFileId, cur
     return {updateStatus: 'unchanged', fileId: currentFileId, fileHash: currentFileHash}
   }
 
-  const {_id} = await Source.writeFile(sourceId, newFile)
+  const {_id} = await Source.writeFile(sourceId, newFile, newFileHash)
 
   return {updateStatus: 'updated', fileId: _id, fileHash: newFileHash}
 }
