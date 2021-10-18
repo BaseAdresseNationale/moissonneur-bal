@@ -24,6 +24,7 @@
     "gdal-next": "^2.8.0",
     "got": "^11.8.2",
     "hasha": "^5.2.2",
+    "http-errors": "^1.8.0",
     "iconv-lite": "^0.6.3",
     "into-stream": "^6.0.0",
     "js-yaml": "^4.1.0",
