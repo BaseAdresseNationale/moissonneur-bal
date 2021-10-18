@@ -1,21 +1,37 @@
 #!/usr/bin/env node --max_old_space_size=8192
 require('dotenv').config()
-const {join} = require('path')
-const {keyBy, omit} = require('lodash')
+const {keyBy} = require('lodash')
+const hasha = require('hasha')
 const chalk = require('chalk')
-const {outputFile} = require('fs-extra')
 const bluebird = require('bluebird')
 
 const mongo = require('./lib/util/mongo')
 const {endFarms} = require('./lib/util/farms')
-const {gzip} = require('./lib/util/gzip')
 
 const {computeList} = require('./lib/sources')
-const {fetchAllIfUpdated, fetchIfUpdated} = require('./lib/resources')
+const {fetchAllIfUpdated, fetchIfUpdated, resourceToArtefact} = require('./lib/resources')
 const {convert, getResourcesDefinitions} = require('./lib/convert')
 
 const Source = require('./lib/models/source')
 const Harvest = require('./lib/models/harvest')
+
+async function handleNewFile({sourceId, newFile, newFileHash, currentFileId, currentFileHash}) {
+  if (!sourceId || !newFile) {
+    throw new Error('handleNewFile must be called at least with sourceId and newFile parameters')
+  }
+
+  if (!newFileHash) {
+    newFileHash = await hasha.async(newFile, {algorithm: 'sha256'})
+  }
+
+  if (currentFileHash && newFileHash === currentFileHash) {
+    return {updateStatus: 'unchanged', fileId: currentFileId, fileHash: currentFileHash}
+  }
+
+  const {_id} = await Source.writeFile(sourceId, newFile)
+
+  return {updateStatus: 'updated', fileId: _id, fileHash: newFileHash}
+}
 
 async function fetchIfUpdatedAndConvert(source, indexedFetchArtefacts) {
   const {converter} = source
@@ -38,36 +54,53 @@ async function fetchIfUpdatedAndConvert(source, indexedFetchArtefacts) {
   if (fetchedResources.some(r => r.data)) {
     const convertedFile = await convert(converter, keyBy(fetchedResources, 'name'))
     return {
-      fetchArtefacts: fetchedResources.map(r => omit(r, 'data')),
-      updateStatus: 'updated',
-      newFile: convertedFile
+      fetchArtefacts: fetchedResources.map(r => resourceToArtefact(r)),
+      convertedFile
     }
   }
 
   return {
-    fetchArtefacts: fetchedResources,
-    updateStatus: 'unchanged'
+    fetchArtefacts: fetchedResources.map(r => resourceToArtefact(r))
   }
 }
 
 async function processSource(source) {
   const lastCompletedHarvest = await Harvest.getLastCompletedHarvest(source._id)
-  const {fetchArtefacts: previousFetchArtefacts} = lastCompletedHarvest || {}
+  const {fetchArtefacts: previousFetchArtefacts, fileId, fileHash} = lastCompletedHarvest || {}
   const indexedFetchArtefacts = keyBy(previousFetchArtefacts, 'url')
+
+  const result = {}
+  let newFile
+  let newFileHash
 
   try {
     if (source.converter) {
-      return await fetchIfUpdatedAndConvert(source, indexedFetchArtefacts)
+      const {convertedFile, fetchArtefacts} = await fetchIfUpdatedAndConvert(source, indexedFetchArtefacts)
+      result.fetchArtefacts = fetchArtefacts
+      newFile = convertedFile
+    } else {
+      const relatedFetchArtefact = indexedFetchArtefacts[source.url] || {}
+      const resource = await fetchIfUpdated({...relatedFetchArtefact, url: source.url})
+
+      result.fetchArtefacts = [resourceToArtefact(resource)]
+      newFile = resource.data
+      newFileHash = resource.hash
     }
 
-    const relatedFetchArtefact = indexedFetchArtefacts[source.url] || {}
-    const resource = await fetchIfUpdated({...relatedFetchArtefact, url: source.url})
-
-    return {
-      fetchArtefacts: [omit(resource, 'data')],
-      updateStatus: resource.data ? 'updated' : 'unchanged',
-      newFile: resource.data || undefined
+    if (newFile) {
+      const handleNewFileResult = await handleNewFile({
+        sourceId: source._id,
+        newFile,
+        newFileHash,
+        currentFileId: fileId,
+        currentFileHash: fileHash
+      })
+      Object.assign(result, handleNewFileResult)
+    } else {
+      Object.assign(result, {updateStatus: 'unchanged', fileId, fileHash})
     }
+
+    return result
   } catch (error) {
     console.log(chalk.red(`${source.title} - Impossible d’accéder aux adresses`))
     console.log(error.message)
@@ -92,21 +125,20 @@ async function main() {
   await bluebird.map(sourcesToHarvest, async source => {
     await Source.startHarvesting(source._id)
 
-    const {fetchArtefacts, updateStatus, newFile, error} = await processSource(source)
+    const {fetchArtefacts, updateStatus, fileId, fileHash, error} = await processSource(source)
 
     if (error) {
       await Source.finishHarvesting(source._id, {status: 'failed', error})
       return
     }
 
-    if (newFile) {
-      await outputFile(
-        join(__dirname, 'dist', `${source._id}.csv.gz`),
-        await gzip(newFile)
-      )
-    }
-
-    await Source.finishHarvesting(source._id, {status: 'completed', fetchArtefacts, updateStatus})
+    await Source.finishHarvesting(source._id, {
+      status: 'completed',
+      fetchArtefacts,
+      updateStatus,
+      fileId,
+      fileHash
+    })
   }, {concurrency: 8})
 
   endFarms()
