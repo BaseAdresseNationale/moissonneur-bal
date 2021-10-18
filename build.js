@@ -118,6 +118,7 @@ async function main() {
   await mongo.connect()
 
   await updateSources()
+  await Source.cleanStalledHarvest()
 
   const sourcesToHarvest = await Source.findSourcesToHarvest()
   console.log(`${sourcesToHarvest.length} sources à moissonner`)
