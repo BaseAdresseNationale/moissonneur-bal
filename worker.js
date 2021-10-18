@@ -114,12 +114,11 @@ async function updateSources() {
   await Source.setOthersAsDeleted(sources.map(s => s._id))
 }
 
-async function main() {
-  await mongo.connect()
-
-  await updateSources()
+async function cleanStalledHarvest() {
   await Source.cleanStalledHarvest()
+}
 
+async function harvestNewOrOutdated() {
   const sourcesToHarvest = await Source.findSourcesToHarvest()
   console.log(`${sourcesToHarvest.length} sources à moissonner`)
 
@@ -141,6 +140,14 @@ async function main() {
       fileHash
     })
   }, {concurrency: 8})
+}
+
+async function main() {
+  await mongo.connect()
+
+  await updateSources()
+  await cleanStalledHarvest()
+  await harvestNewOrOutdated()
 
   endFarms()
   await mongo.disconnect()

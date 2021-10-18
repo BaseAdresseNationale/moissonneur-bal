@@ -9,7 +9,7 @@
   "scripts": {
     "start": "node server",
     "lint": "xo",
-    "build": "node --max_old_space_size=8192 build"
+    "worker": "node --max_old_space_size=8192 worker"
   },
   "dependencies": {
     "bluebird": "^3.7.2",
