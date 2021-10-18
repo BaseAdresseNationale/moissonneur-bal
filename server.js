@@ -36,6 +36,10 @@ async function main() {
     res.send(source)
   }))
 
+  app.get('/files/:fileId/download', w(async (req, res) => {
+    await mongo.sendFile(req.params.fileId, res)
+  }))
+
   app.use(errorHandler)
 
   await mongo.connect()
