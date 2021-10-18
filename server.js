@@ -24,6 +24,11 @@ async function main() {
     res.send(sources)
   }))
 
+  app.get('/sources/:sourceId', w(async (req, res) => {
+    const source = await Source.getSource(req.params.sourceId)
+    res.send(source)
+  }))
+
   await mongo.connect()
 
   const port = process.env.PORT || 5000
