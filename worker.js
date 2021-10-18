@@ -142,14 +142,28 @@ async function harvestNewOrOutdated() {
   }, {concurrency: 8})
 }
 
+async function work() {
+  console.log('Nettoyage des moissonnage bloqués…')
+  await cleanStalledHarvest()
+  console.log('OK!')
+
+  console.log('Mise à jour de la liste des sources…')
+  await updateSources()
+  console.log('OK!')
+
+  console.log('Moissonnage des sources nouvelles et obsolètes')
+  await harvestNewOrOutdated()
+  console.log('OK!')
+
+  console.log('……… maintenant on s’endort pour 1 heure.')
+  setTimeout(async () => {
+    await work()
+  }, 3600 * 1000) // Chaque heure
+}
+
 async function main() {
   await mongo.connect()
-
-  setInterval(async () => {
-    await cleanStalledHarvest()
-    await updateSources()
-    await harvestNewOrOutdated()
-  }, 3600 * 1000) // Chaque heure
+  await work()
 }
 
 main().catch(error => {
