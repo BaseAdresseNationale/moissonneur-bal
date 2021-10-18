@@ -145,12 +145,11 @@ async function harvestNewOrOutdated() {
 async function main() {
   await mongo.connect()
 
-  await updateSources()
-  await cleanStalledHarvest()
-  await harvestNewOrOutdated()
-
-  endFarms()
-  await mongo.disconnect()
+  setInterval(async () => {
+    await cleanStalledHarvest()
+    await updateSources()
+    await harvestNewOrOutdated()
+  }, 3600 * 1000) // Chaque heure
 }
 
 main().catch(error => {
