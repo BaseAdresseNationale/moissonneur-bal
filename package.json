@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@etalab/bal": "^1.7.1",
+    "@slack/web-api": "^6.5.1",
     "bluebird": "^3.7.2",
     "chalk": "^4.1.2",
     "content-disposition": "^0.5.3",

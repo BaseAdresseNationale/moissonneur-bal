@@ -7,6 +7,7 @@ const bluebird = require('bluebird')
 
 const mongo = require('./lib/util/mongo')
 const {endFarms} = require('./lib/util/farms')
+const {sendMessage} = require('./lib/util/slack')
 
 const {computeList} = require('./lib/sources')
 const {fetchAllIfUpdated, fetchIfUpdated, resourceToArtefact} = require('./lib/resources')
@@ -130,6 +131,12 @@ async function harvestNewOrOutdated() {
     if (error) {
       await Source.finishHarvesting(source._id, {status: 'failed', error})
       return
+    }
+
+    if (updateStatus === 'updated') {
+      const message = `Mise à jour d’une Base Adresse Locale : ${source.title}
+      _Moissonnage via ${source.type} :tractor:_`
+      await sendMessage(message)
     }
 
     await Source.finishHarvesting(source._id, {
