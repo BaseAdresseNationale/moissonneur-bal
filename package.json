@@ -12,6 +12,7 @@
     "worker": "node --max_old_space_size=8192 worker"
   },
   "dependencies": {
+    "@etalab/bal": "^1.7.1",
     "bluebird": "^3.7.2",
     "chalk": "^4.1.2",
     "content-disposition": "^0.5.3",
