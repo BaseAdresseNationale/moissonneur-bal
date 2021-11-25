@@ -40,19 +40,19 @@
     talisman "^1.1.4"
     written-number "^0.9.1"
 
-"@etalab/bal@^1.6.0":
-  version "1.6.0"
-  resolved "https://registry.yarnpkg.com/@etalab/bal/-/bal-1.6.0.tgz#4fd41e7f1895b4dac6415bfc965ea120269ff247"
-  integrity sha512-0i0aF+1eDtCuOq43N61qkyCl7H4Fuw6EhIqS5pyWhLGrZMdWQ1aKFTN5xIg+DDWd+1Wc1rTVpqliEkpqAc6iGg==
+"@etalab/bal@^1.7.0":
+  version "1.7.0"
+  resolved "https://registry.yarnpkg.com/@etalab/bal/-/bal-1.7.0.tgz#a54730a1a27748a1aac59aaf193e2a9aff4c9ed9"
+  integrity sha512-B06+LWtqEOe81BufDYR8JSMhGbSuwy7iwT5M68Up+isQFnN7PEWqnEfM+9FqlBl/F9IS6y794JFSJAsaEp3T6w==
   dependencies:
     blob-to-buffer "^1.2.9"
     chalk "^4.1.2"
-    date-fns "^2.25.0"
+    date-fns "^2.26.0"
     iconv-lite "^0.6.3"
     jschardet-french "^0.0.1"
     lodash "^4.17.21"
     papaparse "^5.3.1"
-    yargs "^16.2.0"
+    yargs "^17.2.1"
 
 "@etalab/decoupage-administratif@^0.8.0":
   version "0.8.0"
@@ -2496,10 +2496,10 @@ dashdash@^1.12.0:
   dependencies:
     assert-plus "^1.0.0"
 
-date-fns@^2.25.0:
-  version "2.25.0"
-  resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-2.25.0.tgz#8c5c8f1d958be3809a9a03f4b742eba894fc5680"
-  integrity sha512-ovYRFnTrbGPD4nqaEqescPEv1mNwvt+UTqI3Ay9SzNtey9NZnYu6E2qCcBBgJ6/2VF1zGGygpyTDITqpQQ5e+w==
+date-fns@^2.26.0:
+  version "2.26.0"
+  resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-2.26.0.tgz#fa45305543c392c4f914e50775fd2a4461e60fbd"
+  integrity sha512-VQI812dRi3cusdY/fhoBKvc6l2W8BPWU1FNVnFH9Nttjx4AFBRzfSVb/Eyc7jBT6e9sg1XtAGsYpBQ6c/jygbg==
 
 debug@=3.1.0:
   version "3.1.0"
@@ -7246,10 +7246,10 @@ yargs-parser@^20.2.2:
   resolved "https://registry.yarnpkg.com/yargs-parser/-/yargs-parser-20.2.5.tgz#5d37729146d3f894f39fc94b6796f5b239513186"
   integrity sha512-jYRGS3zWy20NtDtK2kBgo/TlAoy5YUuhD9/LZ7z7W4j1Fdw2cqD0xEEclf8fxc8xjD6X5Qr+qQQwCEsP8iRiYg==
 
-yargs@^16.2.0:
-  version "16.2.0"
-  resolved "https://registry.yarnpkg.com/yargs/-/yargs-16.2.0.tgz#1c82bf0f6b6a66eafce7ef30e376f49a12477f66"
-  integrity sha512-D1mvvtDG0L5ft/jGWkLpG1+m0eQxOfaBvTNELraWj22wSVUMWxZUvYgJYcKh6jGGIkJFhH4IZPQhR4TKpc8mBw==
+yargs@^17.2.1:
+  version "17.2.1"
+  resolved "https://registry.yarnpkg.com/yargs/-/yargs-17.2.1.tgz#e2c95b9796a0e1f7f3bf4427863b42e0418191ea"
+  integrity sha512-XfR8du6ua4K6uLGm5S6fA+FIJom/MdJcFNVY8geLlp2v8GYbOXD4EB1tPNZsRn4vBzKGMgb5DRZMeWuFc2GO8Q==
   dependencies:
     cliui "^7.0.2"
     escalade "^3.1.1"
