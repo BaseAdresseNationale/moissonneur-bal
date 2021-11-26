@@ -5,7 +5,7 @@ whiteList:
 
   - name: Bordeaux Métropole
     converter: bordeaux-metropole
-    dataset: 5a02bf6188ee38130d1057c9
+    dataset: 61a025b1557be5ba6399339b
     homepage: https://data.bordeaux-metropole.fr/data.php?layer=FV_ADRESSE_P
 
   - name: Châlons Agglomération
