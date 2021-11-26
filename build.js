@@ -17,6 +17,14 @@ const {notify} = require('./lib/util/slack')
 const db = new Keyv('sqlite://bal.sqlite')
 const distPath = join(__dirname, 'dist')
 
+async function harmlessProcessSource(source) {
+  try {
+    return await processSource(source)
+  } catch {
+    return {}
+  }
+}
+
 async function main() {
   const sources = await computeList()
 
@@ -37,9 +45,9 @@ async function main() {
 
   const datasets = await bluebird.map(sources, async source => {
     const interval = setInterval(() => console.log(`processing ${source.meta.title}`), 60000)
-    const {data, errored, report} = await processSource(source)
+    const {data, errored, report} = await harmlessProcessSource(source)
 
-    if (data.length === 0) {
+    if (!data || data.length === 0) {
       clearInterval(interval)
       return
     }
