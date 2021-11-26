@@ -22,11 +22,6 @@ whiteList:
     importer: grand-paris-seine-ouest
     dataset: 55716fe9c751df588de5726a
 
-  - name: Lille Métropole
-    importer: lille-metropole
-    dataset: 58b69b21a3a7295a7d8251b5
-    homepage: https://opendata.lillemetropole.fr/explore/dataset/seuils_adresses_mel/
-
   - name: Lorient Agglomération
     importer: lorient-agglomeration
     dataset: 5a09aa7288ee383b626c5ea4
