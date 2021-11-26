@@ -134,8 +134,8 @@ async function harvestNewOrOutdated() {
     }
 
     if (updateStatus === 'updated') {
-      const message = `Mise à jour d’une Base Adresse Locale : ${source.title}
-      _Moissonnage via ${source.type} :tractor:_`
+      const message = `Mise à jour d’une Base Adresse Locale : *${source.title}*
+_Moissonnage via ${source.type} :tractor:_`
       await sendMessage(message)
     }
 
