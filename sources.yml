@@ -22,12 +22,6 @@ whiteList:
     dataset: 5a09aa7288ee383b626c5ea4
     homepage: http://geocatalogue.lorient-agglo.bzh/les-donnees/Cartographie-des-points-adresse-de-Lorient-Agglomeration/12392c369e524cc98cf4c512166c7fed
 
-  - name: Ville de Montpellier
-    importer: montpellier
-    slug: montpellier
-    organization: 5847cb5cc751df5d58c0bb7e
-    homepage: http://data.montpellier3m.fr/dataset/point-adresse-de-montpellier
-
   - name: Ville de Nanterre
     importer: nanterre-ville
     dataset: 5ad75e1dc751df42a0357f8c
