@@ -88,12 +88,6 @@ whiteList:
     slug: marseille
     # Non référencé sur data.gouv.fr
 
-  - name: BAL de la Communauté d'Agglomération du Puy-en-Velay
-    url: https://opendata.agglo-lepuyenvelay.fr/geoadressage/opendata/adresses/bal
-    organization: 5cd531978b4c41605df23b89
-    slug: agglo-lepuyenvelay
-    # Non référencé sur data.gouv.fr
-
   - name: Adresses de Saint-Denis (La Réunion)
     converter: saint-denis-reunion
     dataset: 5d2e6b939ce2e7643a90b663
