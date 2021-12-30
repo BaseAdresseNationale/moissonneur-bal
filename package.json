@@ -42,7 +42,7 @@
     "worker-farm": "^1.7.0"
   },
   "devDependencies": {
-    "xo": "^0.45.0"
+    "xo": "^0.47.0"
   },
   "xo": {
     "space": 2,
