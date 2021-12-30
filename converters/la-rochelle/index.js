@@ -1,5 +1,7 @@
-function commune_insee() {
-  return '17300'
+const fields = {
+  commune_insee() {
+    return '17300'
+  }
 }
 
-module.exports = {commune_insee}
+module.exports = fields
