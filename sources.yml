@@ -18,10 +18,6 @@ whiteList:
     slug: colmar-agglomeration
     homepage: https://www.agglo-colmar.fr/geo
 
-  - name: Grand Paris Seine Ouest
-    converter: grand-paris-seine-ouest
-    dataset: 55716fe9c751df588de5726a
-
   - name: Lorient Agglomération
     converter: lorient-agglomeration
     dataset: 5a09aa7288ee383b626c5ea4
