@@ -38,11 +38,6 @@ whiteList:
     dataset: 59590cf0a3a7291dd09c7fd6
     homepage: https://opendata.paris.fr/explore/dataset/adresse_paris/
 
-  - name: Quimper Bretagne Occidentale
-    importer: quimper-bretagne-occidentale
-    dataset: 5b5aea25c751df35616a7420
-    homepage: https://geobretagne.fr/geonetwork/srv/fre/catalog.search#/metadata/4a9179ee-1cad-49f1-9746-e2e377a8fc95
-
   - name: Saint-Brieuc Armor Agglomération
     url: https://datarmor.cotesdarmor.fr/data-unpaginated/dataserver/cg22/data/200069409_base_adresse_locale?&$inlinecount=allpages&$format=csv
     slug: saint-brieuc-armor-agglomeration
