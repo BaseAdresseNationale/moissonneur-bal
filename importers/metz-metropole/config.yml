@@ -4,6 +4,7 @@ join:
 resources:
   default:
     url: https://maps.metzmetropole.fr/ows?service=WFS&version=2.0.0&request=GetFeature&typeName=public:fdp_voi_nume&srsName=EPSG:4326&outputFormat=json
+    rejectUnauthorized: false
     format: geojson
     fields:
       numeroComplet: lib
@@ -14,6 +15,7 @@ resources:
       lat: _geometry.coordinates.1
   voies:
     url: https://maps.metzmetropole.fr/ows?service=WFS&version=2.0.0&request=GetFeature&typeName=public:fdp_voi_voie&srsName=EPSG:4326&outputFormat=json
+    rejectUnauthorized: false
     format: geojson
     fields:
       _idVoie: id
