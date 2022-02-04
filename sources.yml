@@ -84,10 +84,6 @@ whiteList:
     slug: marseille
     # Non référencé sur data.gouv.fr
 
-  - name: Adresses de Saint-Denis (La Réunion)
-    importer: saint-denis-reunion
-    dataset: 5d2e6b939ce2e7643a90b663
-
   - name: Adresses d’Innimond
     importer: innimond
     dataset: 5f22ad7bd878f3976265af48
