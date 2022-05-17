@@ -84,14 +84,13 @@ whiteList:
   #   importer: dlva
   #   dataset: 5f8e9b24e5cf95adcc819c48
 
+  - dataset: 609a300e4b0a3815bff75ba2
+    url: https://www.pigma.org/datanouvelleaquitaine/dataset/643819e0-6dd8-48b8-b20e-718f8cffe118/resource/cb170a67-986b-48f2-b4da-764fab51042a/download/20210721_v_bal_aitf_1_2.csv
+
 blackList:
   - name: Sixt-sur-Aff
     dataset: 5d1b155b634f41553150048e
     # Non valide
-
-  - name: Pirae (Polynésie française)
-    dataset: 5d5f25846f444112e0dfc2cd
-    # Non supporté à ce stade
 
   - name: Base Adresse Locale sur le territoire de la Métropole NCA
     dataset: 5c2459b206e3e7551204ccef
