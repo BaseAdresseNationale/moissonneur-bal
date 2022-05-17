@@ -19,7 +19,7 @@
     "@livingdata/keyv": "^4.1.0",
     "@livingdata/keyv-sqlite": "^2.1.0",
     "@slack/web-api": "^5.11.0",
-    "@turf/turf": "^5.1.6",
+    "@turf/turf": "^6.5.0",
     "bluebird": "^3.7.2",
     "chalk": "^4.0.0",
     "csv-write-stream": "^2.0.0",
