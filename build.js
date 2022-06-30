@@ -26,6 +26,7 @@ async function harmlessProcessSource(source) {
 }
 
 async function main() {
+  const [importOnly] = process.argv.slice(2)
   const sources = await computeList()
 
   const communesApi = new Set(
@@ -43,7 +44,9 @@ async function main() {
 
   await db.clear()
 
-  const datasets = await bluebird.map(sources, async source => {
+  const sourcesToImport = importOnly ? sources.filter(s => s.importer === importOnly) : sources
+
+  const datasets = await bluebird.map(sourcesToImport, async source => {
     const interval = setInterval(() => console.log(`processing ${source.meta.title}`), 60000)
     const {data, errored, report} = await harmlessProcessSource(source)
 
