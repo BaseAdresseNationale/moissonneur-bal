@@ -77,6 +77,10 @@ whiteList:
     converter: innimond
     dataset: 5f22ad7bd878f3976265af48
 
+  - name: Adresses de Nouméa
+    importer: noumea
+    slug: noumea
+
 blackList:
   - name: Sixt-sur-Aff
     dataset: 5d1b155b634f41553150048e

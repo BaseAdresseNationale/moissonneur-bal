@@ -1,0 +1,12 @@
+computedFields:
+  - codeCommune
+resources:
+  default:
+    url: https://opendata.arcgis.com/api/v3/datasets/0d8d6931e5bb4e08838072bf3954a938_0/downloads/data?format=geojson&spatialRefId=4326
+    format: geojson
+    fields:
+      numero: numero
+      suffixe: comp_num
+      nomVoie: libvoie
+      lon: _geometry.coordinates.0
+      lat: _geometry.coordinates.1
