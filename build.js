@@ -44,7 +44,7 @@ async function main() {
 
   await db.clear()
 
-  const sourcesToImport = importOnly ? sources.filter(s => s.importer === importOnly) : sources
+  const sourcesToImport = importOnly ? sources.filter(s => s.slug === importOnly || (s.dataset && s.dataset.id === importOnly)) : sources
 
   const datasets = await bluebird.map(sourcesToImport, async source => {
     const interval = setInterval(() => console.log(`processing ${source.meta.title}`), 60000)

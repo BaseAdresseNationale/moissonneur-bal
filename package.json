@@ -12,8 +12,8 @@
     "build": "node --max_old_space_size=8192 build"
   },
   "dependencies": {
+    "@ban-team/validateur-bal": "^2.9.0",
     "@etalab/adresses-util": "^0.7.0",
-    "@etalab/bal": "^2.6.0",
     "@etalab/decoupage-administratif": "^2.0.0",
     "@etalab/fantoir": "^0.12.1",
     "@keyv/sqlite": "^3.5.2",
