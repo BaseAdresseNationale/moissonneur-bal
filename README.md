@@ -24,8 +24,17 @@ yarn contours:download
 
 ### Production des fichiers
 
+Pour produire la totalité des données
+
 ```bash
 yarn build
+```
+
+Pour produire uniquement les données liées à un slug interne ou un identifiant data.gouv.fr
+
+```bash
+yarn build [slug]
+yarn build [id]
 ```
 
 ## Licence
