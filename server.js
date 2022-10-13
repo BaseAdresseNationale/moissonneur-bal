@@ -12,6 +12,8 @@ const errorHandler = require('./lib/util/error-handler')
 
 const Source = require('./lib/models/source')
 
+const {ADMIN_TOKEN} = process.env
+
 async function main() {
   const app = express()
 
@@ -20,6 +22,16 @@ async function main() {
   }
 
   app.use(cors({origin: true}))
+
+  function ensureIsAdmin(req, res, next) {
+    const isAdmin = req.get('Authorization') === `Token ${ADMIN_TOKEN}`
+
+    if (!ADMIN_TOKEN || !isAdmin) {
+      throw createError(403, 'Non autorisé')
+    }
+
+    next()
+  }
 
   app.get('/sources', w(async (req, res) => {
     const sources = await Source.getSummary()
