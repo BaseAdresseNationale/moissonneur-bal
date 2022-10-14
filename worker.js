@@ -6,8 +6,14 @@ const ms = require('ms')
 const mongo = require('./lib/util/mongo')
 const {runWorkflow} = require('./lib/worker/run-workflow')
 const {harvestRequestedSources} = require('./lib/worker/start-harvest')
+const {updateSources} = require('./lib/worker/update-sources')
 
 const jobsList = [
+  {
+    name: 'mise à jour des sources de données',
+    every: '5m',
+    handler: updateSources
+  },
   {
     name: 'lancement du workflow',
     every: '1h',
