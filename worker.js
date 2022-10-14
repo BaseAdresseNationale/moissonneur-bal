@@ -4,7 +4,6 @@ require('dotenv').config()
 const ms = require('ms')
 
 const mongo = require('./lib/util/mongo')
-const {endFarms} = require('./lib/util/farms')
 const {runWorkflow} = require('./lib/worker/run-workflow')
 const {harvestRequestedSources} = require('./lib/worker/start-harvest')
 
@@ -40,6 +39,5 @@ async function main() {
 
 main().catch(error => {
   console.error(error)
-  endFarms()
   process.exit(1)
 })

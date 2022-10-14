@@ -6,14 +6,7 @@ resources:
       voie_nom: TYPE_VOIE + NOM_VOIE
       numero: NUM_DEB
       suffixe: SUFF_DEB
-      code_postal: CODE_POSTAL
+      code_postal: CODE_POST
       commune_insee: CODE_INSEE
       long: _geometry.coordinates.0
       lat: _geometry.coordinates.1
-
-
-
-
-
-
-
