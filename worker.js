@@ -6,7 +6,6 @@ const chalk = require('chalk')
 const bluebird = require('bluebird')
 
 const mongo = require('./lib/util/mongo')
-const {endFarms} = require('./lib/util/farms')
 const {sendMessage} = require('./lib/util/slack')
 
 const {computeList} = require('./lib/sources')
@@ -175,6 +174,5 @@ async function main() {
 
 main().catch(error => {
   console.error(error)
-  endFarms()
   process.exit(1)
 })
