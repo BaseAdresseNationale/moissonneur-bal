@@ -33,18 +33,23 @@ async function main() {
     next()
   }
 
-  app.post('/:sourceId/harvest', ensureIsAdmin, w(async (req, res) => {
+  app.param(':sourceId', w(async (req, res, next) => {
     const source = await Source.getSource(req.params.sourceId)
 
     if (!source) {
       throw createError(404, 'Source non trouvée')
     }
 
-    if (source.harvestAsked) {
+    req.source = source
+    next()
+  }))
+
+  app.post('/:sourceId/harvest', ensureIsAdmin, w(async (req, res) => {
+    if (req.source.harvestAsked) {
       throw createError(404, 'Moissonnage déjà demandé')
     }
 
-    const askHarvest = await Source.askHarvest(source._id)
+    const askHarvest = await Source.askHarvest(req.source._id)
 
     res.status(202).send(askHarvest)
   }))
@@ -55,13 +60,7 @@ async function main() {
   }))
 
   app.get('/sources/:sourceId', w(async (req, res) => {
-    const source = await Source.getSource(req.params.sourceId)
-
-    if (!source) {
-      throw createError(404, 'Source non trouvée')
-    }
-
-    res.send(source)
+    res.send(req.source)
   }))
 
   app.get('/files/:fileId/download', w(async (req, res) => {
