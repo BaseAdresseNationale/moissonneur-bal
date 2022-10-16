@@ -45,13 +45,13 @@ async function main() {
   }))
 
   app.post('/:sourceId/harvest', ensureIsAdmin, w(async (req, res) => {
-    if (req.source.harvestAsked) {
+    if (req.source.harvesting.asked) {
       throw createError(404, 'Moissonnage déjà demandé')
     }
 
-    const askHarvest = await Source.askHarvest(req.source._id)
+    const source = await Source.askHarvest(req.source._id)
 
-    res.status(202).send(askHarvest)
+    res.status(202).send(source)
   }))
 
   app.get('/sources', w(async (req, res) => {
