@@ -42,10 +42,14 @@ async function main() {
   await harvestNewOrOutdated()
 
   jobsList.forEach(jobType => {
-    setInterval(() => {
+    setInterval(async () => {
       const now = new Date()
       console.log(`${now.toISOString().slice(0, 19)} | running job : ${jobType.name}`)
-      jobType.handler()
+      try {
+        jobType.handler()
+      } catch (error) {
+        console.error(error)
+      }
     }, ms(jobType.every))
   })
 }
