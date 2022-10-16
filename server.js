@@ -33,7 +33,7 @@ async function main() {
     next()
   }
 
-  app.param(':sourceId', w(async (req, res, next) => {
+  app.param('sourceId', w(async (req, res, next) => {
     const source = await Source.getSource(req.params.sourceId)
 
     if (!source) {
