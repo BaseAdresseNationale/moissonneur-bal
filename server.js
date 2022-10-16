@@ -44,7 +44,7 @@ async function main() {
     next()
   }))
 
-  app.post('/:sourceId/harvest', ensureIsAdmin, w(async (req, res) => {
+  app.post('/sources/:sourceId/harvest', ensureIsAdmin, w(async (req, res) => {
     if (req.source.harvesting.asked) {
       throw createError(404, 'Moissonnage déjà demandé')
     }
