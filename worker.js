@@ -38,6 +38,7 @@ const jobsList = [
 
 async function main() {
   await mongo.connect()
+  await updateSources()
   await harvestNewOrOutdated()
 
   jobsList.forEach(jobType => {
