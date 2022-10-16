@@ -4,8 +4,8 @@ require('dotenv').config()
 const ms = require('ms')
 
 const mongo = require('./lib/util/mongo')
-const {runWorkflow} = require('./lib/worker/run-workflow')
-const {harvestRequestedSources} = require('./lib/worker/start-harvest')
+const {harvestNewOrOutdated} = require('./lib/worker/harvest-new-or-outdated')
+const {harvestAsked} = require('./lib/worker/harvest-asked')
 const {updateSources} = require('./lib/worker/update-sources')
 const {cleanStalledHarvests} = require('./lib/worker/clean-stalled-harvests')
 
@@ -21,24 +21,24 @@ const jobsList = [
     handler: cleanStalledHarvests
   },
   {
-    name: 'lancement du workflow',
+    name: 'moissonnage automatique des sources (nouvelles et anciennes)',
     every: '1h',
     async handler() {
-      await runWorkflow()
+      await harvestNewOrOutdated()
     }
   },
   {
-    name: 'recherche sources à moissonner',
+    name: 'moissonnage à la demande',
     every: '30s',
     async handler() {
-      await harvestRequestedSources()
+      await harvestAsked()
     }
   }
 ]
 
 async function main() {
   await mongo.connect()
-  await runWorkflow()
+  await harvestNewOrOutdated()
 
   jobsList.forEach(jobType => {
     setInterval(() => {
