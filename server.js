@@ -12,6 +12,8 @@ const errorHandler = require('./lib/util/error-handler')
 
 const Source = require('./lib/models/source')
 
+const {ADMIN_TOKEN} = process.env
+
 async function main() {
   const app = express()
 
@@ -21,19 +23,44 @@ async function main() {
 
   app.use(cors({origin: true}))
 
-  app.get('/sources', w(async (req, res) => {
-    const sources = await Source.getSummary()
-    res.send(sources)
-  }))
+  function ensureIsAdmin(req, res, next) {
+    const isAdmin = req.get('Authorization') === `Token ${ADMIN_TOKEN}`
 
-  app.get('/sources/:sourceId', w(async (req, res) => {
+    if (!ADMIN_TOKEN || !isAdmin) {
+      throw createError(403, 'Non autorisé')
+    }
+
+    next()
+  }
+
+  app.param('sourceId', w(async (req, res, next) => {
     const source = await Source.getSource(req.params.sourceId)
 
     if (!source) {
       throw createError(404, 'Source non trouvée')
     }
 
-    res.send(source)
+    req.source = source
+    next()
+  }))
+
+  app.post('/sources/:sourceId/harvest', ensureIsAdmin, w(async (req, res) => {
+    if (req.source.harvesting.asked) {
+      throw createError(404, 'Moissonnage déjà demandé')
+    }
+
+    const source = await Source.askHarvest(req.source._id)
+
+    res.status(202).send(source)
+  }))
+
+  app.get('/sources', w(async (req, res) => {
+    const sources = await Source.getSummary()
+    res.send(sources)
+  }))
+
+  app.get('/sources/:sourceId', w(async (req, res) => {
+    res.send(req.source)
   }))
 
   app.get('/files/:fileId/download', w(async (req, res) => {
