@@ -23,16 +23,12 @@ const jobsList = [
   {
     name: 'moissonnage automatique des sources (nouvelles et anciennes)',
     every: '1h',
-    async handler() {
-      await harvestNewOrOutdated()
-    }
+    handler: harvestNewOrOutdated
   },
   {
     name: 'moissonnage à la demande',
     every: '30s',
-    async handler() {
-      await harvestAsked()
-    }
+    handler: harvestAsked
   }
 ]
 
