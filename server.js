@@ -45,6 +45,17 @@ async function main() {
     next()
   }))
 
+  app.param('harvestId', w(async (req, res, next) => {
+    const harvest = await Harvest.getHarvest(req.params.harvestId)
+
+    if (!harvest) {
+      throw createError(404, 'Moissonnage non trouvé')
+    }
+
+    req.harvest = harvest
+    next()
+  }))
+
   app.post('/sources/:sourceId/harvest', ensureIsAdmin, w(async (req, res) => {
     if (req.source.harvesting.asked) {
       throw createError(404, 'Moissonnage déjà demandé')
@@ -68,6 +79,10 @@ async function main() {
 
   app.get('/sources/:sourceId', w(async (req, res) => {
     res.send(req.source)
+  }))
+
+  app.get('/harvest/:harvestId', w(async (req, res) => {
+    res.send(req.harvest)
   }))
 
   app.get('/files/:fileId/download', w(async (req, res) => {
