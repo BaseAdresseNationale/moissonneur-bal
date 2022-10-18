@@ -10,6 +10,7 @@ const mongo = require('./lib/util/mongo')
 const w = require('./lib/util/w')
 const errorHandler = require('./lib/util/error-handler')
 
+const Harvest = require('./lib/models/harvest')
 const Source = require('./lib/models/source')
 
 const {ADMIN_TOKEN} = process.env
@@ -52,6 +53,12 @@ async function main() {
     const source = await Source.askHarvest(req.source._id)
 
     res.status(202).send(source)
+  }))
+
+  app.get('/sources/:sourceId/harvests', w(async (req, res) => {
+    const harvests = await Harvest.getLatestHarvests(req.source._id)
+
+    res.send(harvests)
   }))
 
   app.get('/sources', w(async (req, res) => {
