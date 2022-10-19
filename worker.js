@@ -8,6 +8,7 @@ const {harvestNewOrOutdated} = require('./lib/worker/harvest-new-or-outdated')
 const {harvestAsked} = require('./lib/worker/harvest-asked')
 const {updateSources} = require('./lib/worker/update-sources')
 const {cleanStalledHarvests} = require('./lib/worker/clean-stalled-harvests')
+const {harvestEnabled} = require('./lib/worker/harvest-enabled')
 
 const jobsList = [
   {
@@ -29,6 +30,11 @@ const jobsList = [
     name: 'moissonnage à la demande',
     every: '30s',
     handler: harvestAsked
+  },
+  {
+    name: 'moissonnage des sources actives',
+    every: '10m',
+    handler: harvestEnabled
   }
 ]
 
