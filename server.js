@@ -17,6 +17,7 @@ const {ADMIN_TOKEN} = process.env
 
 async function main() {
   const app = express()
+  app.use(express.json())
 
   if (process.env.NODE_ENV !== 'production') {
     app.use(morgan('dev'))
@@ -79,6 +80,12 @@ async function main() {
 
   app.get('/sources/:sourceId', w(async (req, res) => {
     res.send(req.source)
+  }))
+
+  app.put('/sources/:sourceId', ensureIsAdmin, w(async (req, res) => {
+    const source = await Source.update(req.source._id, req.body)
+
+    res.send(source)
   }))
 
   app.get('/harvest/:harvestId', w(async (req, res) => {
