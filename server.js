@@ -62,6 +62,10 @@ async function main() {
       throw createError(404, 'Moissonnage déjà demandé')
     }
 
+    if (!req.source.enabled) {
+      throw createError(404, 'Source inactive')
+    }
+
     const source = await Source.askHarvest(req.source._id)
 
     res.status(202).send(source)
