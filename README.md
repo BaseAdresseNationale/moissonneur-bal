@@ -36,7 +36,7 @@ cp .env.sample .env
 yarn worker
 ```
 
-### Lancemenent du serveur de l'API (dans un autre terminal)
+### Lancement du serveur de l'API (dans un autre terminal)
 ```bash
 yarn start
 ```
