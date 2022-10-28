@@ -41,6 +41,7 @@
     "strip-bom-buf": "^2.0.0"
   },
   "devDependencies": {
+    "ava": "^5.0.1",
     "xo": "^0.47.0"
   },
   "xo": {
