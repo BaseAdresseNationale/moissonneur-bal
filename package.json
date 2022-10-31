@@ -9,7 +9,7 @@
   "scripts": {
     "start": "node server",
     "lint": "xo",
-    "test-unit": "ava --serial",
+    "test-unit": "ava",
     "test": "yarn lint && yarn test-unit",
     "worker": "node --max_old_space_size=8192 worker"
   },
