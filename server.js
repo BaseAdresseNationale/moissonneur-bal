@@ -92,7 +92,7 @@ async function main() {
     res.send(source)
   }))
 
-  app.get('/harvest/:harvestId', w(async (req, res) => {
+  app.get('/harvests/:harvestId', w(async (req, res) => {
     res.send(req.harvest)
   }))
 
