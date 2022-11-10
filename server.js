@@ -12,6 +12,7 @@ const errorHandler = require('./lib/util/error-handler')
 
 const Harvest = require('./lib/models/harvest')
 const Source = require('./lib/models/source')
+const Revision = require('./lib/models/revision')
 
 const {ADMIN_TOKEN} = process.env
 
@@ -92,8 +93,18 @@ async function main() {
     res.send(source)
   }))
 
+  app.get('/sources/:sourceId/current-revisions', w(async (req, res) => {
+    const revisions = await Revision.getCurrentRevisions(req.source._id)
+    res.send(revisions)
+  }))
+
   app.get('/harvests/:harvestId', w(async (req, res) => {
     res.send(req.harvest)
+  }))
+
+  app.get('/harvests/:harvestId/revisions', w(async (req, res) => {
+    const revisions = await Revision.getRevisions(req.harvest._id)
+    res.send(revisions)
   }))
 
   app.get('/files/:fileId/download', w(async (req, res) => {
