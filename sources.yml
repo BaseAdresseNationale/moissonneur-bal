@@ -37,10 +37,6 @@ whiteList:
     dataset: 5af03721b595081c1c80a8ad
     converter: grenoble
 
-  - name: Metz Métropole
-    dataset: 542ab42f88ee382b8f22e2e4
-    converter: metz-metropole
-
   - name: La Rochelle
     organization: 5821930b88ee386862c65bb3
     slug: la-rochelle
