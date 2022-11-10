@@ -44,7 +44,7 @@ yarn start
 ## Documentation API
 
 Les requêtes nécessitant un jeton doivent utiliser l'en-tête HTTP `Authorization`
->Exemple : 
+>Exemple :
 >`Authorization: Token f66gdjfehfv66DBD`
 
 ### Points d'accès
@@ -70,6 +70,12 @@ Les requêtes nécessitant un jeton doivent utiliser l'en-tête HTTP `Authorizat
 
 ### `/harvests/{harvestId}/revisions`
 - `GET` : Liste les révisions d'un moissonnage
+
+### `/revisions/{revisionId}`
+- `GET` : Retourne les informations concernant une révision
+
+### `/revisions/{revisionId}/publish`
+- `POST` : Déclenche la publication d'une révision *
 
 ### `/files/{fileId}/download`
 - `GET` : Télécharge un fichier un fonction de son id

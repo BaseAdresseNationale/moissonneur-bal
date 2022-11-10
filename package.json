@@ -27,6 +27,7 @@
     "express": "^4.18.1",
     "fast-json-stable-stringify": "^2.1.0",
     "gdal-async": "^3.5.1",
+    "get-stream": "^6.0.1",
     "got": "^11.8.5",
     "hasha": "^5.2.2",
     "http-errors": "^2.0.0",
