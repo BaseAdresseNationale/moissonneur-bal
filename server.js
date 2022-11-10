@@ -48,7 +48,13 @@ async function main() {
   }))
 
   app.param('harvestId', w(async (req, res, next) => {
-    const harvest = await Harvest.getHarvest(req.params.harvestId)
+    const harvestId = mongo.parseObjectID(req.params.harvestId)
+
+    if (!harvestId) {
+      throw createError(404, 'Identifiant non valide')
+    }
+
+    const harvest = await Harvest.getHarvest(harvestId)
 
     if (!harvest) {
       throw createError(404, 'Moissonnage non trouvé')
