@@ -62,8 +62,14 @@ Les requêtes nécessitant un jeton doivent utiliser l'en-tête HTTP `Authorizat
 ### `/sources/{sourceId}/harvests`
 - `GET` : Retourne les 10 derniers moissonnages d'une source
 
+### `/sources/{sourceId}/current-revisions`
+- `GET` : Retourne les révisions courantes d'une source donnée
+
 ### `/harvests/{harvestId}`
 - `GET` : Retourne les informations d'un moissonnage
+
+### `/harvests/{harvestId}/revisions`
+- `GET` : Liste les révisions d'un moissonnage
 
 ### `/files/{fileId}/download`
 - `GET` : Télécharge un fichier un fonction de son id
