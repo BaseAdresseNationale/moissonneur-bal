@@ -64,6 +64,23 @@ async function main() {
     next()
   }))
 
+  app.param('revisionId', w(async (req, res, next) => {
+    const revisionId = mongo.parseObjectID(req.params.revisionId)
+
+    if (!revisionId) {
+      throw createError(404, 'Identifiant non valide')
+    }
+
+    const revision = await Revision.getRevision(revisionId)
+
+    if (!revision) {
+      throw createError(404, 'Révision non trouvée')
+    }
+
+    req.revision = revision
+    next()
+  }))
+
   app.post('/sources/:sourceId/harvest', ensureIsAdmin, w(async (req, res) => {
     if (req.source.harvesting.asked) {
       throw createError(404, 'Moissonnage déjà demandé')
