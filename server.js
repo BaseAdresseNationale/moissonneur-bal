@@ -130,6 +130,15 @@ async function main() {
     res.send(revisions)
   }))
 
+  app.get('/revisions/:revisionId', (req, res) => {
+    res.send(req.revision)
+  })
+
+  app.post('/revisions/:revisionId/publish', ensureIsAdmin, w(async (req, res) => {
+    const revision = await Revision.publish(req.revision)
+    res.send(revision)
+  }))
+
   app.get('/files/:fileId/download', w(async (req, res) => {
     await mongo.sendFile(req.params.fileId, res)
   }))
