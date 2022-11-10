@@ -60,10 +60,6 @@ whiteList:
     converter: saint-denis-reunion
     dataset: 5d2e6b939ce2e7643a90b663
 
-  - name: Adresses d’Innimond
-    converter: innimond
-    dataset: 5f22ad7bd878f3976265af48
-
   - name: Adresses de Nouméa
     converter: noumea
     slug: noumea
