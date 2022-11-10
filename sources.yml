@@ -73,7 +73,7 @@ whiteList:
     dataset: 5f22ad7bd878f3976265af48
 
   - name: Adresses de Nouméa
-    importer: noumea
+    converter: noumea
     slug: noumea
 
 blackList:
