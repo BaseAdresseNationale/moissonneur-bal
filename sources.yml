@@ -42,10 +42,6 @@ whiteList:
     slug: la-rochelle
     converter: la-rochelle
 
-  - name: Bassussarry
-    converter: bassussarry
-    slug: bassussarry
-
   - name: BAL du Grand Poitiers
     converter: grand-poitiers
     dataset: 5e3007a28b4c416184143179
