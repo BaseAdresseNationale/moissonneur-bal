@@ -42,7 +42,7 @@ async function main() {
       const now = new Date()
       console.log(`${now.toISOString().slice(0, 19)} | running job : ${jobType.name}`)
       try {
-        jobType.handler()
+        await jobType.handler()
       } catch (error) {
         console.error(error)
       }
