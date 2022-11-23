@@ -135,7 +135,7 @@ async function main() {
   })
 
   app.post('/revisions/:revisionId/publish', ensureIsAdmin, w(async (req, res) => {
-    const revision = await Revision.publish(req.revision)
+    const revision = await Revision.publish(req.revision, {force: req.body.force})
     res.send(revision)
   }))
 
