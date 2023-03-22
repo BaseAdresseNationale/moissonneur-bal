@@ -14,7 +14,7 @@
     "worker": "node --max_old_space_size=8192 worker"
   },
   "dependencies": {
-    "@ban-team/validateur-bal": "^2.12.0",
+    "@ban-team/validateur-bal": "^2.13.0",
     "@slack/web-api": "^6.7.2",
     "bluebird": "^3.7.2",
     "chalk": "^4.1.2",
