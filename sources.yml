@@ -1,8 +1,4 @@
 whiteList:
-  - name: Base Adresse Locale de la Métropole de Lyon
-    dataset: 5be174928b4c412c5b8cc23f
-    url: https://download.data.grandlyon.com/files/grandlyon/localisation/bal/bal_200046977.csv
-
   - name: Châlons Agglomération
     converter: chalons-agglomeration
     dataset: 5c14547606e3e7530604ccef
