@@ -4,11 +4,6 @@ whiteList:
     dataset: 5c14547606e3e7530604ccef
     homepage: http://opendata.chalons-agglo.fr/datasets/ce237a8f47bc450d9abd6bfa84a44f74_3
 
-  - name: Ville de Nanterre
-    converter: nanterre-ville
-    dataset: 5ad75e1dc751df42a0357f8c
-    homepage: https://www.nanterre.fr/1409-les-adresses.htm
-
   - name: Ville de Paris
     converter: paris
     dataset: 59590cf0a3a7291dd09c7fd6
