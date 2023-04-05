@@ -90,6 +90,10 @@ async function main() {
       throw createError(404, 'Source inactive')
     }
 
+    if (req.source._deleted) {
+      throw createError(404, 'La source est supprimée')
+    }
+
     const source = await Source.askHarvest(req.source._id)
 
     res.status(202).send(source)
