@@ -21,10 +21,6 @@ async function getClients() {
     return response.body
   }
 
-  if (response.statusCode === 404) {
-    return
-  }
-
   throw new Error(response.body.message)
 }
 
