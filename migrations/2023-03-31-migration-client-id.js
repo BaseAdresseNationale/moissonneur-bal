@@ -4,7 +4,7 @@ require('dotenv').config()
 const got = require('got')
 const mongo = require('../lib/util/mongo')
 
-const API_DEPOT_URL = process.env.API_DEPOT_URL || 'https://plateforme.adresse.data.gouv.fr/api-depot'
+const API_DEPOT_URL = process.env.API_DEPOT_URL || 'https://plateforme-bal.adresse.data.gouv.fr/api-depot'
 const {API_DEPOT_ADMIN_TOKEN} = process.env
 
 async function getClients() {
