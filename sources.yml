@@ -9,14 +9,6 @@ whiteList:
     dataset: 59590cf0a3a7291dd09c7fd6
     homepage: https://opendata.paris.fr/explore/dataset/adresse_paris/
 
-  - name: Saint-Brieuc Armor Agglomération
-    url: https://datarmor.cotesdarmor.fr/data-unpaginated/dataserver/cg22/data/200069409_base_adresse_locale?&$inlinecount=allpages&$format=csv
-    slug: saint-brieuc-armor-agglomeration
-    organization: 5acb2f2088ee3813a476714d
-    homepage: https://datarmor.cotesdarmor.fr/data-presentation-ux/#/cg22/datasets/200069409_base_adresse_locale/views/desc
-    odbl: true
-    # Non référencé sur data.gouv.fr à ce jour
-
   - name: Lamballe Terre & Mer
     url: https://datarmor.cotesdarmor.fr/data-unpaginated/dataserver/cg22/data/200069391_base_adresse_locale?&$inlinecount=allpages&$format=csv
     slug: lamballe-terre-et-mer
