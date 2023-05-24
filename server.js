@@ -100,9 +100,8 @@ async function main() {
   }))
 
   app.get('/sources/:sourceId/harvests', w(async (req, res) => {
-    const harvests = await Harvest.getLatestHarvests(req.source._id)
-
-    res.send(harvests)
+    const response = await Harvest.getHarvests(req.source._id, req.query)
+    res.send(response)
   }))
 
   app.get('/sources', w(async (req, res) => {
