@@ -11,22 +11,22 @@ const {cleanStalledHarvests} = require('./lib/worker/clean-stalled-harvests')
 
 const jobsList = [
   {
-    name: 'mise à jour des sources de données',
+    name: 'Mise à jour des sources de données',
     every: '5m',
     handler: updateSources
   },
   {
-    name: 'nettoyage des moissonnages bloqués',
+    name: 'Nettoyage des moissonnages bloqués',
     every: '2m',
     handler: cleanStalledHarvests
   },
   {
-    name: 'moissonnage automatique des sources (nouvelles et anciennes)',
+    name: 'Moissonnage automatique des sources (nouvelles et anciennes)',
     every: '1h',
     handler: harvestNewOrOutdated
   },
   {
-    name: 'moissonnage à la demande',
+    name: 'Moissonnage à la demande',
     every: '30s',
     handler: harvestAsked
   }
@@ -34,13 +34,14 @@ const jobsList = [
 
 async function main() {
   await mongo.connect()
+  console.log('Mise à jour des sources de données')
   await updateSources()
+  console.log('Moissonnage automatique des sources (nouvelles et anciennes)')
   await harvestNewOrOutdated()
 
   jobsList.forEach(jobType => {
     setInterval(async () => {
-      const now = new Date()
-      console.log(`${now.toISOString().slice(0, 19)} | running job : ${jobType.name}`)
+      console.log(`Running job : ${jobType.name}`)
       try {
         await jobType.handler()
       } catch (error) {
