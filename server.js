@@ -139,6 +139,11 @@ async function main() {
     res.send(req.revision)
   })
 
+  app.get('/communes/:codeCommune/revisions', ensureIsAdmin, w(async (req, res) => {
+    const revisions = await Revision.getRevisionByCodeCommune(req.params.codeCommune)
+    res.send(revisions)
+  }))
+
   app.post('/revisions/:revisionId/publish', ensureIsAdmin, w(async (req, res) => {
     const revision = await Revision.publish(req.revision, {force: req.body.force})
     res.send(revision)
