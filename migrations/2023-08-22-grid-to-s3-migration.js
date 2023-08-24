@@ -1,9 +1,9 @@
 #!/usr/bin/env node
+/* eslint-disable no-negated-condition */
 require('dotenv').config()
 const fs = require('fs')
-const getStream = require('get-stream')
 const mongo = require('../lib/util/mongo')
-const {s3Service} = require('../lib/files/s3.service')
+const s3Service = require('../lib/files/s3.service')
 
 async function main() {
   await mongo.connect()
@@ -26,6 +26,7 @@ async function main() {
     console.log(`Processing file : ${count} / ${total}`)
 
     const fileId = file._id.toHexString()
+    const fileToProcess = await mongo.getFile(file._id)
 
     if (lastProcessedFileId && lastProcessedFileId !== fileId) {
       console.log('Last processed ID doesn\'t match, continue')
@@ -36,31 +37,35 @@ async function main() {
     }
 
     fs.writeFileSync('./last-processed-id', fileId)
-    const fileAlreadyExists = fileId && await s3Service.checkS3FileExists(fileId)
+    const fileAlreadyExistsInS3 = fileId && await s3Service.checkS3FileExists(fileId)
+    const fileAlreadyExistsInMetadata = fileId && await mongo.db.collection('files').findOne({_id: file._id})
 
-    if (fileAlreadyExists) {
-      console.log(`Skipping upload for file ${fileId}. Reason: Already uploaded`)
-      continue
+    if (fileAlreadyExistsInMetadata) {
+      console.log(`Metadata already exists for file ${fileId}`)
+    } else {
+      console.log(`Writing metadata for file ${fileId}`)
+      await mongo.db.collection('files').insertOne({
+        _id: file._id,
+        filename: file.filename,
+        sourceId: file.metadata.sourceId,
+        harvestId: file.metadata.harvestId,
+        fileHash: file.metadata.fileHash,
+        dataHash: file.metadata.dataHash,
+      })
     }
 
-    console.log(`Writing metadata for file ${fileId}`)
-    await mongo.db.collection('files').insertOne({
-      _id: file._id,
-      filename: file.filename,
-      sourceId: file.metadata.sourceId,
-      harvestId: file.metadata.harvestId,
-      fileHash: file.metadata.fileHash,
-      dataHash: file.metadata.dataHash,
-    })
-
-    const data = await getStream.buffer(this.bucket.openDownloadStream(fileId))
-
-    console.log(`Uploading CSV file for file ${fileId}`)
-    await s3Service.uploadS3File({
-      filename: fileId,
-      data
-    })
-    console.log(`Upload OK, ${count} / ${total} files processed`)
+    if (fileAlreadyExistsInS3) {
+      console.log(`File ${fileId} already exists in S3`)
+    } else if (!fileToProcess.data) {
+      console.log(`No data found for file ${fileId}`)
+    } else {
+      console.log(`Uploading CSV file for file ${fileId}`)
+      await s3Service.uploadS3File({
+        filename: fileId,
+        data: fileToProcess.data
+      })
+      console.log(`Upload OK, ${count} / ${total} files processed`)
+    }
   }
 
   await mongo.disconnect()
