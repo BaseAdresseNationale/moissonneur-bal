@@ -61,7 +61,7 @@ typings/
 .next
 
 #migration
-./last-processed-id
+last-processed-id
 
 *.sqlite
 *.geojson
