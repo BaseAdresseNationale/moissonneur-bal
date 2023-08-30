@@ -60,10 +60,7 @@ async function main() {
       console.log(`No data found for file ${fileId}`)
     } else {
       console.log(`Uploading CSV file for file ${fileId}`)
-      await s3Service.uploadS3File({
-        filename: fileId,
-        data: fileToProcess.data
-      })
+      await s3Service.uploadS3File(fileId, fileToProcess.data)
       console.log(`Upload OK, ${count} / ${total} files processed`)
     }
   }
