@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-/* eslint-disable no-negated-condition */
+
 require('dotenv').config()
 const fs = require('fs')
 const mongo = require('../lib/util/mongo')
@@ -37,6 +37,12 @@ async function main() {
     }
 
     fs.writeFileSync('./last-processed-id', fileId)
+
+    if (!fileToProcess.data) {
+      console.log(`Error : No data found for file ${fileId}, continue`)
+      continue
+    }
+
     const fileAlreadyExistsInS3 = fileId && await s3Service.checkS3FileExists(fileId)
     const fileAlreadyExistsInMetadata = fileId && await mongo.db.collection('files').findOne({_id: file._id})
 
@@ -56,8 +62,6 @@ async function main() {
 
     if (fileAlreadyExistsInS3) {
       console.log(`File ${fileId} already exists in S3`)
-    } else if (!fileToProcess.data) {
-      console.log(`No data found for file ${fileId}`)
     } else {
       console.log(`Uploading CSV file for file ${fileId}`)
       await s3Service.uploadS3File(fileId, fileToProcess.data)
