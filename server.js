@@ -5,6 +5,7 @@ const express = require('express')
 const morgan = require('morgan')
 const cors = require('cors')
 const createError = require('http-errors')
+const contentDisposition = require('content-disposition')
 
 const mongo = require('./lib/util/mongo')
 const w = require('./lib/util/w')
@@ -13,6 +14,7 @@ const errorHandler = require('./lib/util/error-handler')
 const Harvest = require('./lib/models/harvest')
 const Source = require('./lib/models/source')
 const Revision = require('./lib/models/revision')
+const File = require('./lib/models/file')
 
 const {ADMIN_TOKEN} = process.env
 
@@ -148,7 +150,11 @@ async function main() {
   }))
 
   app.get('/files/:fileId/download', w(async (req, res) => {
-    await mongo.sendFile(req.params.fileId, res)
+    const file = await File.getFile(req.params.fileId)
+
+    res.set('Content-Disposition', contentDisposition(file.filename))
+    res.set('Content-Length', file.data.length)
+    res.send(file.data)
   }))
 
   app.use(errorHandler)
