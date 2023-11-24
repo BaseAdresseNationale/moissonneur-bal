@@ -66,8 +66,6 @@ blackList:
   - dataset: 5e322303dee7e71547f5c8ec
     # Doublon moissonnage ODS Pays de la Loire
 
-  - dataset: 5d72f45106e3e76febd78afd
   - dataset: 60a3c6c477ced898a49a7035
-  - dataset: 5d72f45106e3e76fa1d78afd
   - dataset: 612904755f59b6818346ea4e
   - dataset: 6129047508917df8f846ea4f
