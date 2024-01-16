@@ -25,10 +25,6 @@ whiteList:
     slug: la-rochelle
     converter: la-rochelle
 
-  - name: BAL du Grand Poitiers
-    converter: grand-poitiers
-    dataset: 5e3007a28b4c416184143179
-
   - name: Référentiel Adresses du Pays Compiégnois
     url: http://geo.compiegnois.fr/documents/referentiel/adresse/bal/payscompiegnois_bal.csv
     dataset: 5bf2b569634f410e3285adda
