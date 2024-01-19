@@ -1,0 +1,38 @@
+[
+  {
+    "name": "Sixt-sur-Aff",
+    "dataset": "5d1b155b634f41553150048e",
+    "comment": "Non valide"
+  },
+  {
+    "name": "Pirae (Polynésie française)",
+    "dataset": "5d5f25846f444112e0dfc2cd",
+    "comment": "Non supporté à ce stade"
+  },
+  {
+    "name": "dlva",
+    "dataset": "5f8e9b24e5cf95adcc819c48"
+  },
+  {
+    "name": "Points Adresse de Lannion-Trégor Communauté",
+    "dataset": "59c3a54388ee38019cc19cbc",
+    "comment": "Ancien jeu de données non retiré de data.gouv.fr"
+  },
+  {
+    "name": "Communes dAngers Loire Métropole",
+    "dataset": "5e322303dee7e71547f5c8ec",
+    "comment": "Doublon moissonnage ODS Pays de la Loire"
+  },
+  {
+    "name": "Adresses de la commune de NÉVACHE",
+    "dataset": "60a3c6c477ced898a49a7035"
+  },
+  {
+    "name": "Base Adresse Locale de la Commune de Montfuron",
+    "dataset": "612904755f59b6818346ea4e"
+  },
+  {
+    "name": "Base Adresse Locale de Roumoules",
+    "dataset": "6129047508917df8f846ea4f"
+  }
+]
