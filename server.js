@@ -13,6 +13,7 @@ const errorHandler = require('./lib/util/error-handler')
 
 const Harvest = require('./lib/models/harvest')
 const Source = require('./lib/models/source')
+const Organization = require('./lib/models/organization')
 const Revision = require('./lib/models/revision')
 const File = require('./lib/models/file')
 
@@ -117,13 +118,32 @@ async function main() {
 
   app.put('/sources/:sourceId', ensureIsAdmin, w(async (req, res) => {
     const source = await Source.update(req.source._id, req.body)
-
     res.send(source)
   }))
 
   app.get('/sources/:sourceId/current-revisions', w(async (req, res) => {
     const revisions = await Revision.getCurrentRevisions(req.source._id)
     res.send(revisions)
+  }))
+
+  app.get('/organizations', w(async (req, res) => {
+    const result = await Organization.fetchAll()
+    res.send(result)
+  }))
+
+  app.get('/organizations/:organizationId', w(async (req, res) => {
+    const result = await Organization.fetch(req.params.organizationId)
+    res.send(result)
+  }))
+
+  app.get('/organizations/:organizationId/sources', w(async (req, res) => {
+    const result = await Source.getSourceByOganization(req.params.organizationId)
+    res.send(result)
+  }))
+
+  app.put('/organizations/:organizationId', ensureIsAdmin, w(async (req, res) => {
+    const result = await Organization.update(req.params.organizationId, req.body)
+    res.send(result)
   }))
 
   app.get('/harvests/:harvestId', w(async (req, res) => {
