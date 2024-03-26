@@ -8,7 +8,7 @@ https://adresse-data-gouv-fr.gitbook.io/bal/moissonneur
 
 ## Pré-requis
 
-- [Node.js](https://nodejs.org) 16+
+- [Node.js](https://nodejs.org) 18+
 - [yarn](https://www.yarnpkg.com)
 - [MongoDB](https://www.mongodb.com) 4+
 
@@ -30,29 +30,47 @@ cp .env.sample .env
 
 On pourra ensuite éditer les variables d'environnement dans le fichier `.env` si nécessaire.
 
-### Lancement du moissonnage
+### Développement
 
-```bash
-yarn worker
+Lancer l'application (worker + api) :
+
+```
+$ yarn dev
 ```
 
-### Lancement du serveur de l'API (sur le port 5000 par default)
+Lancer seulement l'api :
 
-```bash
-yarn start
 ```
+$ yarn dev:api
+```
+
+
+### Production
+
+Créer une version de production :
+
+```
+$ yarn build
+```
+
+Démarrer l'application (port 7000 par défaut) :
+
+```
+$ yarn start
+```
+
 
 ### Test
 
-Rapport des tests (ava) :
+Rapport des tests (jest) :
 
 ```
-$ yarn test-unit
+$ yarn test
 ```
 
 ### Linter
 
-Rapport du linter (xo) :
+Rapport du linter (eslint) :
 
 ```
 $ yarn lint
@@ -68,8 +86,6 @@ Elles peuvent être définies classiquement ou en créant un fichier `.env` sur 
 | `MONGODB_URL` | Paramètre de connexion à MongoDB |
 | `MONGODB_DBNAME` | Nom de la base de données à utiliser |
 | `PORT` | Port de l'api |
-| `SLACK_TOKEN` | Jeton Slack permettant la publication de messages lors du moissonnage |
-| `SLACK_CHANNEL` | Canal recevant les messages à publier |
 | `ADMIN_TOKEN` | Jeton nécessaire au contrôle du moissonneur via l'API |
 | `API_DEPOT_URL` | URL de l'api de depot |
 | `API_DEPOT_CLIENT_ID` | ID du client `moissonneur` de l'api depot |
