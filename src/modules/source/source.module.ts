@@ -21,7 +21,7 @@ import { WorkerModule } from '../worker/worker.module';
     forwardRef(() => WorkerModule),
   ],
   providers: [SourceService],
-  controllers: [],
+  controllers: [SourceController],
   exports: [SourceService],
 })
 export class SourceModule {

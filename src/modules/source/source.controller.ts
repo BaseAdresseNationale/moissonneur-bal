@@ -142,6 +142,8 @@ export class SourceController {
   })
   @ApiParam({ name: 'sourceId', required: true, type: String })
   @ApiResponse({ status: HttpStatus.OK, type: Source })
+  @ApiBearerAuth('admin-token')
+  @UseGuards(AdminGuard)
   async askHarvest(@Req() req: CustomRequest, @Res() res: Response) {
     if (req.source.harvestingSince !== null) {
       throw new HttpException('Moissonnage en cours', HttpStatus.NOT_FOUND);
