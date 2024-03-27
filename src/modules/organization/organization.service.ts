@@ -1,6 +1,6 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { FilterQuery, Model, QueryWithHelpers } from 'mongoose';
 
 import { Organization } from './organization.schema';
 
@@ -11,8 +11,44 @@ export class OrganizationService {
     private organizationModel: Model<Organization>,
   ) {}
 
-  public async findById(organizationId: string): Promise<Organization> {
-    return this.organizationModel.findById(organizationId).lean();
+  async findMany(
+    filter?: FilterQuery<Organization>,
+    selector: Record<string, number> = null,
+    limit: number = null,
+    offset: number = null,
+  ): Promise<Organization[]> {
+    const query: QueryWithHelpers<
+      Array<Organization>,
+      Organization
+    > = this.organizationModel.find(filter);
+
+    if (selector) {
+      query.select(selector);
+    }
+    if (limit) {
+      query.limit(limit);
+    }
+    if (offset) {
+      query.skip(offset);
+    }
+
+    return query.lean().exec();
+  }
+
+  public async findOneOrFail(organizationId: string): Promise<Organization> {
+    const voie = await this.organizationModel
+      .findOne({ _id: organizationId })
+      .lean()
+      .exec();
+
+    if (!voie) {
+      throw new HttpException(
+        `Source ${organizationId} not found`,
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
+    return voie;
   }
 
   public async upsert(organization: Partial<Organization>) {
@@ -38,6 +74,19 @@ export class OrganizationService {
     );
 
     return upsertResult;
+  }
+
+  public async updateOne(
+    organizationId: string,
+    changes: Partial<Organization>,
+  ): Promise<Organization> {
+    const source: Organization = await this.organizationModel.findOneAndUpdate(
+      { _id: organizationId },
+      { $set: changes },
+      { upsert: true },
+    );
+
+    return source;
   }
 
   public async softDeleteInactive(activeIds: string[]) {

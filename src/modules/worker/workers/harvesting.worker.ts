@@ -61,7 +61,7 @@ export class HarvestingWorker implements Worker {
         await this.harvestService.getLastCompletedHarvest(source._id);
       // RECUPERE L'ORGANIZATION
       const organization: Organization =
-        await this.organizationService.findById(source.organization);
+        await this.organizationService.findOneOrFail(source.organization);
       // FETCH LE FICHIER
       const file: Buffer = await this.fetchfileBal(source.url);
       // CHECK LE FICHIER ET CREER LES DIFFERENTES REVISIONS

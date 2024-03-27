@@ -1,4 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { IsDefined, IsEnum, IsString } from 'class-validator';
 import { SchemaTypes } from 'mongoose';
 import { DateEntity } from 'src/lib/schemas/date-entity.schema';
 
@@ -10,9 +11,13 @@ export enum TypePerimeterEnum {
 
 @Schema({ _id: false })
 export class Perimeter {
+  @IsDefined()
+  @IsEnum(TypePerimeterEnum)
   @Prop({ type: SchemaTypes.String, enum: TypePerimeterEnum })
   type: TypePerimeterEnum;
 
+  @IsDefined()
+  @IsString()
   @Prop({ type: SchemaTypes.String })
   code: string;
 }
