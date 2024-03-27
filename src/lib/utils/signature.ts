@@ -1,14 +1,14 @@
 import stringify from 'fast-json-stable-stringify';
-import { hashSync } from 'hasha';
+import Hash from 'hasha';
 
-export function signRow(row: any): string {
+export async function signRow(row: any): Promise<string> {
   const stringifiedRow = stringify(row);
-  return hashSync(stringifiedRow, { algorithm: 'md5' });
+  return Hash.async(stringifiedRow, { algorithm: 'md5' });
 }
 
-export function signData(data: any[]): string {
+export async function signData(data: any[]): Promise<string> {
   const signedRows = data.map((d) => signRow(d));
   const sortedSignatures = signedRows.sort().join('|');
 
-  return hashSync(sortedSignatures, { algorithm: 'sha256' });
+  return Hash.async(sortedSignatures, { algorithm: 'sha256' });
 }

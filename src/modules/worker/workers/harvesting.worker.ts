@@ -9,9 +9,12 @@ import { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
 import { catchError, firstValueFrom } from 'rxjs';
 import { Harvest, StatusHarvestEnum } from 'src/modules/harvest/harvest.schema';
 import { HandleFile } from './harvesting/handle_file';
+import { Task } from 'src/modules/queue/queue';
 
 @Injectable()
-export class HarvestingWorker {
+export class HarvestingWorker implements Task {
+  title: string = 'Harvesting of sources';
+
   constructor(
     private readonly httpService: HttpService,
     private handleFile: HandleFile,

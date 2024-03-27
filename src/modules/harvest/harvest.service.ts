@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model, Types } from 'mongoose';
+import { FilterQuery, Model, QueryWithHelpers, Types } from 'mongoose';
+import { sub } from 'date-fns';
 
 import { Harvest, StatusHarvestEnum } from './harvest.schema';
 
@@ -20,7 +21,35 @@ export class HarvestService {
     return this.harvestModel.create(harvest);
   }
 
-  async getLastCompletedHarvest(sourceId: string) {
+  async findMany(
+    filter?: FilterQuery<Harvest>,
+    selector: Record<string, number> = null,
+    limit: number = null,
+    offset: number = null,
+  ): Promise<Harvest[]> {
+    const query: QueryWithHelpers<
+      Array<Harvest>,
+      Harvest
+    > = this.harvestModel.find(filter);
+
+    if (selector) {
+      query.select(selector);
+    }
+    if (limit) {
+      query.limit(limit);
+    }
+    if (offset) {
+      query.skip(offset);
+    }
+
+    return query.lean().exec();
+  }
+
+  async count(filter?: FilterQuery<Harvest>): Promise<number> {
+    return this.harvestModel.countDocuments(filter);
+  }
+
+  async getLastCompletedHarvest(sourceId: string): Promise<Harvest> {
     return this.harvestModel.findOne(
       { sourceId, status: StatusHarvestEnum.COMPLETED },
       { sort: { createdAt: -1 } },
@@ -33,5 +62,12 @@ export class HarvestService {
       { $set: { ...changes, finishedAt: new Date() } },
       { new: true },
     );
+  }
+
+  async deleteStalled() {
+    return this.harvestModel.deleteMany({
+      status: StatusHarvestEnum.ACTIVE,
+      startedAt: { $lt: sub(new Date(), { minutes: 30 }) },
+    });
   }
 }

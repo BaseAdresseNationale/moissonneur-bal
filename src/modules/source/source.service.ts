@@ -1,13 +1,66 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { FilterQuery, Model, QueryWithHelpers } from 'mongoose';
+import { sub } from 'date-fns';
 
 import { Source } from './source.schema';
-import { sub } from 'date-fns';
 
 @Injectable()
 export class SourceService {
   constructor(@InjectModel(Source.name) private sourceModel: Model<Source>) {}
+
+  async findMany(
+    filter?: FilterQuery<Source>,
+    selector: Record<string, number> = null,
+    limit: number = null,
+    offset: number = null,
+  ): Promise<Source[]> {
+    const query: QueryWithHelpers<
+      Array<Source>,
+      Source
+    > = this.sourceModel.find(filter);
+
+    if (selector) {
+      query.select(selector);
+    }
+    if (limit) {
+      query.limit(limit);
+    }
+    if (offset) {
+      query.skip(offset);
+    }
+
+    return query.lean().exec();
+  }
+
+  public async findOneOrFail(sourceId: string): Promise<Source> {
+    const voie = await this.sourceModel
+      .findOne({ _id: sourceId })
+      .lean()
+      .exec();
+
+    if (!voie) {
+      throw new HttpException(
+        `Source ${sourceId} not found`,
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
+    return voie;
+  }
+
+  public async updateOne(
+    sourceId: string,
+    changes: Partial<Source>,
+  ): Promise<Source> {
+    const source: Source = await this.sourceModel.findOneAndUpdate(
+      { _id: sourceId },
+      { $set: changes },
+      { upsert: true },
+    );
+
+    return source;
+  }
 
   public async upsert(source: Partial<Source>) {
     const now = new Date();
@@ -69,6 +122,15 @@ export class SourceService {
       { _id: sourceId },
       { $set: { harvestingSince: null, lastHarvest } },
       { new: true },
+    );
+  }
+
+  async finishStalledHarvesting() {
+    return this.sourceModel.updateMany(
+      {
+        harvestingSince: { $lt: sub(new Date(), { minutes: 30 }) },
+      },
+      { $set: { harvestingSince: null } },
     );
   }
 }

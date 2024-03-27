@@ -9,6 +9,7 @@ import { FileModule } from './modules/file/file.module';
 import { RevisionModule } from './modules/revision/revision.module';
 import { ApiDepotModule } from './modules/api_depot/api_depot.module';
 import { ApiBetaGouvModule } from './modules/api_beta_gouv/api_beta_gouv.module';
+import { QueueModule } from './modules/queue/queue.module';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { ApiBetaGouvModule } from './modules/api_beta_gouv/api_beta_gouv.module'
     RevisionModule,
     ApiDepotModule,
     ApiBetaGouvModule,
+    QueueModule,
   ],
   controllers: [],
   providers: [],

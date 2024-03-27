@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { Interval } from '@nestjs/schedule';
 import { UpdateSourceOrganisationWorker } from './workers/update_source_organization.worker';
 import { HarvestingWorker } from './workers/harvesting.worker';
+import { QueueService } from '../queue/queue.service';
+import { CleanStalledWorker } from './workers/clean_stalled_harvests.worker';
 
 // {
 //   name: 'Mise à jour des sources de données',
@@ -27,22 +28,35 @@ import { HarvestingWorker } from './workers/harvesting.worker';
 @Injectable()
 export class WorkerService {
   constructor(
+    private readonly queueService: QueueService,
     private readonly updateSourceOrganisationWorker: UpdateSourceOrganisationWorker,
     private readonly harvestingWorker: HarvestingWorker,
+    private readonly cleanStalledWorker: CleanStalledWorker,
   ) {
-    this.updateSourceOrganization();
+    // ON COMMENCE PAR RECUPERE TOUTES LES SOURCES ET ORGANIZATIONS
+    this.queueService.pushTask(this.updateSourceOrganisationWorker);
+    // ON MOISSONNE TOUTES LES SOURCES
+    this.queueService.pushTask(this.harvestingWorker);
   }
 
   // Every 5min
   // @Interval(300000)
   async updateSourceOrganization() {
     // Mise à jour des sources de données
-    await this.updateSourceOrganisationWorker.run();
+    this.queueService.pushTask(this.updateSourceOrganisationWorker);
   }
 
   // Every 1hours
+  // @Interval(300000)
   async runHarvesting() {
     // Moissonnage automatique des sources (nouvelles et anciennes)
-    await this.harvestingWorker.run();
+    this.queueService.pushTask(this.harvestingWorker);
+  }
+
+  // Every 2min
+  // @Interval(300000)
+  async cleanStalledHarvesting() {
+    // Moissonnage automatique des sources (nouvelles et anciennes)
+    this.queueService.pushTask(this.cleanStalledWorker);
   }
 }

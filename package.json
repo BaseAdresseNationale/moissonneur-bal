@@ -37,7 +37,7 @@
     "date-fns": "^3.6.0",
     "dotenv": "^16.4.5",
     "fast-json-stable-stringify": "^2.1.0",
-    "hasha": "^6.0.0",
+    "hasha": "^5.2.2",
     "lodash": "^4.17.21",
     "mongoose": "^8.2.3",
     "papaparse": "^5.4.1",

@@ -9,9 +9,12 @@ import { Organization } from '../../organization/organization.schema';
 import { OrganizationService } from '../../organization/organization.service';
 import { SourceService } from '../../source/source.service';
 import { ApiBetaGouvService } from 'src/modules/api_beta_gouv/api_beta_gouv.service';
+import { Task } from 'src/modules/queue/queue';
 
 @Injectable()
-export class UpdateSourceOrganisationWorker {
+export class UpdateSourceOrganisationWorker implements Task {
+  title: string = 'Update sources and organizations';
+
   constructor(
     private apiBetaGouv: ApiBetaGouvService,
     private organizationService: OrganizationService,

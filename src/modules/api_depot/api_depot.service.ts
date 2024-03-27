@@ -9,7 +9,7 @@ import {
 import { Organization } from '../organization/organization.schema';
 import { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
 import { catchError, firstValueFrom } from 'rxjs';
-import { hash } from 'hasha';
+import Hash from 'hasha';
 
 @Injectable()
 export class ApiDepotService {
@@ -67,7 +67,7 @@ export class ApiDepotService {
   }
 
   private async uploadFileRevision(revisionId: string, balFile: Buffer) {
-    const fileHash: string = await hash(balFile, { algorithm: 'md5' });
+    const fileHash: string = await Hash.async(balFile, { algorithm: 'md5' });
     const url: string = `/revisions/${revisionId}/files/bal`;
     const options: AxiosRequestConfig = {
       headers: {

@@ -11,6 +11,11 @@ import { FileModule } from '../file/file.module';
 import { RevisionModule } from '../revision/revision.module';
 import { ApiDepotModule } from '../api_depot/api_depot.module';
 import { ApiBetaGouvModule } from '../api_beta_gouv/api_beta_gouv.module';
+import { HarvestingWorker } from './workers/harvesting.worker';
+import { HandleFile } from './workers/harvesting/handle_file';
+import { HandleCommune } from './workers/harvesting/handle_commune';
+import { QueueModule } from '../queue/queue.module';
+import { CleanStalledWorker } from './workers/clean_stalled_harvests.worker';
 
 @Module({
   imports: [
@@ -23,8 +28,16 @@ import { ApiBetaGouvModule } from '../api_beta_gouv/api_beta_gouv.module';
     RevisionModule,
     ApiDepotModule,
     ApiBetaGouvModule,
+    QueueModule,
   ],
   controllers: [],
-  providers: [UpdateSourceOrganisationWorker, WorkerService],
+  providers: [
+    UpdateSourceOrganisationWorker,
+    HarvestingWorker,
+    CleanStalledWorker,
+    WorkerService,
+    HandleFile,
+    HandleCommune,
+  ],
 })
 export class WorkerModule {}

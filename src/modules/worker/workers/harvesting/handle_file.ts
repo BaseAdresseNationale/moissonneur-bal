@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Organization } from '../../../organization/organization.schema';
 import { Harvest } from 'src/modules/harvest/harvest.schema';
-import { hash } from 'hasha';
+import Hash from 'hasha';
 import ValidateurBal from '@ban-team/validateur-bal';
 import { signData } from 'src/lib/utils/signature';
 import { communeIsInPerimeters } from 'src/lib/utils/perimeters';
@@ -32,7 +32,7 @@ export class HandleFile {
     organization: Organization,
   ): Promise<Partial<Harvest>> {
     // CHECK QUE LE FICHIER NE FAIT PAS PLUS DE 100mo
-    const newFileHash = await hash(newFile, { algorithm: 'sha256' });
+    const newFileHash = await Hash.async(newFile, { algorithm: 'sha256' });
     if (newFile.length > MAX_ALLOWED_FILE_SIZE) {
       return {
         updateStatus: StatusUpdateEnum.REJECTED,
@@ -89,7 +89,7 @@ export class HandleFile {
       };
     }
     // ON CHECK SI LE HASH DE LA DONNEE EST LE MEME QUE L'ANCIEN
-    const dataHash = signData(result.rows.map((r) => r.rawValues));
+    const dataHash = await signData(result.rows.map((r) => r.rawValues));
     if (currentDataHash && currentDataHash === dataHash) {
       return {
         updateStatus: StatusUpdateEnum.UNCHANGED,
