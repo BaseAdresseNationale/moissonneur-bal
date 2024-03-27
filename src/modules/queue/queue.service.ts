@@ -1,5 +1,14 @@
 import { Injectable } from '@nestjs/common';
-import { Task } from './queue';
+
+export type Worker = {
+  run(params: any): void;
+};
+
+interface Task {
+  title: string;
+  worker: Worker;
+  params: any;
+}
 
 @Injectable()
 export class QueueService {
@@ -8,7 +17,12 @@ export class QueueService {
 
   constructor() {}
 
-  public pushTask(task: Task) {
+  public pushTask(worker: Worker, title: string = '', params: any = null) {
+    const task: Task = {
+      worker,
+      title,
+      params,
+    };
     this.queue.push(task);
     if (!this.isTaskRunning) {
       this.runTaskQueue();
@@ -22,7 +36,7 @@ export class QueueService {
       const task = this.queue.shift();
       console.debug(`Task start ${task.title}`);
       try {
-        await task.run();
+        await task.worker.run(task.params);
       } catch (e) {
         console.debug(`Task error ${task.title}`, e);
       }

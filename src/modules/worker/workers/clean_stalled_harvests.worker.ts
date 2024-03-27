@@ -1,12 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { SourceService } from '../../source/source.service';
 import { HarvestService } from 'src/modules/harvest/harvest.service';
-import { Task } from 'src/modules/queue/queue';
+import { Worker } from 'src/modules/queue/queue.service';
 
 @Injectable()
-export class CleanStalledWorker implements Task {
-  title: string = 'Clean stalled source and harvest';
-
+export class CleanStalledWorker implements Worker {
   constructor(
     private sourceService: SourceService,
     private harvestService: HarvestService,

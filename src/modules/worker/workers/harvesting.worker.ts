@@ -9,12 +9,10 @@ import { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
 import { catchError, firstValueFrom } from 'rxjs';
 import { Harvest, StatusHarvestEnum } from 'src/modules/harvest/harvest.schema';
 import { HandleFile } from './harvesting/handle_file';
-import { Task } from 'src/modules/queue/queue';
+import { Worker } from 'src/modules/queue/queue.service';
 
 @Injectable()
-export class HarvestingWorker implements Task {
-  title: string = 'Harvesting of sources';
-
+export class HarvestingWorker implements Worker {
   constructor(
     private readonly httpService: HttpService,
     private handleFile: HandleFile,
@@ -81,33 +79,39 @@ export class HarvestingWorker implements Task {
     }
   }
 
-  async run() {
+  async harvestingOneSource(sourceId: string) {
+    const startAt: Date = new Date();
+    // POUR CHAQUE SOURCE ON LOCK POUR PAS QU'IL Y AI PAS D'AUTRE HARVEST EN MEME TEMPS
+    const source = await this.sourceService.startHarvesting(sourceId, startAt);
+    // SI LA SOURCE N'EXISTE PAS CEST QUELLE EST DEJA MOISSONNE
+    if (source) {
+      const newHarvest = await this.harvestService.createOne(sourceId, startAt);
+      // DOWNLOAD DU FICHIER ET CREATION DES DIFFERENTES REVISIONS
+      const changes = await this.harvestingSource(source, newHarvest);
+      // SET SI LE HARVEST A REUSSI OU ECHOUE ET SET finishedAt
+      await this.harvestService.finishOne(newHarvest._id, changes);
+      // DELOCK LE HARVESTING ET SET LA DATE DU MOISSONAGE QUI VIENT DAVOIR LIEU
+      await this.sourceService.finishHarvesting(sourceId, startAt);
+    } else {
+      console.error(`La source ${sourceId} a deja un moissonnage en cour`);
+    }
+  }
+
+  async harvestingMultiSources() {
     // RECUPERE LES SOURCE QUI N'ONT PAS ETE MOISSONEE DEPUIS 24H
     const sourcesToHarvest: Source[] =
       await this.sourceService.findSourcesToHarvest();
 
-    for (const { _id: sourceId } of sourcesToHarvest) {
-      const startAt: Date = new Date();
-      // POUR CHAQUE SOURCE ON LOCK POUR PAS QU'IL Y AI PAS D'AUTRE HARVEST EN MEME TEMPS
-      const source = await this.sourceService.startHarvesting(
-        sourceId,
-        startAt,
-      );
-      // SI LA SOURCE N'EXISTE PAS CEST QUELLE EST DEJA MOISSONNE
-      if (source) {
-        const newHarvest = await this.harvestService.createOne(
-          sourceId,
-          startAt,
-        );
-        // DOWNLOAD DU FICHIER ET CREATION DES DIFFERENTES REVISIONS
-        const changes = await this.harvestingSource(source, newHarvest);
-        // SET SI LE HARVEST A REUSSI OU ECHOUE ET SET finishedAt
-        await this.harvestService.finishOne(newHarvest._id, changes);
-        // DELOCK LE HARVESTING ET SET LA DATE DU MOISSONAGE QUI VIENT DAVOIR LIEU
-        await this.sourceService.finishHarvesting(sourceId, startAt);
-      } else {
-        console.error(`La source ${sourceId} a deja un moissonnage en cour`);
-      }
+    for (const { _id } of sourcesToHarvest) {
+      await this.harvestingOneSource(_id);
+    }
+  }
+
+  async run(sourceId: string = null) {
+    if (sourceId) {
+      await this.harvestingOneSource(sourceId);
+    } else {
+      await this.harvestingMultiSources();
     }
   }
 }

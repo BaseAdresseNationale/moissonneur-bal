@@ -5,5 +5,5 @@ export class UpdateSourceDTO {
   @IsDefined()
   @IsBoolean()
   @ApiProperty({ required: true, nullable: false })
-  enable: boolean;
+  enabled: boolean;
 }

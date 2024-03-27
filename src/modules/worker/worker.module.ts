@@ -39,5 +39,6 @@ import { CleanStalledWorker } from './workers/clean_stalled_harvests.worker';
     HandleFile,
     HandleCommune,
   ],
+  exports: [HarvestingWorker],
 })
 export class WorkerModule {}

@@ -3,15 +3,14 @@ import {
   Get,
   Put,
   Post,
-  Delete,
   UseGuards,
   Res,
   Req,
   HttpStatus,
-  Body,
   Inject,
   forwardRef,
   Query,
+  HttpException,
 } from '@nestjs/common';
 import { Response } from 'express';
 import {
@@ -38,16 +37,21 @@ import {
   SourceHarvestsQueryPipe,
   SourceHarvestsQueryTransformed,
 } from './pipe/search_query.pipe';
+import { QueueService } from '../queue/queue.service';
+import { HarvestingWorker } from '../worker/workers/harvesting.worker';
 
 @ApiTags('sources')
 @Controller('sources')
 export class SourceController {
   constructor(
     private sourceService: SourceService,
+    private queueService: QueueService,
     @Inject(forwardRef(() => RevisionService))
     private revisionService: RevisionService,
     @Inject(forwardRef(() => HarvestService))
     private harvestService: HarvestService,
+    @Inject(forwardRef(() => HarvestingWorker))
+    private harvestingWorker: HarvestingWorker,
   ) {}
 
   @Get('')
@@ -129,5 +133,34 @@ export class SourceController {
       offset,
     };
     res.status(HttpStatus.OK).json(page);
+  }
+
+  @Post(':sourceId/harvest')
+  @ApiOperation({
+    summary: 'Ask harvest of source',
+    operationId: 'askHarvest',
+  })
+  @ApiParam({ name: 'sourceId', required: true, type: String })
+  @ApiResponse({ status: HttpStatus.OK, type: Source })
+  async askHarvest(@Req() req: CustomRequest, @Res() res: Response) {
+    if (req.source.harvestingSince !== null) {
+      throw new HttpException('Moissonnage en cours', HttpStatus.NOT_FOUND);
+    }
+
+    if (!req.source.enabled) {
+      throw new HttpException(`Source inactive`, HttpStatus.NOT_FOUND);
+    }
+
+    if (req.source._deleted) {
+      throw new HttpException(`Source archivée`, HttpStatus.NOT_FOUND);
+    }
+
+    this.queueService.pushTask(
+      this.harvestingWorker,
+      `Harvesting of source ${req.source}`,
+      req.source._id,
+    );
+
+    res.status(HttpStatus.OK).json(res);
   }
 }

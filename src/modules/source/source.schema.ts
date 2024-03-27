@@ -20,7 +20,7 @@ export class Source extends DateEntity {
   license: string;
 
   @Prop({ type: SchemaTypes.Boolean })
-  enable?: boolean;
+  enabled?: boolean;
 
   @Prop({ type: SchemaTypes.Date })
   lastHarvest?: Date;
