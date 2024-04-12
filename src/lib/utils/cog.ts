@@ -23,7 +23,7 @@ const communesByDepartementIndex: Record<string, CommuneCOG[]> = groupBy(
   'departement',
 );
 
-const epciByCode: Record<string, EpciCOG> = groupBy(epci, 'code');
+const epciByCode: Record<string, EpciCOG> = keyBy(epci, 'code');
 
 export function getCommune(codeCommune: string): CommuneCOG {
   return communesIndex[codeCommune];
