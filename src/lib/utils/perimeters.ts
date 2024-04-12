@@ -21,7 +21,7 @@ function isInDepartement(departement: string, codeCommune: string): boolean {
 
 function isInEPCI(siren: string, codeCommune: string): boolean {
   const epci: EpciCOG = getEPCI(siren);
-  return epci.membres && epci.membres.some(({ code }) => code === codeCommune);
+  return epci?.membres?.some(({ code }) => code === codeCommune);
 }
 
 function codeInseeIsInPerimeters(codeInsee: string, perimeters: Perimeter[]) {
