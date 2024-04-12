@@ -19,8 +19,9 @@ export class ApiDepotService {
     private configService: ConfigService,
     private readonly httpService: HttpService,
   ) {
-    this.API_DEPOT_CLIENT_ID =
-      this.configService.get<string>('URL_API_DATA_GOUV');
+    this.API_DEPOT_CLIENT_ID = this.configService.get<string>(
+      'API_DEPOT_CLIENT_ID',
+    );
   }
 
   private async getCurrentRevision(codeCommune: string) {
