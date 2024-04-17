@@ -40,6 +40,8 @@ import { ApiDepotService } from 'src/modules/api_depot/api_depot.service';
 import { StatusUpdateEnum } from 'src/lib/types/status_update.enum';
 import { FileService } from 'src/modules/file/file.service';
 
+process.env.API_DEPOT_CLIENT_ID = 'moissonneur-bal';
+
 describe('UPDATE SOURCE ORGA WORKER', () => {
   // DB
   let mongod: MongoMemoryServer;
@@ -282,9 +284,6 @@ describe('UPDATE SOURCE ORGA WORKER', () => {
       // MOCK URL SOURCE
       axiosMock.onGet(url).replyOnce(200, readFile('1.3-valid.csv'));
       // MOCK PUBLICATION API DEPOT
-      axiosMock
-        .onGet(`/communes/31591/current-revision`)
-        .replyOnce(404, 'Aucune révision connue pour cette commune');
       const revisionId = new ObjectId();
       axiosMock
         .onPost(`/communes/31591/revisions`)
@@ -298,6 +297,10 @@ describe('UPDATE SOURCE ORGA WORKER', () => {
       axiosMock
         .onPost(`/revisions/${revisionId.toHexString()}/publish`)
         .replyOnce(200, { _id: revisionId.toHexString() });
+
+      axiosMock.onGet(`/communes/31591/current-revision`).replyOnce(200, {
+        client: { _id: '_moissonneur-bal', id: 'moissonneur-bal' },
+      });
       // RUN WORKER
       await harvestingWorker.run();
       // CHECK HARVEST
@@ -478,7 +481,7 @@ describe('UPDATE SOURCE ORGA WORKER', () => {
       axiosMock.onGet(url).replyOnce(200, readFile('1.3-valid.csv'));
       // MOCK PUBLICATION API DEPOT
       axiosMock.onGet(`/communes/31591/current-revision`).replyOnce(200, {
-        client: { _id: 'other-client' },
+        client: { _id: '_other-client', id: 'other-client' },
       });
       // RUN WORKER
       await harvestingWorker.run();
@@ -503,7 +506,7 @@ describe('UPDATE SOURCE ORGA WORKER', () => {
         current: true,
         publication: {
           status: StatusPublicationEnum.PROVIDED_BY_OTHER_CLIENT,
-          currentClientId: 'other-client',
+          currentClientId: '_other-client',
         },
       };
       expect(revisionRes).toMatchObject(revisionExpected);
