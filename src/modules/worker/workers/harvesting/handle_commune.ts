@@ -104,8 +104,10 @@ export class HandleCommune {
     organization: Organization,
   ) {
     // ON RECUPERE TOUTES LES REVISION COURANTE DE LA SOURCE
-    const currentRevisions: Revision[] =
-      await this.revisionService.getCurrentRevisionsBySource(sourceId);
+    const currentRevisions: Revision[] = await this.revisionService.findMany({
+      sourceId,
+      current: true,
+    });
     // ON RECUPERE LES CODES COMMUNES TROUVE DANS LE FICHIER
     const validRows: Record<string, any> = rows.filter((r) => r.isValid);
     const codesCommunes: string[] = [

@@ -39,6 +39,9 @@ import {
 } from './pipe/search_query.pipe';
 import { QueueService } from '../queue/queue.service';
 import { HarvestingWorker } from '../worker/workers/harvesting.worker';
+import { PipelineStage } from 'mongoose';
+import { StatusUpdateEnum } from 'src/lib/types/status_update.enum';
+import { AggregateRevision } from '../revision/dto/aggregation_revision.dto';
 
 @ApiTags('sources')
 @Controller('sources')
@@ -96,8 +99,55 @@ export class SourceController {
   @ApiParam({ name: 'sourceId', required: true, type: String })
   @ApiResponse({ status: HttpStatus.OK, type: Revision, isArray: true })
   async findCurrentRevision(@Req() req: CustomRequest, @Res() res: Response) {
-    const revisions: Revision[] =
-      await this.revisionService.getCurrentRevisionsBySource(req.source._id);
+    const revisions: Revision[] = await this.revisionService.findMany({
+      sourceId: req.source._id,
+      current: true,
+    });
+    res.status(HttpStatus.OK).json(revisions);
+  }
+
+  @Get(':sourceId/last-updated-revisions')
+  @ApiOperation({
+    summary: 'Find last revisions by source',
+    operationId: 'findCurrentRevision',
+  })
+  @ApiParam({ name: 'sourceId', required: true, type: String })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    type: AggregateRevision,
+    isArray: true,
+  })
+  async findLastRevision(@Req() req: CustomRequest, @Res() res: Response) {
+    const aggregation: PipelineStage[] = [
+      {
+        $match: {
+          sourceId: req.source._id,
+          updateStatus: { $ne: StatusUpdateEnum.UNCHANGED },
+        },
+      },
+      { $sort: { _created: 1 } },
+      {
+        $group: {
+          _id: '$codeCommune',
+          id: { $last: '$_id' },
+          codeCommune: { $last: '$codeCommune' },
+          sourceId: { $last: '$sourceId' },
+          harvestId: { $last: '$harvestId' },
+          updateStatus: { $last: '$updateStatus' },
+          updateRejectionReason: { $last: '$updateRejectionReason' },
+          fileId: { $last: '$fileId' },
+          dataHash: { $last: '$dataHash' },
+          nbRows: { $last: '$nbRows' },
+          nbRowsWithErrors: { $last: '$nbRowsWithErrors' },
+          uniqueErrors: { $last: '$uniqueErrors' },
+          current: { $last: '$current' },
+          publication: { $last: '$publication' },
+          _created: { $last: '$_created' },
+        },
+      },
+    ];
+    const revisions: AggregateRevision[] =
+      await this.revisionService.aggregate(aggregation);
     res.status(HttpStatus.OK).json(revisions);
   }
 

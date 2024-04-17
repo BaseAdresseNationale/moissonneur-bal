@@ -241,6 +241,7 @@ describe('UPDATE SOURCE ORGA WORKER', () => {
         },
       };
       expect(revisionRes).toMatchObject(revisionExpected);
+      expect(revisionRes._created).toBeInstanceOf(Date);
     });
 
     it('Harvesting with last harvest', async () => {
@@ -330,6 +331,7 @@ describe('UPDATE SOURCE ORGA WORKER', () => {
         },
       };
       expect(revisionRes).toMatchObject(revisionExpected);
+      expect(revisionRes._created).toBeInstanceOf(Date);
     });
 
     it('Harvesting with last harvest (file no change)', async () => {
@@ -510,6 +512,7 @@ describe('UPDATE SOURCE ORGA WORKER', () => {
         },
       };
       expect(revisionRes).toMatchObject(revisionExpected);
+      expect(revisionRes._created).toBeInstanceOf(Date);
     });
 
     it('Harvesting provide other source', async () => {
@@ -575,6 +578,7 @@ describe('UPDATE SOURCE ORGA WORKER', () => {
         },
       };
       expect(revisionRes).toMatchObject(revisionExpected);
+      expect(revisionRes._created).toBeInstanceOf(Date);
     });
   });
 
