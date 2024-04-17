@@ -60,7 +60,7 @@ export class SourceController {
   @Get('')
   @ApiOperation({ summary: 'Find many sources', operationId: 'findMany' })
   @ApiResponse({ status: HttpStatus.OK, type: Source, isArray: true })
-  async findMany(@Req() req: CustomRequest, @Res() res: Response) {
+  async findMany(@Res() res: Response) {
     const sources: Source[] = await this.sourceService.findMany(
       {},
       { _id: 1, _updated: 1, _deleted: 1, title: 1, enabled: 1 },
@@ -109,7 +109,7 @@ export class SourceController {
   @Get(':sourceId/last-updated-revisions')
   @ApiOperation({
     summary: 'Find last revisions by source',
-    operationId: 'findCurrentRevision',
+    operationId: 'findLastUpdatedRevision',
   })
   @ApiParam({ name: 'sourceId', required: true, type: String })
   @ApiResponse({
@@ -122,7 +122,13 @@ export class SourceController {
       {
         $match: {
           sourceId: req.source._id,
-          updateStatus: { $ne: StatusUpdateEnum.UNCHANGED },
+          $or: [
+            {
+              updateStatus: StatusUpdateEnum.UNCHANGED,
+              publication: { $ne: null },
+            },
+            { updateStatus: { $ne: StatusUpdateEnum.UNCHANGED } },
+          ],
         },
       },
       { $sort: { _created: 1 } },
