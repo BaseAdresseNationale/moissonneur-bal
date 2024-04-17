@@ -89,6 +89,9 @@ export class Revision {
   @Prop({ type: PublicationSchema })
   @ApiProperty({ type: () => Publication, required: false })
   publication?: Publication;
+
+  @Prop({ type: SchemaTypes.Date, default: Date.now })
+  _created?: Date;
 }
 
 export const RevisionSchema = SchemaFactory.createForClass(Revision);

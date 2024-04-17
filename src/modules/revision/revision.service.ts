@@ -1,6 +1,12 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { FilterQuery, Model, QueryWithHelpers } from 'mongoose';
+import {
+  Aggregate,
+  FilterQuery,
+  Model,
+  PipelineStage,
+  QueryWithHelpers,
+} from 'mongoose';
 
 import { Revision } from './revision.schema';
 import { StatusUpdateEnum } from 'src/lib/types/status_update.enum';
@@ -64,10 +70,8 @@ export class RevisionService {
     return revision;
   }
 
-  public async getCurrentRevisionsBySource(
-    sourceId: string,
-  ): Promise<Revision[]> {
-    return this.revisionModel.find({ sourceId, current: true }).lean();
+  async aggregate(aggregation?: PipelineStage[]): Promise<Aggregate<any>> {
+    return this.revisionModel.aggregate(aggregation);
   }
 
   public async createRevision(revision: Partial<Revision>): Promise<Revision> {
