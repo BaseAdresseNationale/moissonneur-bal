@@ -27,7 +27,6 @@ export class ApiDepotService {
   private async getCurrentRevision(codeCommune: string) {
     const url: string = `/communes/${codeCommune}/current-revision`;
     const options: AxiosRequestConfig = { responseType: 'json' };
-
     const { data: revision } = await firstValueFrom(
       this.httpService.get<any>(url, options).pipe(
         catchError((error: AxiosError) => {
@@ -140,7 +139,7 @@ export class ApiDepotService {
       !options.force &&
       currentPublishedRevision &&
       currentPublishedRevision.client &&
-      currentPublishedRevision.client._id !== this.API_DEPOT_CLIENT_ID
+      currentPublishedRevision.client.id !== this.API_DEPOT_CLIENT_ID
     ) {
       return {
         status: StatusPublicationEnum.PROVIDED_BY_OTHER_CLIENT,
@@ -151,7 +150,7 @@ export class ApiDepotService {
     if (
       !options.force &&
       currentPublishedRevision &&
-      currentPublishedRevision.context.extras.sourceId &&
+      currentPublishedRevision.context?.extras?.sourceId &&
       currentPublishedRevision.context?.extras?.sourceId !== sourceId.toString()
     ) {
       return {
