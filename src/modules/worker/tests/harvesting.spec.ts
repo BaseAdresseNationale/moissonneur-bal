@@ -234,7 +234,6 @@ describe('UPDATE SOURCE ORGA WORKER', () => {
         nbRows: 1,
         nbRowsWithErrors: 0,
         uniqueErrors: [],
-        current: true,
         publication: {
           status: StatusPublicationEnum.PUBLISHED,
           publishedRevisionId: revisionId.toHexString(),
@@ -324,7 +323,6 @@ describe('UPDATE SOURCE ORGA WORKER', () => {
         nbRows: 1,
         nbRowsWithErrors: 0,
         uniqueErrors: [],
-        current: true,
         publication: {
           status: StatusPublicationEnum.PUBLISHED,
           publishedRevisionId: revisionId.toHexString(),
@@ -505,7 +503,6 @@ describe('UPDATE SOURCE ORGA WORKER', () => {
         nbRows: 1,
         nbRowsWithErrors: 0,
         uniqueErrors: [],
-        current: true,
         publication: {
           status: StatusPublicationEnum.PROVIDED_BY_OTHER_CLIENT,
           currentClientId: '_other-client',
@@ -571,7 +568,6 @@ describe('UPDATE SOURCE ORGA WORKER', () => {
         nbRows: 1,
         nbRowsWithErrors: 0,
         uniqueErrors: [],
-        current: true,
         publication: {
           status: StatusPublicationEnum.PROVIDED_BY_OTHER_SOURCE,
           currentSourceId: 'other-source',

@@ -28,7 +28,6 @@ import { CustomRequest } from 'src/lib/types/request.type';
 import { AdminGuard } from 'src/lib/admin.guard';
 import { UpdateSourceDTO } from './dto/update_source.dto';
 import { RevisionService } from '../revision/revision.service';
-import { Revision } from '../revision/revision.schema';
 import { HarvestService } from '../harvest/harvest.service';
 import { Harvest } from '../harvest/harvest.schema';
 import { PageDTO } from 'src/lib/class/page.dto';
@@ -91,21 +90,6 @@ export class SourceController {
     res.status(HttpStatus.OK).json(source);
   }
 
-  @Get(':sourceId/current-revisions')
-  @ApiOperation({
-    summary: 'Find current revisions by source',
-    operationId: 'findCurrentRevision',
-  })
-  @ApiParam({ name: 'sourceId', required: true, type: String })
-  @ApiResponse({ status: HttpStatus.OK, type: Revision, isArray: true })
-  async findCurrentRevision(@Req() req: CustomRequest, @Res() res: Response) {
-    const revisions: Revision[] = await this.revisionService.findMany({
-      sourceId: req.source._id,
-      current: true,
-    });
-    res.status(HttpStatus.OK).json(revisions);
-  }
-
   @Get(':sourceId/last-updated-revisions')
   @ApiOperation({
     summary: 'Find last revisions by source',
@@ -146,7 +130,6 @@ export class SourceController {
           nbRows: { $last: '$nbRows' },
           nbRowsWithErrors: { $last: '$nbRowsWithErrors' },
           uniqueErrors: { $last: '$uniqueErrors' },
-          current: { $last: '$current' },
           publication: { $last: '$publication' },
           _created: { $last: '$_created' },
         },

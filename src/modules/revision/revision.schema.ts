@@ -82,10 +82,6 @@ export class Revision {
   @ApiProperty({ required: false })
   uniqueErrors?: string[];
 
-  @Prop({ type: SchemaTypes.Boolean })
-  @ApiProperty({ required: false })
-  current?: boolean;
-
   @Prop({ type: PublicationSchema })
   @ApiProperty({ type: () => Publication, required: false })
   publication?: Publication;
