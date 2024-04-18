@@ -70,12 +70,6 @@ export class RevisionController {
     const organization = await this.organizationService.findOneOrFail(
       source.organizationId,
     );
-    if (!revison.current) {
-      throw new HttpException(
-        'La révision n’est pas la révision courante pour cette commune',
-        HttpStatus.CONFLICT,
-      );
-    }
 
     if (
       !force &&
