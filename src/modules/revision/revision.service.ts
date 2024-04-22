@@ -1,14 +1,9 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import {
-  Aggregate,
-  FilterQuery,
-  Model,
-  PipelineStage,
-  QueryWithHelpers,
-} from 'mongoose';
+import { FilterQuery, Model, PipelineStage, QueryWithHelpers } from 'mongoose';
 
-import { Revision } from './revision.schema';
+import { Revision, StatusPublicationEnum } from './revision.schema';
+import { StatusUpdateEnum } from 'src/lib/types/status_update.enum';
 
 @Injectable()
 export class RevisionService {
@@ -69,7 +64,75 @@ export class RevisionService {
     return revision;
   }
 
-  async aggregate(aggregation?: PipelineStage[]): Promise<Aggregate<any>> {
+  async findLastUpdated(sourceId: string): Promise<Revision[]> {
+    const aggregation: PipelineStage[] = [
+      {
+        $match: {
+          sourceId,
+          $or: [
+            {
+              updateStatus: StatusUpdateEnum.UNCHANGED,
+              publication: { $ne: null },
+            },
+            { updateStatus: { $ne: StatusUpdateEnum.UNCHANGED } },
+          ],
+        },
+      },
+      { $sort: { _created: 1 } },
+      {
+        $group: {
+          _id: '$codeCommune',
+          id: { $last: '$_id' },
+          codeCommune: { $last: '$codeCommune' },
+          sourceId: { $last: '$sourceId' },
+          harvestId: { $last: '$harvestId' },
+          updateStatus: { $last: '$updateStatus' },
+          updateRejectionReason: { $last: '$updateRejectionReason' },
+          fileId: { $last: '$fileId' },
+          dataHash: { $last: '$dataHash' },
+          nbRows: { $last: '$nbRows' },
+          nbRowsWithErrors: { $last: '$nbRowsWithErrors' },
+          uniqueErrors: { $last: '$uniqueErrors' },
+          publication: { $last: '$publication' },
+          _created: { $last: '$_created' },
+        },
+      },
+    ];
+    const sourceAgg: any[] = await this.revisionModel.aggregate(aggregation);
+    return sourceAgg.map((r) => ({ ...r, _id: r.id }));
+  }
+
+  async findErrorBySources(): Promise<
+    {
+      _id: string;
+      nbErrors: number;
+    }[]
+  > {
+    const aggregation: PipelineStage[] = [
+      {
+        $group: {
+          _id: '$codeCommune',
+          sourceId: { $last: '$sourceId' },
+          updateStatus: { $last: '$updateStatus' },
+          status: { $last: '$publication.status' },
+        },
+      },
+      { $sort: { startedAt: 1 } },
+      {
+        $match: {
+          $or: [
+            { status: StatusPublicationEnum.ERROR },
+            { updateStatus: StatusUpdateEnum.REJECTED },
+          ],
+        },
+      },
+      {
+        $group: {
+          _id: '$sourceId',
+          nbErrors: { $count: {} },
+        },
+      },
+    ];
     return this.revisionModel.aggregate(aggregation);
   }
 

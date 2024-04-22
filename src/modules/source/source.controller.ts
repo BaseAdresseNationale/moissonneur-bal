@@ -29,7 +29,7 @@ import { AdminGuard } from 'src/lib/admin.guard';
 import { UpdateSourceDTO } from './dto/update_source.dto';
 import { RevisionService } from '../revision/revision.service';
 import { HarvestService } from '../harvest/harvest.service';
-import { Harvest } from '../harvest/harvest.schema';
+import { Harvest, StatusHarvestEnum } from '../harvest/harvest.schema';
 import { PageDTO } from 'src/lib/class/page.dto';
 import { SourceHarvestsQuery } from './dto/source_harvests.query';
 import {
@@ -38,9 +38,9 @@ import {
 } from './pipe/search_query.pipe';
 import { QueueService } from '../queue/queue.service';
 import { HarvestingWorker } from '../worker/workers/harvesting.worker';
-import { PipelineStage } from 'mongoose';
 import { StatusUpdateEnum } from 'src/lib/types/status_update.enum';
-import { AggregateRevision } from '../revision/dto/aggregation_revision.dto';
+import { ExtendedSourceDTO } from './dto/extended_source.dto';
+import { Revision } from '../revision/revision.schema';
 
 @ApiTags('sources')
 @Controller('sources')
@@ -58,13 +58,38 @@ export class SourceController {
 
   @Get('')
   @ApiOperation({ summary: 'Find many sources', operationId: 'findMany' })
-  @ApiResponse({ status: HttpStatus.OK, type: Source, isArray: true })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    type: ExtendedSourceDTO,
+    isArray: true,
+  })
   async findMany(@Res() res: Response) {
     const sources: Source[] = await this.sourceService.findMany(
       {},
       { _id: 1, _updated: 1, _deleted: 1, title: 1, enabled: 1 },
     );
-    res.status(HttpStatus.OK).json(sources);
+
+    const harvestsInError: {
+      _id: string;
+      status: StatusHarvestEnum;
+      updateStatus: StatusUpdateEnum;
+    }[] = await this.harvestService.findErrorBySources();
+
+    const nbRevisionsInError: {
+      _id: string;
+      nbErrors: number;
+    }[] = await this.revisionService.findErrorBySources();
+
+    const extendedSources: ExtendedSourceDTO[] = sources.map((s) => {
+      return {
+        ...s,
+        harvestError: harvestsInError.some(({ _id }) => s._id === _id),
+        nbRevisionError:
+          nbRevisionsInError.find(({ _id }) => s._id === _id)?.nbErrors || 0,
+      };
+    });
+
+    res.status(HttpStatus.OK).json(extendedSources);
   }
 
   @Get(':sourceId')
@@ -98,45 +123,13 @@ export class SourceController {
   @ApiParam({ name: 'sourceId', required: true, type: String })
   @ApiResponse({
     status: HttpStatus.OK,
-    type: AggregateRevision,
+    type: Revision,
     isArray: true,
   })
   async findLastRevision(@Req() req: CustomRequest, @Res() res: Response) {
-    const aggregation: PipelineStage[] = [
-      {
-        $match: {
-          sourceId: req.source._id,
-          $or: [
-            {
-              updateStatus: StatusUpdateEnum.UNCHANGED,
-              publication: { $ne: null },
-            },
-            { updateStatus: { $ne: StatusUpdateEnum.UNCHANGED } },
-          ],
-        },
-      },
-      { $sort: { _created: 1 } },
-      {
-        $group: {
-          _id: '$codeCommune',
-          id: { $last: '$_id' },
-          codeCommune: { $last: '$codeCommune' },
-          sourceId: { $last: '$sourceId' },
-          harvestId: { $last: '$harvestId' },
-          updateStatus: { $last: '$updateStatus' },
-          updateRejectionReason: { $last: '$updateRejectionReason' },
-          fileId: { $last: '$fileId' },
-          dataHash: { $last: '$dataHash' },
-          nbRows: { $last: '$nbRows' },
-          nbRowsWithErrors: { $last: '$nbRowsWithErrors' },
-          uniqueErrors: { $last: '$uniqueErrors' },
-          publication: { $last: '$publication' },
-          _created: { $last: '$_created' },
-        },
-      },
-    ];
-    const revisions: AggregateRevision[] =
-      await this.revisionService.aggregate(aggregation);
+    const revisions: Revision[] = await this.revisionService.findLastUpdated(
+      req.source._id,
+    );
     res.status(HttpStatus.OK).json(revisions);
   }
 

@@ -1,9 +1,16 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { FilterQuery, Model, QueryWithHelpers, Types } from 'mongoose';
+import {
+  FilterQuery,
+  Model,
+  PipelineStage,
+  QueryWithHelpers,
+  Types,
+} from 'mongoose';
 import { sub } from 'date-fns';
 
 import { Harvest, StatusHarvestEnum } from './harvest.schema';
+import { StatusUpdateEnum } from 'src/lib/types/status_update.enum';
 
 @Injectable()
 export class HarvestService {
@@ -62,6 +69,34 @@ export class HarvestService {
     }
 
     return query.lean().exec();
+  }
+
+  async findErrorBySources(): Promise<
+    {
+      _id: string;
+      status: StatusHarvestEnum;
+      updateStatus: StatusUpdateEnum;
+    }[]
+  > {
+    const aggregation: PipelineStage[] = [
+      { $sort: { startedAt: 1 } },
+      {
+        $group: {
+          _id: '$sourceId',
+          status: { $last: '$status' },
+          updateStatus: { $last: '$updateStatus' },
+        },
+      },
+      {
+        $match: {
+          $or: [
+            { status: StatusHarvestEnum.FAILED },
+            { updateStatus: StatusUpdateEnum.REJECTED },
+          ],
+        },
+      },
+    ];
+    return this.harvestModel.aggregate(aggregation);
   }
 
   async count(filter?: FilterQuery<Harvest>): Promise<number> {
