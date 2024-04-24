@@ -1,13 +1,30 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Inject,
+  Injectable,
+  forwardRef,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { FilterQuery, Model, QueryWithHelpers } from 'mongoose';
 import { sub } from 'date-fns';
 
 import { Source } from './source.schema';
+import { StatusHarvestEnum } from '../harvest/harvest.schema';
+import { RevisionService } from '../revision/revision.service';
+import { HarvestService } from '../harvest/harvest.service';
+import { StatusUpdateEnum } from 'src/lib/types/status_update.enum';
+import { ExtendedSourceDTO } from './dto/extended_source.dto';
 
 @Injectable()
 export class SourceService {
-  constructor(@InjectModel(Source.name) private sourceModel: Model<Source>) {}
+  constructor(
+    @InjectModel(Source.name) private sourceModel: Model<Source>,
+    @Inject(forwardRef(() => RevisionService))
+    private revisionService: RevisionService,
+    @Inject(forwardRef(() => HarvestService))
+    private harvestService: HarvestService,
+  ) {}
 
   async findMany(
     filter?: FilterQuery<Source>,
@@ -31,6 +48,35 @@ export class SourceService {
     }
 
     return query.lean().exec();
+  }
+
+  async findManyExtended(): Promise<ExtendedSourceDTO[]> {
+    const sources: Source[] = await this.findMany(
+      {},
+      { _id: 1, _updated: 1, _deleted: 1, title: 1, enabled: 1 },
+    );
+
+    const harvestsInError: {
+      _id: string;
+      status: StatusHarvestEnum;
+      updateStatus: StatusUpdateEnum;
+    }[] = await this.harvestService.findErrorBySources();
+
+    const nbRevisionsInError: {
+      _id: string;
+      nbErrors: number;
+    }[] = await this.revisionService.findErrorBySources();
+
+    const extendedSources: ExtendedSourceDTO[] = sources.map((s) => {
+      return {
+        ...s,
+        harvestError: harvestsInError.some(({ _id }) => s._id === _id),
+        nbRevisionError:
+          nbRevisionsInError.find(({ _id }) => s._id === _id)?.nbErrors || 0,
+      };
+    });
+
+    return extendedSources;
   }
 
   public async findOneOrFail(sourceId: string): Promise<Source> {

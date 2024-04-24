@@ -10,8 +10,8 @@ export class FileController {
 
   @Get(':fileId/download')
   @ApiOperation({
-    summary: 'Download ile',
-    operationId: 'findMany',
+    summary: 'Download file',
+    operationId: 'findOne',
   })
   @ApiParam({ name: 'fileId', required: true, type: String })
   @ApiResponse({ status: HttpStatus.OK, type: Buffer })
