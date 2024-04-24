@@ -29,7 +29,7 @@ import { AdminGuard } from 'src/lib/admin.guard';
 import { UpdateSourceDTO } from './dto/update_source.dto';
 import { RevisionService } from '../revision/revision.service';
 import { HarvestService } from '../harvest/harvest.service';
-import { Harvest, StatusHarvestEnum } from '../harvest/harvest.schema';
+import { Harvest } from '../harvest/harvest.schema';
 import { PageDTO } from 'src/lib/class/page.dto';
 import { SourceHarvestsQuery } from './dto/source_harvests.query';
 import {
@@ -38,7 +38,6 @@ import {
 } from './pipe/search_query.pipe';
 import { QueueService } from '../queue/queue.service';
 import { HarvestingWorker } from '../worker/workers/harvesting.worker';
-import { StatusUpdateEnum } from 'src/lib/types/status_update.enum';
 import { ExtendedSourceDTO } from './dto/extended_source.dto';
 import { Revision } from '../revision/revision.schema';
 
@@ -64,30 +63,8 @@ export class SourceController {
     isArray: true,
   })
   async findMany(@Res() res: Response) {
-    const sources: Source[] = await this.sourceService.findMany(
-      {},
-      { _id: 1, _updated: 1, _deleted: 1, title: 1, enabled: 1 },
-    );
-
-    const harvestsInError: {
-      _id: string;
-      status: StatusHarvestEnum;
-      updateStatus: StatusUpdateEnum;
-    }[] = await this.harvestService.findErrorBySources();
-
-    const nbRevisionsInError: {
-      _id: string;
-      nbErrors: number;
-    }[] = await this.revisionService.findErrorBySources();
-
-    const extendedSources: ExtendedSourceDTO[] = sources.map((s) => {
-      return {
-        ...s,
-        harvestError: harvestsInError.some(({ _id }) => s._id === _id),
-        nbRevisionError:
-          nbRevisionsInError.find(({ _id }) => s._id === _id)?.nbErrors || 0,
-      };
-    });
+    const extendedSources: ExtendedSourceDTO[] =
+      await this.sourceService.findManyExtended();
 
     res.status(HttpStatus.OK).json(extendedSources);
   }

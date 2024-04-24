@@ -20,6 +20,14 @@ import {
 import { ApiBetaGouvModule } from 'src/modules/api_beta_gouv/api_beta_gouv.module';
 import { SourceService } from 'src/modules/source/source.service';
 import { OrganizationService } from 'src/modules/organization/organization.service';
+import { HarvestService } from 'src/modules/harvest/harvest.service';
+import { RevisionService } from 'src/modules/revision/revision.service';
+import { Harvest, HarvestSchema } from 'src/modules/harvest/harvest.schema';
+import { Revision, RevisionSchema } from 'src/modules/revision/revision.schema';
+import { FileService } from 'src/modules/file/file.service';
+import { ApiDepotService } from 'src/modules/api_depot/api_depot.service';
+import { ConfigModule } from '@nestjs/config';
+import { HttpModule } from '@nestjs/axios';
 
 describe('UPDATE SOURCE ORGA WORKER', () => {
   //
@@ -43,17 +51,25 @@ describe('UPDATE SOURCE ORGA WORKER', () => {
 
     const moduleRef: TestingModule = await Test.createTestingModule({
       imports: [
+        ConfigModule,
+        HttpModule,
         MongooseModule.forRoot(uri),
         ApiBetaGouvModule,
         MongooseModule.forFeature([
           { name: Source.name, schema: SourceSchema },
           { name: Organization.name, schema: OrganizationSchema },
+          { name: Harvest.name, schema: HarvestSchema },
+          { name: Revision.name, schema: RevisionSchema },
         ]),
       ],
       providers: [
         UpdateSourceOrganisationWorker,
         SourceService,
         OrganizationService,
+        HarvestService,
+        RevisionService,
+        FileService,
+        ApiDepotService,
       ],
     }).compile();
 
