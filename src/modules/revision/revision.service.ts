@@ -1,4 +1,10 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  Inject,
+  forwardRef,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import {
   Aggregate,
@@ -8,12 +14,25 @@ import {
   QueryWithHelpers,
 } from 'mongoose';
 
-import { Revision } from './revision.schema';
+import ValidateurBal from '@ban-team/validateur-bal';
+import { Revision, StatusPublicationEnum } from './revision.schema';
+import { SourceService } from '../source/source.service';
+import { FileService } from '../file/file.service';
+import { ApiDepotService } from '../api_depot/api_depot.service';
+import { OrganizationService } from '../organization/organization.service';
 
 @Injectable()
 export class RevisionService {
   constructor(
     @InjectModel(Revision.name) private revisionModel: Model<Revision>,
+    @Inject(forwardRef(() => SourceService))
+    private sourceService: SourceService,
+    @Inject(forwardRef(() => OrganizationService))
+    private organizationService: OrganizationService,
+    @Inject(forwardRef(() => FileService))
+    private fileService: FileService,
+    @Inject(forwardRef(() => ApiDepotService))
+    private apiDepotService: ApiDepotService,
   ) {}
 
   public async findOneOrFail(revisionId: string): Promise<Revision> {
@@ -75,5 +94,81 @@ export class RevisionService {
 
   public async createRevision(revision: Partial<Revision>): Promise<Revision> {
     return this.revisionModel.create(revision);
+  }
+
+  public async publish(
+    revision: Revision,
+    force: boolean = false,
+  ): Promise<Revision> {
+    const source = await this.sourceService.findOneOrFail(revision.sourceId);
+    const organization = await this.organizationService.findOneOrFail(
+      source.organizationId,
+    );
+
+    if (
+      !force &&
+      ![
+        StatusPublicationEnum.PUBLISHED,
+        StatusPublicationEnum.PROVIDED_BY_OTHER_CLIENT,
+        StatusPublicationEnum.PROVIDED_BY_OTHER_SOURCE,
+      ].includes(revision.publication.status)
+    ) {
+      throw new HttpException(
+        'La révision ne peut pas être publiée',
+        HttpStatus.CONFLICT,
+      );
+    }
+
+    if (!source.enabled || source._deleted) {
+      throw new HttpException(
+        'La source associée n’est plus active',
+        HttpStatus.CONFLICT,
+      );
+    }
+
+    let file = null;
+    try {
+      file = await this.fileService.getFile(revision.fileId.toHexString());
+    } catch {
+      throw new HttpException(
+        'Le fichier BAL associé n’est plus disponible',
+        HttpStatus.CONFLICT,
+      );
+    }
+
+    const validationResult = await ValidateurBal.validate(file, {
+      profile: '1.3-relax',
+    });
+
+    if (
+      !validationResult.parseOk ||
+      validationResult.rows.length !== revision.nbRows
+    ) {
+      throw new HttpException(
+        'Problème de cohérence des données : investigation nécessaire',
+        HttpStatus.CONFLICT,
+      );
+    }
+
+    try {
+      // ON ESSAYE DE PUBLIER LA BAL SUR L'API-DEPOT
+      revision.publication = await this.apiDepotService.publishBal(
+        revision,
+        file,
+        organization,
+        { force },
+      );
+    } catch (error) {
+      revision.publication = {
+        status: StatusPublicationEnum.ERROR,
+        errorMessage: error.message,
+      };
+    }
+
+    const result: Revision = await this.updateOne(revision._id.toHexString(), {
+      publication: revision.publication,
+    });
+
+    return result;
   }
 }

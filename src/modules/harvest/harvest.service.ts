@@ -28,7 +28,7 @@ export class HarvestService {
 
     if (!harvest) {
       throw new HttpException(
-        `Source ${harvestId} not found`,
+        `Harvest ${harvestId} not found`,
         HttpStatus.NOT_FOUND,
       );
     }
