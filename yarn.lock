@@ -952,10 +952,10 @@
   resolved "https://registry.yarnpkg.com/@ban-team/shared-data/-/shared-data-1.2.0.tgz#0e29e84a00f7df3b17e5821bde1405a2bfa656b5"
   integrity sha512-35jz6ITHHufUKxXAfa8ReSMl6lZarnfVBkS++wgHpk27e9K52bXyAHo+n3X331n2mSzoIQXxFK7SEcPob7a5cA==
 
-"@ban-team/validateur-bal@^2.18.3":
-  version "2.18.3"
-  resolved "https://registry.yarnpkg.com/@ban-team/validateur-bal/-/validateur-bal-2.18.3.tgz#afa0e2d736f2672fb4750784c224997e3d21592e"
-  integrity sha512-lJ+m7mjh4PxJuAidqJ5i89mGG7L/ifgMZsdyhjR3GNqA30A2EIawTKgiF0harHZ1E38O1aneciIroS2C3GEIgw==
+"@ban-team/validateur-bal@^2.19.0":
+  version "2.19.0"
+  resolved "https://registry.yarnpkg.com/@ban-team/validateur-bal/-/validateur-bal-2.19.0.tgz#681ef655077db1486b45426a2ce2930dd034dcc8"
+  integrity sha512-OIl1BE+MULv/L7ALR6PddNXmqkqwqi31W3SvvK/9GQULZjuMraPXPhHIxpraac1UtbcOzqdSAAKUUfNoqqkQFQ==
   dependencies:
     "@ban-team/shared-data" "^1.2.0"
     "@etalab/project-legal" "^0.6.0"
@@ -1020,10 +1020,10 @@
   resolved "https://registry.yarnpkg.com/@eslint/js/-/js-8.57.0.tgz#a5417ae8427873f1dd08b70b3574b453e67b5f7f"
   integrity sha512-Ys+3g2TaW7gADOJzPt83SJtCDhMjndcDMFVQ/Tj9iA1BfJzFKD9mAUXT3OenpuPHbI6P/myECxRJrofUsDx/5g==
 
-"@etalab/decoupage-administratif@^3.1.1":
-  version "3.1.1"
-  resolved "https://registry.yarnpkg.com/@etalab/decoupage-administratif/-/decoupage-administratif-3.1.1.tgz#bb8388c57526ba45a39a7b6e7da8d1d496278e7c"
-  integrity sha512-/1yqSlo6Xerdz1MN+rh57hDWcAam18gwSK5u4wFjT1glRUiN/o1A4IQe6pvB9JqGvHv6WbF5X7WyE+yxeMqLig==
+"@etalab/decoupage-administratif@^4.0.0":
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/@etalab/decoupage-administratif/-/decoupage-administratif-4.0.0.tgz#b5d048efc43a688312a42f6daa2bef93c0d2c63b"
+  integrity sha512-TMGZT4rFaQdkovoAZF5iMNJnxc2To8GXiC4x/N8Z5j6I0j29AeInE2Js86Wy9W2ZnjGFbKkSpmnsbLYwWYAFsw==
 
 "@etalab/project-legal@^0.6.0":
   version "0.6.0"
