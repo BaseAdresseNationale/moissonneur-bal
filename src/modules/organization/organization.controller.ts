@@ -25,6 +25,7 @@ import { OrganizationService } from './organization.service';
 import { Organization } from './organization.schema';
 import { UpdateOrganizationDTO } from './dto/update_organization.dto';
 import { Source } from '../source/source.schema';
+import { ExtendedSourceDTO } from '../source/dto/extended_source.dto';
 
 @ApiTags('organizations')
 @Controller('organizations')
@@ -82,12 +83,18 @@ export class OrganizationController {
     operationId: 'findSources',
   })
   @ApiParam({ name: 'organizationId', required: true, type: String })
-  @ApiResponse({ status: HttpStatus.OK, type: Source, isArray: true })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    type: ExtendedSourceDTO,
+    isArray: true,
+  })
   async findSources(@Req() req: CustomRequest, @Res() res: Response) {
     const sources: Source[] = await this.sourceService.findMany(
       { organizationId: req.organization._id },
       { _id: 1, _updated: 1, _deleted: 1, title: 1, enabled: 1 },
     );
-    res.status(HttpStatus.OK).json(sources);
+    const extendedSources: ExtendedSourceDTO[] =
+      await this.sourceService.extendMany(sources);
+    res.status(HttpStatus.OK).json(extendedSources);
   }
 }

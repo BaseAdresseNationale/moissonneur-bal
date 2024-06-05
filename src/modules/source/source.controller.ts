@@ -63,8 +63,12 @@ export class SourceController {
     isArray: true,
   })
   async findMany(@Res() res: Response) {
+    const sources: Source[] = await this.sourceService.findMany(
+      {},
+      { _id: 1, _updated: 1, _deleted: 1, title: 1, enabled: 1 },
+    );
     const extendedSources: ExtendedSourceDTO[] =
-      await this.sourceService.findManyExtended();
+      await this.sourceService.extendMany(sources);
 
     res.status(HttpStatus.OK).json(extendedSources);
   }

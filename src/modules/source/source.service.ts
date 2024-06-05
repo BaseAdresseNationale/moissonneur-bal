@@ -50,12 +50,7 @@ export class SourceService {
     return query.lean().exec();
   }
 
-  async findManyExtended(): Promise<ExtendedSourceDTO[]> {
-    const sources: Source[] = await this.findMany(
-      {},
-      { _id: 1, _updated: 1, _deleted: 1, title: 1, enabled: 1 },
-    );
-
+  public async extendMany(sources: Source[]): Promise<ExtendedSourceDTO[]> {
     const harvestsInError: {
       _id: string;
       status: StatusHarvestEnum;
