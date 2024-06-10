@@ -58,7 +58,7 @@ export class HandleCommune {
       return this.revisionService.createRevision(newRevision);
     }
     // CHECK QUE LE HASH DE LA DATA EST DIFFERNT DE CELUI DE LA DERNIERE REVISION
-    const dataHash: string = await signData(rows.map((r) => r.rawValues));
+    const dataHash: string = signData(rows.map((r) => r.rawValues));
     if (currentRevision && currentRevision.dataHash === dataHash) {
       newRevision.updateStatus = StatusUpdateEnum.UNCHANGED;
       newRevision.fileId = currentRevision.fileId;
