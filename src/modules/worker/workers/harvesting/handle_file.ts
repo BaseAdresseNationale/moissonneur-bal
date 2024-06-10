@@ -89,7 +89,7 @@ export class HandleFile {
       };
     }
     // ON CHECK SI LE HASH DE LA DONNEE EST LE MEME QUE L'ANCIEN
-    const dataHash = await signData(result.rows.map((r) => r.rawValues));
+    const dataHash = signData(result.rows.map((r) => r.rawValues));
     if (currentDataHash && currentDataHash === dataHash) {
       return {
         updateStatus: StatusUpdateEnum.UNCHANGED,
