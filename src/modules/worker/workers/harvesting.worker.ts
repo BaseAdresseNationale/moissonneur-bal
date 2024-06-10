@@ -40,10 +40,7 @@ export class HarvestingWorker implements Worker {
       throw new Error('Not valid response code: ' + status);
     }
 
-    if (
-      headers['content-type'] &&
-      headers['content-type'].includes('text/html')
-    ) {
+    if (headers['content-type']?.includes('text/html')) {
       throw new Error('Not valid content-type: ' + headers['content-type']);
     }
 

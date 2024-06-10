@@ -42,7 +42,7 @@ import { FileService } from 'src/modules/file/file.service';
 
 process.env.API_DEPOT_CLIENT_ID = 'moissonneur-bal';
 
-describe('UPDATE SOURCE ORGA WORKER', () => {
+describe('HARVESTING WORKER', () => {
   // DB
   let mongod: MongoMemoryServer;
   let mongoConnection: Connection;
