@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 
 export type Worker = {
-  run(params: any): void;
+  run(params: any): Promise<void>;
 };
 
 interface Task {

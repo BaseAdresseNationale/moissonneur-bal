@@ -137,9 +137,8 @@ export class ApiDepotService {
     // CHECK SI IL EXISTE DEJA UN AUTRE CLIENT DE L API DEPOT POUR LA COMMUNE
     if (
       !options.force &&
-      currentPublishedRevision &&
-      currentPublishedRevision.client &&
-      currentPublishedRevision.client.id !== this.API_DEPOT_CLIENT_ID
+      currentPublishedRevision?.client?.id &&
+      currentPublishedRevision?.client?.id !== this.API_DEPOT_CLIENT_ID
     ) {
       return {
         status: StatusPublicationEnum.PROVIDED_BY_OTHER_CLIENT,
@@ -149,9 +148,9 @@ export class ApiDepotService {
     // CHECK SI IL EXISTE UNE AUTRE SOURCE QUI MOISSONE CETTE COMMUNE
     if (
       !options.force &&
-      currentPublishedRevision &&
-      currentPublishedRevision.context?.extras?.sourceId &&
-      currentPublishedRevision.context?.extras?.sourceId !== sourceId.toString()
+      currentPublishedRevision?.context?.extras?.sourceId &&
+      currentPublishedRevision?.context?.extras?.sourceId !==
+        sourceId.toString()
     ) {
       return {
         status: StatusPublicationEnum.PROVIDED_BY_OTHER_SOURCE,
