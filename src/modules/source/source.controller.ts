@@ -11,6 +11,7 @@ import {
   forwardRef,
   Query,
   HttpException,
+  Body,
 } from '@nestjs/common';
 import { Response } from 'express';
 import {
@@ -88,10 +89,14 @@ export class SourceController {
   @ApiResponse({ status: HttpStatus.OK, type: Source })
   @ApiBearerAuth('admin-token')
   @UseGuards(AdminGuard)
-  async updateOne(@Req() req: CustomRequest, @Res() res: Response) {
+  async updateOne(
+    @Req() req: CustomRequest,
+    @Body() body: UpdateSourceDTO,
+    @Res() res: Response,
+  ) {
     const source: Source = await this.sourceService.updateOne(
       req.source._id,
-      req.body,
+      body,
     );
     res.status(HttpStatus.OK).json(source);
   }
