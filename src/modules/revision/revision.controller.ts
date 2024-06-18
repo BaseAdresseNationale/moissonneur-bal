@@ -6,6 +6,7 @@ import {
   Res,
   Req,
   HttpStatus,
+  Body,
 } from '@nestjs/common';
 import { Response } from 'express';
 import {
@@ -46,10 +47,14 @@ export class RevisionController {
   @ApiResponse({ status: HttpStatus.OK, type: Revision })
   @ApiBearerAuth('admin-token')
   @UseGuards(AdminGuard)
-  async publish(@Req() req: CustomRequest, @Res() res: Response) {
+  async publish(
+    @Req() req: CustomRequest,
+    @Body() body: PublishRevisionDTO,
+    @Res() res: Response,
+  ) {
     const result: Revision = await this.revisionService.publish(
       req.revision,
-      req.body.force,
+      body.force,
     );
 
     res.status(HttpStatus.OK).json(result);

@@ -8,6 +8,7 @@ import {
   HttpStatus,
   Inject,
   forwardRef,
+  Body,
 } from '@nestjs/common';
 import { Response } from 'express';
 import {
@@ -69,10 +70,14 @@ export class OrganizationController {
   @ApiResponse({ status: HttpStatus.OK, type: Organization })
   @ApiBearerAuth('admin-token')
   @UseGuards(AdminGuard)
-  async updateOne(@Req() req: CustomRequest, @Res() res: Response) {
+  async updateOne(
+    @Req() req: CustomRequest,
+    @Body() body: UpdateOrganizationDTO,
+    @Res() res: Response,
+  ) {
     const organization: Organization = await this.organizationService.updateOne(
       req.organization._id,
-      req.body,
+      body,
     );
     res.status(HttpStatus.OK).json(organization);
   }
