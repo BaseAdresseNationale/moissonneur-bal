@@ -137,7 +137,7 @@ export class ApiDepotService {
     // CHECK SI IL EXISTE DEJA UN AUTRE CLIENT DE L API DEPOT POUR LA COMMUNE
     if (
       !options.force &&
-      currentPublishedRevision?.client?.id &&
+      currentPublishedRevision?.client &&
       currentPublishedRevision?.client?.id !== this.API_DEPOT_CLIENT_ID
     ) {
       return {
