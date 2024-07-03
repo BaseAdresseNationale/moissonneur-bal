@@ -11,7 +11,12 @@ async function bootstrap() {
   const config = new DocumentBuilder()
     .setTitle('Moissonneur API')
     .setDescription('API permettant la gestion du moissonneur')
+    .setExternalDoc(
+      'Documentation technique',
+      'https://adresse-data-gouv-fr.gitbook.io/bal/moissonneur',
+    )
     .setVersion('1.0')
+    .addServer(process.env.MOISSONNEUR_URL)
     .addBearerAuth(
       {
         description: `Please enter the authentication token`,
