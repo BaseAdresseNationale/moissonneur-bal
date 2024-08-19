@@ -121,12 +121,7 @@ export class RevisionService {
     return sourceAgg.map((r) => ({ ...r, _id: r.id }));
   }
 
-  async findErrorBySources(): Promise<
-    {
-      id: string;
-      nbErrors: number;
-    }[]
-  > {
+  async findErrorBySources(): Promise<Record<string, number>> {
     const aggregation: PipelineStage[] = [
       {
         $group: {

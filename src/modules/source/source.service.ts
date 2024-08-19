@@ -65,23 +65,17 @@ export class SourceService {
   }
 
   public async extendMany(sources: Source[]): Promise<ExtendedSourceDTO[]> {
-    const harvestsInError: {
-      id: string;
-      status: StatusHarvestEnum;
-      updateStatus: StatusUpdateEnum;
-    }[] = await this.harvestService.findErrorBySources();
+    const haverstErrorBySourceId: string[] =
+      await this.harvestService.findSourcesIdError();
 
-    const nbRevisionsInError: {
-      id: string;
-      nbErrors: number;
-    }[] = await this.revisionService.findErrorBySources();
+    const revisionErrorBySourceId: Record<string, number> =
+      await this.revisionService.findErrorBySources();
 
     const extendedSources: ExtendedSourceDTO[] = sources.map((s) => {
       return {
         ...s,
-        harvestError: harvestsInError.some(({ id }) => s.id === id),
-        nbRevisionError:
-          nbRevisionsInError.find(({ id }) => s.id === id)?.nbErrors || 0,
+        harvestError: haverstErrorBySourceId.includes(s.id),
+        nbRevisionError: revisionErrorBySourceId[s.id] || 0,
       };
     });
 

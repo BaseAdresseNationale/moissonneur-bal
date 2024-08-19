@@ -1,5 +1,4 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
 import {
   FilterQuery,
   Model,
@@ -9,13 +8,21 @@ import {
 } from 'mongoose';
 import { sub } from 'date-fns';
 
-import { Harvest, StatusHarvestEnum } from './harvest.schema';
 import { StatusUpdateEnum } from 'src/lib/types/status_update.enum';
+import { Harvest, StatusHarvestEnum } from './harvest.entity';
+import {
+  FindOptionsOrder,
+  FindOptionsWhere,
+  LessThan,
+  Repository,
+} from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class HarvestService {
   constructor(
-    @InjectModel(Harvest.name) private harvestModel: Model<Harvest>,
+    @InjectRepository(Harvest)
+    private harvestsRepository: Repository<Harvest>,
   ) {}
 
   async createOne(sourceId: string, startedAt: Date): Promise<Harvest> {
@@ -24,18 +31,22 @@ export class HarvestService {
       status: StatusHarvestEnum.ACTIVE,
       startedAt,
     };
-
-    return this.harvestModel.create(harvest);
+    const entityToSave = await this.harvestsRepository.save(harvest);
+    return this.harvestsRepository.create(entityToSave);
   }
+
   public async findOneOrFail(harvestId: string): Promise<Harvest> {
-    const harvest = await this.harvestModel
-      .findOne({ _id: harvestId })
-      .lean()
-      .exec();
+    const where: FindOptionsWhere<Harvest> = {
+      id: harvestId,
+    };
+    const harvest = await this.harvestsRepository.findOne({
+      where,
+      withDeleted: true,
+    });
 
     if (!harvest) {
       throw new HttpException(
-        `Harvest ${harvestId} not found`,
+        `Source ${harvestId} not found`,
         HttpStatus.NOT_FOUND,
       );
     }
@@ -43,84 +54,57 @@ export class HarvestService {
     return harvest;
   }
 
-  async findMany(
-    filter?: FilterQuery<Harvest>,
-    selector: Record<string, number> = null,
-    sort: Record<string, any> = null,
-    limit: number = null,
-    offset: number = null,
+  public async findMany(
+    where: FindOptionsWhere<Harvest>,
+    limit?: number,
+    offset?: number,
+    order?: FindOptionsOrder<Harvest>,
   ): Promise<Harvest[]> {
-    const query: QueryWithHelpers<
-      Array<Harvest>,
-      Harvest
-    > = this.harvestModel.find(filter);
-
-    if (selector) {
-      query.select(selector);
-    }
-    if (sort) {
-      query.sort(sort);
-    }
-    if (limit) {
-      query.limit(limit);
-    }
-    if (offset) {
-      query.skip(offset);
-    }
-
-    return query.lean().exec();
+    return this.harvestsRepository.find({
+      where,
+      ...(limit && { take: limit }),
+      ...(offset && { skip: offset }),
+      ...(order && { order }),
+    });
   }
 
-  async findErrorBySources(): Promise<
-    {
-      id: string;
-      status: StatusHarvestEnum;
-      updateStatus: StatusUpdateEnum;
-    }[]
-  > {
-    const aggregation: PipelineStage[] = [
-      { $sort: { startedAt: 1 } },
-      {
-        $group: {
-          _id: '$sourceId',
-          status: { $last: '$status' },
-          updateStatus: { $last: '$updateStatus' },
-        },
-      },
-      {
-        $match: {
-          $or: [
-            { status: StatusHarvestEnum.FAILED },
-            { updateStatus: StatusUpdateEnum.REJECTED },
-          ],
-        },
-      },
-    ];
-    return this.harvestModel.aggregate(aggregation);
+  async findSourcesIdError(): Promise<string[]> {
+    const sourceIds: { source_id: string }[] = await this.harvestsRepository
+      .createQueryBuilder()
+      .select('source_id')
+      .distinctOn(['source_id'])
+      .orderBy('source_id, start_at')
+      .where('status = :status OR updateStatus = :updateStatus', {
+        status: StatusHarvestEnum.FAILED,
+        updateStatus: StatusUpdateEnum.REJECTED,
+      })
+      .getRawMany();
+
+    return sourceIds.map(({ source_id }) => source_id);
   }
 
-  async count(filter?: FilterQuery<Harvest>): Promise<number> {
-    return this.harvestModel.countDocuments(filter);
+  async count(filter?: FindOptionsWhere<Harvest>): Promise<number> {
+    return this.harvestsRepository.countBy(filter);
   }
 
   async getLastCompletedHarvest(sourceId: string): Promise<Harvest> {
-    return this.harvestModel
-      .findOne({ sourceId, status: StatusHarvestEnum.COMPLETED })
-      .sort({ finishedAt: 'desc' });
+    return this.harvestsRepository.findOne({
+      where: { sourceId, status: StatusHarvestEnum.COMPLETED },
+      order: { finishedAt: 'desc' },
+    });
   }
 
-  async finishOne(harvestId: Types.ObjectId, changes: Partial<Harvest>) {
-    return this.harvestModel.findOneAndUpdate(
-      { _id: harvestId },
-      { $set: { ...changes, finishedAt: new Date() } },
-      { new: true },
+  async finishOne(harvestId: string, changes: Partial<Harvest>): Promise<void> {
+    await this.harvestsRepository.update(
+      { id: harvestId },
+      { ...changes, finishedAt: new Date() },
     );
   }
 
   async deleteStalled() {
-    return this.harvestModel.deleteMany({
+    return this.harvestsRepository.delete({
       status: StatusHarvestEnum.ACTIVE,
-      startedAt: { $lt: sub(new Date(), { minutes: 30 }) },
+      startedAt: LessThan(sub(new Date(), { minutes: 30 })),
     });
   }
 }

@@ -29,7 +29,7 @@ import { AdminGuard } from 'src/lib/admin.guard';
 import { UpdateSourceDTO } from './dto/update_source.dto';
 import { RevisionService } from '../revision/revision.service';
 import { HarvestService } from '../harvest/harvest.service';
-import { Harvest } from '../harvest/harvest.schema';
+import { Harvest } from '../harvest/harvest.entity';
 import { PageDTO } from 'src/lib/class/page.dto';
 import { SourceHarvestsQuery } from './dto/source_harvests.query';
 import {
@@ -101,7 +101,7 @@ export class SourceController {
     @Res() res: Response,
   ) {
     const source: Source = await this.sourceService.updateOne(
-      req.source._id,
+      req.source.id,
       body,
     );
     res.status(HttpStatus.OK).json(source);
@@ -120,7 +120,7 @@ export class SourceController {
   })
   async findLastRevision(@Req() req: CustomRequest, @Res() res: Response) {
     const revisions: Revision[] = await this.revisionService.findLastUpdated(
-      req.source._id,
+      req.source.id,
     );
     res.status(HttpStatus.OK).json(revisions);
   }
@@ -141,15 +141,14 @@ export class SourceController {
   ) {
     const harvests: Harvest[] = await this.harvestService.findMany(
       {
-        sourceId: req.source._id,
+        sourceId: req.source.id,
       },
-      null,
-      { startedAt: 'desc' },
       limit,
       offset,
+      { startedAt: 'DESC' },
     );
     const count: number = await this.harvestService.count({
-      sourceId: req.source._id,
+      sourceId: req.source.id,
     });
     const page: PageDTO<Harvest> = {
       results: harvests,

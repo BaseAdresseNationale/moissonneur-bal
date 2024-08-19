@@ -67,11 +67,11 @@ export class Harvest extends IdEntity {
 
   @ApiProperty()
   @Column('date', { name: 'start_at', nullable: true })
-  startAt: Date;
+  startedAt: Date;
 
   @ApiProperty()
   @Column('date', { name: 'finish_at', nullable: true })
-  finishAt: Date;
+  finishedAt: Date;
 
   @ApiProperty({ type: () => Source })
   @ManyToOne(() => Source, (s) => s.harvests)
