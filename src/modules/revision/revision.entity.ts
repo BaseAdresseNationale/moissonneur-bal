@@ -87,7 +87,7 @@ export class Revision extends IdEntity {
   updateStatus: UpdateStatusRevisionEnum;
 
   @ApiProperty()
-  @Column('text', { nullable: true })
+  @Column('text', { nullable: true, name: 'update_rejection_reason' })
   updateRejectionReason: string;
 
   @ApiProperty({ type: () => Publication })

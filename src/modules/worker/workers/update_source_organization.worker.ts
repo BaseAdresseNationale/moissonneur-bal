@@ -31,7 +31,7 @@ export class UpdateSourceOrganisationWorker implements Worker {
 
   private transformDatasetToSource(dataset: DatasetDataGouv): Partial<Source> {
     return {
-      id: `datagouv-${dataset.id}`,
+      id: dataset.id,
       title: dataset.title,
       description: dataset.description || undefined,
       license: dataset.license === 'odc-odbl' ? 'odc-odbl' : 'lov2',

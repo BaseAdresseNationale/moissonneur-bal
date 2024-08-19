@@ -9,7 +9,7 @@ export enum TypePerimeterEnum {
   EPCI = 'epci',
 }
 
-@Entity({ name: 'pertimeters' })
+@Entity({ name: 'perimeters' })
 export class Perimeter extends IdEntity {
   @Index('IDX_perimeters_organization_id')
   @ApiProperty()

@@ -15,18 +15,11 @@ import { Perimeter } from './modules/organization/perimeters.entity';
 import { Source } from './modules/source/source.entity';
 import { Harvest } from './modules/harvest/harvest.entity';
 import { Revision } from './modules/revision/revision.entity';
+import { Start1724083040779 } from 'migrations/1724083040779-start';
 
 @Module({
   imports: [
     ConfigModule.forRoot(),
-    // MongooseModule.forRootAsync({
-    //   imports: [ConfigModule],
-    //   useFactory: async (config: ConfigService) => ({
-    //     uri: config.get('MONGODB_URL'),
-    //     dbName: config.get('MONGODB_DBNAME'),
-    //   }),
-    //   inject: [ConfigService],
-    // }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: async (config: ConfigService) => ({
@@ -35,7 +28,7 @@ import { Revision } from './modules/revision/revision.entity';
         keepConnectionAlive: true,
         schema: 'public',
         migrationsRun: true,
-        migrations: [],
+        migrations: [Start1724083040779],
         entities: [Organization, Perimeter, Source, Harvest, Revision],
       }),
       inject: [ConfigService],

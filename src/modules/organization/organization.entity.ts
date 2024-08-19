@@ -1,43 +1,26 @@
 import { ApiProperty } from '@nestjs/swagger';
-import {
-  Column,
-  Entity,
-  Index,
-  OneToMany,
-  CreateDateColumn,
-  DeleteDateColumn,
-  UpdateDateColumn,
-} from 'typeorm';
-import { IdEntity } from '../../lib/class/id.entity';
+import { Column, Entity, OneToMany, PrimaryColumn } from 'typeorm';
 import { Perimeter } from './perimeters.entity';
 import { Source } from '../source/source.entity';
+import { DatesEntity } from '../../lib/class/dates.entity';
 
 @Entity({ name: 'organizations' })
-export class Organization extends IdEntity {
+export class Organization extends DatesEntity {
+  @ApiProperty()
+  @PrimaryColumn('varchar', { length: 32 })
+  id?: string;
+
   @ApiProperty()
   @Column('text', { nullable: false })
   name: string;
 
   @ApiProperty()
-  @Column('text', { nullable: false })
+  @Column('text', { nullable: true })
   page: string;
 
   @ApiProperty()
-  @Column('text', { nullable: false })
+  @Column('text', { nullable: true })
   logo: string;
-
-  @ApiProperty()
-  @CreateDateColumn({ name: 'created_at' })
-  createdAt: Date;
-
-  @ApiProperty()
-  @UpdateDateColumn({ name: 'updated_at' })
-  updatedAt: Date;
-
-  @Index()
-  @ApiProperty()
-  @DeleteDateColumn({ name: 'deleted_at' })
-  deletedAt: Date | null;
 
   @ApiProperty({ type: () => Perimeter, isArray: true })
   @OneToMany(() => Perimeter, (perimeter) => perimeter.organization, {

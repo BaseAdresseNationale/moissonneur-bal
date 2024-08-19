@@ -3,20 +3,22 @@ import {
   Column,
   Entity,
   Index,
-  CreateDateColumn,
   ManyToOne,
   JoinColumn,
   OneToMany,
-  UpdateDateColumn,
-  DeleteDateColumn,
+  PrimaryColumn,
 } from 'typeorm';
-import { IdEntity } from '../../lib/class/id.entity';
 import { Organization } from '../organization/organization.entity';
 import { Harvest } from '../harvest/harvest.entity';
 import { Revision } from '../revision/revision.entity';
+import { DatesEntity } from '../../lib/class/dates.entity';
 
 @Entity({ name: 'sources' })
-export class Source extends IdEntity {
+export class Source extends DatesEntity {
+  @ApiProperty()
+  @PrimaryColumn('varchar', { length: 32 })
+  id?: string;
+
   @Index('IDX_sources_organization_id')
   @ApiProperty()
   @Column('varchar', { length: 32, name: 'organization_id', nullable: true })
@@ -50,21 +52,8 @@ export class Source extends IdEntity {
   lastHarvest: Date;
 
   @ApiProperty()
-  @Column('date', { name: 'harvestingSince', nullable: true })
+  @Column('date', { name: 'harvesting_since', nullable: true })
   harvestingSince: Date;
-
-  @ApiProperty()
-  @CreateDateColumn({ name: 'created_at' })
-  createdAt: Date;
-
-  @ApiProperty()
-  @UpdateDateColumn({ name: 'updated_at' })
-  updatedAt: Date;
-
-  @Index()
-  @ApiProperty()
-  @DeleteDateColumn({ name: 'deleted_at' })
-  deletedAt: Date | null;
 
   @ApiProperty({ type: () => Organization })
   @ManyToOne(() => Organization, (orga) => orga.sources, {
