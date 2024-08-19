@@ -1,7 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { Organization } from './organization.entity';
 import {
-  FindOptionsRelations,
   FindOptionsSelect,
   FindOptionsWhere,
   In,
@@ -20,12 +19,10 @@ export class OrganizationService {
   async findMany(
     where: FindOptionsWhere<Organization>,
     select?: FindOptionsSelect<Organization>,
-    relations?: FindOptionsRelations<Organization>,
   ): Promise<Organization[]> {
     return this.organizationsRepository.find({
       where,
       ...(select && { select }),
-      ...(relations && { relations }),
     });
   }
 
@@ -40,7 +37,7 @@ export class OrganizationService {
 
     if (!organization) {
       throw new HttpException(
-        `Source ${organizationId} not found`,
+        `Organization ${organizationId} not found`,
         HttpStatus.NOT_FOUND,
       );
     }

@@ -39,11 +39,14 @@ export class Source extends IdEntity {
   license: string;
 
   @ApiProperty()
-  @Column('boolean', { nullable: true })
-  enable: boolean;
+  @Column('boolean', { nullable: true, default: true })
+  enabled: boolean;
 
   @ApiProperty()
-  @Column('date', { name: 'last_harvest', nullable: true })
+  @Column('date', {
+    name: 'last_harvest',
+    nullable: true,
+  })
   lastHarvest: Date;
 
   @ApiProperty()

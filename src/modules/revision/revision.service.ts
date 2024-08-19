@@ -123,7 +123,7 @@ export class RevisionService {
 
   async findErrorBySources(): Promise<
     {
-      _id: string;
+      id: string;
       nbErrors: number;
     }[]
   > {

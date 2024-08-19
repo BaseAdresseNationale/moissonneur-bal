@@ -73,7 +73,7 @@ export class HarvestService {
 
   async findErrorBySources(): Promise<
     {
-      _id: string;
+      id: string;
       status: StatusHarvestEnum;
       updateStatus: StatusUpdateEnum;
     }[]

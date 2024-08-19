@@ -24,7 +24,6 @@ import {
   ApiQuery,
 } from '@nestjs/swagger';
 import { SourceService } from './source.service';
-import { Source } from './source.schema';
 import { CustomRequest } from 'src/lib/types/request.type';
 import { AdminGuard } from 'src/lib/admin.guard';
 import { UpdateSourceDTO } from './dto/update_source.dto';
@@ -41,6 +40,7 @@ import { QueueService } from '../queue/queue.service';
 import { HarvestingWorker } from '../worker/workers/harvesting.worker';
 import { ExtendedSourceDTO } from './dto/extended_source.dto';
 import { Revision } from '../revision/revision.schema';
+import { Source } from './source.entity';
 
 @ApiTags('sources')
 @Controller('sources')
@@ -66,7 +66,13 @@ export class SourceController {
   async findMany(@Res() res: Response) {
     const sources: Source[] = await this.sourceService.findMany(
       {},
-      { _id: 1, _updated: 1, _deleted: 1, title: 1, enabled: 1 },
+      {
+        id: true,
+        updatedAt: true,
+        deletedAt: true,
+        title: true,
+        enabled: true,
+      },
     );
     const extendedSources: ExtendedSourceDTO[] =
       await this.sourceService.extendMany(sources);
