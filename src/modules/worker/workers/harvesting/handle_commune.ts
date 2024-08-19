@@ -11,7 +11,7 @@ import { chain } from 'lodash';
 import Papa from 'papaparse';
 import { FileService } from 'src/modules/file/file.service';
 import { ApiDepotService } from 'src/modules/api_depot/api_depot.service';
-import { UpdateStatusEnum } from 'src/modules/harvest/harvest.entity';
+import { UpdateStatusRevisionEnum } from 'src/modules/revision/revision.entity';
 
 @Injectable()
 export class HandleCommune {
@@ -52,7 +52,7 @@ export class HandleCommune {
     };
     // CHECK QU'IL Y A MOINS DE 5% DES LIGNES EN ERREUR
     if (validRows.length / rows.length < 0.95) {
-      newRevision.updateStatus = UpdateStatusEnum.REJECTED;
+      newRevision.updateStatus = UpdateStatusRevisionEnum.REJECTED;
       newRevision.updateRejectionReason =
         'Le fichier contient trop d’erreurs de validation';
       // CREER UNE REVISION REJETER
@@ -61,7 +61,7 @@ export class HandleCommune {
     // CHECK QUE LE HASH DE LA DATA EST DIFFERNT DE CELUI DE LA DERNIERE REVISION
     const dataHash: string = signData(rows.map((r) => r.rawValues));
     if (currentRevision && currentRevision.dataHash === dataHash) {
-      newRevision.updateStatus = UpdateStatusEnum.UNCHANGED;
+      newRevision.updateStatus = UpdateStatusRevisionEnum.UNCHANGED;
       newRevision.fileId = currentRevision.fileId;
       newRevision.dataHash = dataHash;
       // CREER UNE REVISION INCHANGE
@@ -76,7 +76,7 @@ export class HandleCommune {
     // ON UPLOAD LE FICHIER SUR S3
     const fileId = await this.fileService.writeFile(file);
     // ON SET DES METAS DE LA REVISION EN PLUS
-    newRevision.updateStatus = UpdateStatusEnum.UPDATED;
+    newRevision.updateStatus = UpdateStatusRevisionEnum.UPDATED;
     newRevision.fileId = fileId;
     newRevision.dataHash = dataHash;
 

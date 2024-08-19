@@ -7,7 +7,7 @@ import {
   JoinColumn,
   OneToMany,
 } from 'typeorm';
-import { IdEntity } from 'src/lib/class/id.entity';
+import { IdEntity } from '../../lib/class/id.entity';
 import { Source } from '../source/source.entity';
 import { Revision } from '../revision/revision.entity';
 
@@ -17,7 +17,7 @@ export enum StatusHarvestEnum {
   FAILED = 'failed',
 }
 
-export enum UpdateStatusEnum {
+export enum UpdateStatusHarvestEnum {
   REJECTED = 'rejected',
   UPDATED = 'updated',
   UNCHANGED = 'unchanged',
@@ -49,13 +49,14 @@ export class Harvest extends IdEntity {
   })
   status: StatusHarvestEnum;
 
-  @ApiProperty({ enum: UpdateStatusEnum })
+  @ApiProperty({ enum: UpdateStatusHarvestEnum })
   @Column('enum', {
-    enum: UpdateStatusEnum,
+    enum: UpdateStatusHarvestEnum,
     nullable: true,
     name: 'update_status',
+    enumName: 'update_status_harvest',
   })
-  updateStatus: UpdateStatusEnum;
+  updateStatus: UpdateStatusHarvestEnum;
 
   @ApiProperty()
   @Column('text', { nullable: true })

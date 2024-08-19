@@ -1,6 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { Organization } from '../../../organization/organization.entity';
-import { Harvest, UpdateStatusEnum } from 'src/modules/harvest/harvest.entity';
+import {
+  Harvest,
+  UpdateStatusHarvestEnum,
+} from 'src/modules/harvest/harvest.entity';
 import hasha from 'hasha';
 import { validate } from '@ban-team/validateur-bal';
 import { signData } from 'src/lib/utils/signature';
@@ -33,7 +36,7 @@ export class HandleFile {
     const newFileHash = hasha(newFile, { algorithm: 'sha256' });
     if (newFile.length > MAX_ALLOWED_FILE_SIZE) {
       return {
-        updateStatus: UpdateStatusEnum.REJECTED,
+        updateStatus: UpdateStatusHarvestEnum.REJECTED,
         updateRejectionReason: 'Fichier trop volumineux',
         fileHash: newFileHash,
       };
@@ -48,7 +51,7 @@ export class HandleFile {
         ...new Set(result.parseErrors.map(({ code }) => code)),
       ];
       return {
-        updateStatus: UpdateStatusEnum.REJECTED,
+        updateStatus: UpdateStatusHarvestEnum.REJECTED,
         updateRejectionReason: `Impossible de lire le fichier CSV : ${parseErrors.join(', ')}`,
         fileHash: newFileHash, // On garde fileHash mais on ne stocke pas le fichier problématique
       };
@@ -57,7 +60,7 @@ export class HandleFile {
     const validRows = result.rows.filter((r) => r.isValid);
     if (validRows.length / result.rows.length < 0.95) {
       return {
-        updateStatus: UpdateStatusEnum.REJECTED,
+        updateStatus: UpdateStatusHarvestEnum.REJECTED,
         updateRejectionReason:
           'Le fichier contient trop d’erreurs de validation',
         fileHash: newFileHash,
@@ -73,14 +76,14 @@ export class HandleFile {
     );
     if (communeOutOfPerimeters.length > 0) {
       return {
-        updateStatus: UpdateStatusEnum.REJECTED,
+        updateStatus: UpdateStatusHarvestEnum.REJECTED,
         updateRejectionReason: `Les codes commune ${communeOutOfPerimeters.join(', ')} sont en dehors du périmètre`,
       };
     }
     // ON CHECK SI LE HASH DU FICHIER EST LE MEME QUE L'ANCIEN
     if (currentFileHash && newFileHash === currentFileHash) {
       return {
-        updateStatus: UpdateStatusEnum.UNCHANGED,
+        updateStatus: UpdateStatusHarvestEnum.UNCHANGED,
         fileId: currentFileId,
         fileHash: currentFileHash,
         dataHash: currentDataHash, // On considère que le dataHash est inchangé
@@ -90,7 +93,7 @@ export class HandleFile {
     const dataHash = signData(result.rows.map((r) => r.rawValues));
     if (currentDataHash && currentDataHash === dataHash) {
       return {
-        updateStatus: UpdateStatusEnum.UNCHANGED,
+        updateStatus: UpdateStatusHarvestEnum.UNCHANGED,
         fileId: currentFileId,
         fileHash: newFileHash,
         dataHash,
@@ -107,7 +110,7 @@ export class HandleFile {
     );
 
     return {
-      updateStatus: UpdateStatusEnum.UPDATED,
+      updateStatus: UpdateStatusHarvestEnum.UPDATED,
       fileId: newFileId,
       fileHash: newFileHash,
       dataHash,

@@ -20,7 +20,7 @@
     "start:prod": "node dist/main",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "test": "jest",
-    "migration": "npx ts-node"
+    "typeorm": "typeorm-ts-node-commonjs"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.540.0",
@@ -47,6 +47,7 @@
     "mongoose": "^8.2.3",
     "mysql2": "^3.11.0",
     "papaparse": "^5.4.1",
+    "pg": "^8.12.0",
     "reflect-metadata": "^0.2.0",
     "rxjs": "^7.8.1",
     "typeorm": "^0.3.20"

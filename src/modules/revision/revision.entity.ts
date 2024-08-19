@@ -7,9 +7,15 @@ import {
   JoinColumn,
   CreateDateColumn,
 } from 'typeorm';
-import { IdEntity } from 'src/lib/class/id.entity';
+import { IdEntity } from '../../lib/class/id.entity';
 import { Source } from '../source/source.entity';
-import { Harvest, UpdateStatusEnum } from '../harvest/harvest.entity';
+import { Harvest } from '../harvest/harvest.entity';
+
+export enum UpdateStatusRevisionEnum {
+  REJECTED = 'rejected',
+  UPDATED = 'updated',
+  UNCHANGED = 'unchanged',
+}
 
 export enum StatusPublicationEnum {
   PUBLISHED = 'published',
@@ -49,7 +55,7 @@ export class Validation {
 
 @Entity({ name: 'revisions' })
 export class Revision extends IdEntity {
-  @Index('IDX_harvests_source_id')
+  @Index('IDX_revisions_source_id')
   @ApiProperty()
   @Column('varchar', { length: 32, name: 'source_id', nullable: false })
   sourceId?: string;
@@ -71,13 +77,14 @@ export class Revision extends IdEntity {
   @Column('text', { nullable: true, name: 'code_commune' })
   codeCommune: string;
 
-  @ApiProperty({ enum: UpdateStatusEnum })
+  @ApiProperty({ enum: UpdateStatusRevisionEnum })
   @Column('enum', {
-    enum: UpdateStatusEnum,
+    enum: UpdateStatusRevisionEnum,
     nullable: true,
     name: 'update_status',
+    enumName: 'update_status_revision',
   })
-  updateStatus: UpdateStatusEnum;
+  updateStatus: UpdateStatusRevisionEnum;
 
   @ApiProperty()
   @Column('text', { nullable: true })

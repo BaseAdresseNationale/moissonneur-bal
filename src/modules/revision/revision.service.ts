@@ -15,7 +15,7 @@ import { ApiDepotService } from '../api_depot/api_depot.service';
 import { OrganizationService } from '../organization/organization.service';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindOptionsSelect, FindOptionsWhere, Repository } from 'typeorm';
-import { UpdateStatusEnum } from '../harvest/harvest.entity';
+import { UpdateStatusRevisionEnum } from '../revision/revision.entity';
 
 @Injectable()
 export class RevisionService {
@@ -81,8 +81,8 @@ export class RevisionService {
       .andWhere(
         '(updateStatus = :updateStatus1 AND publication NOT null) OR updateStatus = :updateStatus2',
         {
-          updateStatus1: UpdateStatusEnum.UNCHANGED,
-          updateStatus2: UpdateStatusEnum.UNCHANGED,
+          updateStatus1: UpdateStatusRevisionEnum.UNCHANGED,
+          updateStatus2: UpdateStatusRevisionEnum.UNCHANGED,
         },
       )
       .getMany();
@@ -111,8 +111,8 @@ export class RevisionService {
       .distinctOn(['codeCommune'])
       .orderBy('codeCommune, created_at', 'DESC')
       .where('status = :status OR updateStatus = :updateStatus', {
-        status: UpdateStatusEnum.UNCHANGED,
-        updateStatus: UpdateStatusEnum.UNCHANGED,
+        status: UpdateStatusRevisionEnum.UNCHANGED,
+        updateStatus: UpdateStatusRevisionEnum.UNCHANGED,
       })
       .getRawMany();
     return countBy(sourceIds, ({ source_id }) => source_id);

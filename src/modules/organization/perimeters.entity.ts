@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Column, Entity, Index, JoinColumn, ManyToOne } from 'typeorm';
-import { IdEntity } from 'src/lib/class/id.entity';
+import { IdEntity } from '../../lib/class/id.entity';
 import { Organization } from './organization.entity';
 
 export enum TypePerimeterEnum {

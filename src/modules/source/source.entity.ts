@@ -10,7 +10,7 @@ import {
   UpdateDateColumn,
   DeleteDateColumn,
 } from 'typeorm';
-import { IdEntity } from 'src/lib/class/id.entity';
+import { IdEntity } from '../../lib/class/id.entity';
 import { Organization } from '../organization/organization.entity';
 import { Harvest } from '../harvest/harvest.entity';
 import { Revision } from '../revision/revision.entity';

@@ -8,7 +8,7 @@ import {
   DeleteDateColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { IdEntity } from 'src/lib/class/id.entity';
+import { IdEntity } from '../../lib/class/id.entity';
 import { Perimeter } from './perimeters.entity';
 import { Source } from '../source/source.entity';
 
