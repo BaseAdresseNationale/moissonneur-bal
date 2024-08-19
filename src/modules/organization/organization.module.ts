@@ -1,19 +1,17 @@
 import { MiddlewareConsumer, Module, forwardRef } from '@nestjs/common';
-import { MongooseModule } from '@nestjs/mongoose';
 
 import { OrganizationService } from './organization.service';
-import { Organization, OrganizationSchema } from './organization.schema';
 import { SourceModule } from '../source/source.module';
 import { OrganizationController } from './organization.controller';
 import { ConfigModule } from '@nestjs/config';
 import { OrganizationMiddleware } from './organization.middleware';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { Organization } from './organization.entity';
 
 @Module({
   imports: [
     ConfigModule,
-    MongooseModule.forFeature([
-      { name: Organization.name, schema: OrganizationSchema },
-    ]),
+    TypeOrmModule.forFeature([Organization]),
     forwardRef(() => SourceModule),
   ],
   providers: [OrganizationService],

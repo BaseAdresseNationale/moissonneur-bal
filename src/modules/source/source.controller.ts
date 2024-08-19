@@ -39,7 +39,7 @@ import {
 import { QueueService } from '../queue/queue.service';
 import { HarvestingWorker } from '../worker/workers/harvesting.worker';
 import { ExtendedSourceDTO } from './dto/extended_source.dto';
-import { Revision } from '../revision/revision.schema';
+import { Revision } from '../revision/revision.entity';
 import { Source } from './source.entity';
 
 @ApiTags('sources')
@@ -73,6 +73,7 @@ export class SourceController {
         title: true,
         enabled: true,
       },
+      true,
     );
     const extendedSources: ExtendedSourceDTO[] =
       await this.sourceService.extendMany(sources);

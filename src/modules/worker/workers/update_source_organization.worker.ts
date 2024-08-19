@@ -4,8 +4,8 @@ import {
   DatasetDataGouv,
   OrganizationDataGouv,
 } from './../../api_beta_gouv/api_beta_gouv.type';
-import { Source } from '../../source/source.schema';
-import { Organization } from '../../organization/organization.schema';
+import { Source } from '../../source/source.entity';
+import { Organization } from '../../organization/organization.entity';
 import { OrganizationService } from '../../organization/organization.service';
 import { SourceService } from '../../source/source.service';
 import { ApiBetaGouvService } from 'src/modules/api_beta_gouv/api_beta_gouv.service';
@@ -29,9 +29,9 @@ export class UpdateSourceOrganisationWorker implements Worker {
     return mostRecentResource.url;
   }
 
-  private transformDatasetToSource(dataset: DatasetDataGouv): Source {
+  private transformDatasetToSource(dataset: DatasetDataGouv): Partial<Source> {
     return {
-      _id: `datagouv-${dataset.id}`,
+      id: `datagouv-${dataset.id}`,
       title: dataset.title,
       description: dataset.description || undefined,
       license: dataset.license === 'odc-odbl' ? 'odc-odbl' : 'lov2',
@@ -42,9 +42,9 @@ export class UpdateSourceOrganisationWorker implements Worker {
 
   private transformDatasetToOrganization(
     organization: OrganizationDataGouv,
-  ): Organization {
+  ): Partial<Organization> {
     return {
-      _id: organization.id,
+      id: organization.id,
       logo: organization.logo,
       name: organization.name || undefined,
       page: organization.page,
@@ -52,7 +52,7 @@ export class UpdateSourceOrganisationWorker implements Worker {
   }
 
   private async upsertOrgnizations(datasets: DatasetDataGouv[]) {
-    const organizations: Organization[] = Object.values(
+    const organizations: Partial<Organization>[] = Object.values(
       keyBy(
         datasets.map((d) => d.organization),
         'id',
@@ -63,17 +63,17 @@ export class UpdateSourceOrganisationWorker implements Worker {
     );
     // ARCHIVE LES ORGANIZATIONS QUI N'EXISTE PLUS
     await this.organizationService.softDeleteInactive(
-      organizations.map(({ _id }) => _id),
+      organizations.map(({ id }) => id),
     );
   }
 
   private async upsertSources(datasets: DatasetDataGouv[]) {
-    const sources: Source[] = datasets.map((dataset) =>
+    const sources: Partial<Source>[] = datasets.map((dataset) =>
       this.transformDatasetToSource(dataset),
     );
     await Promise.all(sources.map(async (s) => this.sourceService.upsert(s)));
     // ARCHIVE LES SOURCES QUI N'EXISTE PLUS
-    await this.sourceService.softDeleteInactive(sources.map(({ _id }) => _id));
+    await this.sourceService.softDeleteInactive(sources.map(({ id }) => id));
   }
 
   async run() {

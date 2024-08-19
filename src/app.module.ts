@@ -1,6 +1,5 @@
 import { Module } from '@nestjs/common';
 import { WorkerModule } from './modules/worker/worker.module';
-import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { OrganizationModule } from './modules/organization/organization.module';
 import { SourceModule } from './modules/source/source.module';

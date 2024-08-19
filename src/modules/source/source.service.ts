@@ -36,10 +36,12 @@ export class SourceService {
   async findMany(
     where: FindOptionsWhere<Source>,
     select?: FindOptionsSelect<Source>,
+    withDeleted: boolean = false,
   ): Promise<Source[]> {
     return this.sourcesRepository.find({
       where,
       ...(select && { select }),
+      withDeleted,
     });
   }
 

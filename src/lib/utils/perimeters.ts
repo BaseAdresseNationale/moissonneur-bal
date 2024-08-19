@@ -1,7 +1,7 @@
 import {
   Perimeter,
   TypePerimeterEnum,
-} from 'src/modules/organization/organization.schema';
+} from 'src/modules/organization/perimeters.entity';
 import {
   getCommunesByDepartement,
   getCommune,

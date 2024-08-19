@@ -1,8 +1,7 @@
 import { MiddlewareConsumer, Module, forwardRef } from '@nestjs/common';
-import { MongooseModule } from '@nestjs/mongoose';
+import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { RevisionService } from './revision.service';
-import { RevisionSchema, Revision } from './revision.schema';
 import { RevisionMiddleware } from './revision.middleware';
 import { RevisionController } from './revision.controller';
 import { ConfigModule } from '@nestjs/config';
@@ -11,13 +10,12 @@ import { OrganizationModule } from '../organization/organization.module';
 import { FileModule } from '../file/file.module';
 import { ApiDepotModule } from '../api_depot/api_depot.module';
 import { CommuneController } from './commune.controller';
+import { Revision } from './revision.entity';
 
 @Module({
   imports: [
     ConfigModule,
-    MongooseModule.forFeature([
-      { name: Revision.name, schema: RevisionSchema },
-    ]),
+    TypeOrmModule.forFeature([Revision]),
     forwardRef(() => SourceModule),
     forwardRef(() => OrganizationModule),
     forwardRef(() => FileModule),

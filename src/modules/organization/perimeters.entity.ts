@@ -3,21 +3,25 @@ import { Column, Entity, Index, JoinColumn, ManyToOne } from 'typeorm';
 import { IdEntity } from 'src/lib/class/id.entity';
 import { Organization } from './organization.entity';
 
-export enum TypeNumerotationEnum {
-  NUMERIQUE = 'numerique',
-  METRIQUE = 'metrique',
+export enum TypePerimeterEnum {
+  COMMUNE = 'commune',
+  DEPARTEMENT = 'departement',
+  EPCI = 'epci',
 }
 
 @Entity({ name: 'pertimeters' })
 export class Perimeter extends IdEntity {
   @Index('IDX_perimeters_organization_id')
   @ApiProperty()
-  @Column('varchar', { length: 32, name: 'organization_id', nullable: true })
-  toponymeId?: string;
+  @Column('varchar', { length: 32, name: 'organization_id', nullable: false })
+  organizationId?: string;
 
-  @ApiProperty()
-  @Column('text', { nullable: false })
-  type: string;
+  @ApiProperty({ enum: TypePerimeterEnum })
+  @Column('enum', {
+    enum: TypePerimeterEnum,
+    nullable: false,
+  })
+  type: TypePerimeterEnum;
 
   @ApiProperty()
   @Column('text', { nullable: false })

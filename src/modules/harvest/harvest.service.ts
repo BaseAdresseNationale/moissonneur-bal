@@ -1,8 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { sub } from 'date-fns';
 
-import { StatusUpdateEnum } from 'src/lib/types/status_update.enum';
-import { Harvest, StatusHarvestEnum } from './harvest.entity';
+import { Harvest, StatusHarvestEnum, UpdateStatusEnum } from './harvest.entity';
 import {
   FindOptionsOrder,
   FindOptionsWhere,
@@ -69,7 +68,7 @@ export class HarvestService {
       .orderBy('source_id, start_at', 'DESC')
       .where('status = :status OR updateStatus = :updateStatus', {
         status: StatusHarvestEnum.FAILED,
-        updateStatus: StatusUpdateEnum.REJECTED,
+        updateStatus: UpdateStatusEnum.REJECTED,
       })
       .getRawMany();
 

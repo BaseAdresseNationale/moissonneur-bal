@@ -155,9 +155,9 @@ export class ApiDepotService {
       const extras = {
         sourceId,
         harvestId,
-        nbRows,
-        nbRowsWithErrors,
-        uniqueErrors,
+        nbRows: validation.nbRows,
+        nbRowsWithErrors: validation.nbRowsWithErrors,
+        uniqueErrors: validation.uniqueErrors,
       };
       // ON CREER UNE REVISION POUR LA COMMUNE
       const revision = await this.createRevision(
