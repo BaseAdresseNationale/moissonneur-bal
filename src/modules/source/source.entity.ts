@@ -7,6 +7,8 @@ import {
   ManyToOne,
   JoinColumn,
   OneToMany,
+  UpdateDateColumn,
+  DeleteDateColumn,
 } from 'typeorm';
 import { IdEntity } from 'src/lib/class/id.entity';
 import { Organization } from '../organization/organization.entity';
@@ -51,6 +53,15 @@ export class Source extends IdEntity {
   @ApiProperty()
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
+
+  @ApiProperty()
+  @UpdateDateColumn({ name: 'updated_at' })
+  updatedAt: Date;
+
+  @Index()
+  @ApiProperty()
+  @DeleteDateColumn({ name: 'deleted_at' })
+  deletedAt: Date | null;
 
   @ApiProperty({ type: () => Organization })
   @ManyToOne(() => Organization, (orga) => orga.sources, {

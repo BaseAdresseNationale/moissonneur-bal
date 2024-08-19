@@ -23,10 +23,10 @@ import { SourceService } from '../source/source.service';
 import { CustomRequest } from 'src/lib/types/request.type';
 import { AdminGuard } from 'src/lib/admin.guard';
 import { OrganizationService } from './organization.service';
-import { Organization } from './organization.schema';
 import { UpdateOrganizationDTO } from './dto/update_organization.dto';
 import { Source } from '../source/source.schema';
 import { ExtendedSourceDTO } from '../source/dto/extended_source.dto';
+import { Organization } from './organization.entity';
 
 @ApiTags('organizations')
 @Controller('organizations')

@@ -1,45 +1,42 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { FilterQuery, Model, QueryWithHelpers } from 'mongoose';
-
-import { Organization } from './organization.schema';
+import { Organization } from './organization.entity';
+import {
+  FindOptionsRelations,
+  FindOptionsSelect,
+  FindOptionsWhere,
+  In,
+  Not,
+  Repository,
+} from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class OrganizationService {
   constructor(
-    @InjectModel(Organization.name)
-    private organizationModel: Model<Organization>,
+    @InjectRepository(Organization)
+    private organizationsRepository: Repository<Organization>,
   ) {}
 
   async findMany(
-    filter?: FilterQuery<Organization>,
-    selector: Record<string, number> = null,
-    limit: number = null,
-    offset: number = null,
+    where: FindOptionsWhere<Organization>,
+    select?: FindOptionsSelect<Organization>,
+    relations?: FindOptionsRelations<Organization>,
   ): Promise<Organization[]> {
-    const query: QueryWithHelpers<
-      Array<Organization>,
-      Organization
-    > = this.organizationModel.find(filter);
-
-    if (selector) {
-      query.select(selector);
-    }
-    if (limit) {
-      query.limit(limit);
-    }
-    if (offset) {
-      query.skip(offset);
-    }
-
-    return query.lean().exec();
+    return this.organizationsRepository.find({
+      where,
+      ...(select && { select }),
+      ...(relations && { relations }),
+    });
   }
 
   public async findOneOrFail(organizationId: string): Promise<Organization> {
-    const organization = await this.organizationModel
-      .findOne({ _id: organizationId })
-      .lean()
-      .exec();
+    const where: FindOptionsWhere<Organization> = {
+      id: organizationId,
+    };
+    const organization = await this.organizationsRepository.findOne({
+      where,
+      withDeleted: true,
+    });
 
     if (!organization) {
       throw new HttpException(
@@ -51,48 +48,45 @@ export class OrganizationService {
     return organization;
   }
 
-  public async upsert(organization: Partial<Organization>) {
-    const now = new Date();
+  public async upsert(payload: Partial<Organization>): Promise<void> {
+    const where: FindOptionsWhere<Organization> = {
+      id: payload.id,
+    };
+    const organization = await this.organizationsRepository.findOne({
+      where,
+      withDeleted: true,
+    });
 
-    const upsertResult = await this.organizationModel.findOneAndUpdate(
-      { _id: organization._id },
-      {
-        $set: {
+    if (organization) {
+      if (organization.deletedAt) {
+        await this.organizationsRepository.restore({ id: organization.id });
+      }
+      await this.organizationsRepository.update(
+        { id: organization.id },
+        {
           name: organization.name,
           page: organization.page,
           logo: organization.logo,
-          _updated: now,
-          _deleted: false,
         },
-        $setOnInsert: {
-          _id: organization._id,
-          perimeters: [],
-          _created: now,
-        },
-      },
-      { upsert: true },
-    );
-
-    return upsertResult;
+      );
+    } else {
+      const entityToSave: Organization =
+        await this.organizationsRepository.create(payload);
+      await this.organizationsRepository.save(entityToSave);
+    }
   }
 
   public async updateOne(
     organizationId: string,
     changes: Partial<Organization>,
   ): Promise<Organization> {
-    const source: Organization = await this.organizationModel.findOneAndUpdate(
-      { _id: organizationId },
-      { $set: changes },
-      { upsert: true },
-    );
-
-    return source;
+    await this.organizationsRepository.update({ id: organizationId }, changes);
+    return this.organizationsRepository.findOneBy({
+      id: organizationId,
+    });
   }
 
   public async softDeleteInactive(activeIds: string[]) {
-    await this.organizationModel.updateMany(
-      { _id: { $nin: activeIds }, _deleted: false },
-      { $set: { _deleted: true, _updated: new Date() } },
-    );
+    await this.organizationsRepository.softDelete({ id: Not(In(activeIds)) });
   }
 }
