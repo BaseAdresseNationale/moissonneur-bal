@@ -7,10 +7,8 @@ import {
 } from '@nestjs/common';
 import { sub } from 'date-fns';
 
-import { StatusHarvestEnum } from '../harvest/harvest.schema';
 import { RevisionService } from '../revision/revision.service';
 import { HarvestService } from '../harvest/harvest.service';
-import { StatusUpdateEnum } from 'src/lib/types/status_update.enum';
 import { ExtendedSourceDTO } from './dto/extended_source.dto';
 import { Source } from './source.entity';
 import { InjectRepository } from '@nestjs/typeorm';

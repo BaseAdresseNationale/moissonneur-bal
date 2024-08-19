@@ -1,11 +1,4 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import {
-  FilterQuery,
-  Model,
-  PipelineStage,
-  QueryWithHelpers,
-  Types,
-} from 'mongoose';
 import { sub } from 'date-fns';
 
 import { StatusUpdateEnum } from 'src/lib/types/status_update.enum';
@@ -73,7 +66,7 @@ export class HarvestService {
       .createQueryBuilder()
       .select('source_id')
       .distinctOn(['source_id'])
-      .orderBy('source_id, start_at')
+      .orderBy('source_id, start_at', 'DESC')
       .where('status = :status OR updateStatus = :updateStatus', {
         status: StatusHarvestEnum.FAILED,
         updateStatus: StatusUpdateEnum.REJECTED,

@@ -169,7 +169,7 @@ export class SourceController {
   @ApiBearerAuth('admin-token')
   @UseGuards(AdminGuard)
   async askHarvest(@Req() req: CustomRequest, @Res() res: Response) {
-    if (req.source.harvesting.harvestingSince !== null) {
+    if (req.source.harvestingSince !== null) {
       throw new HttpException('Moissonnage en cours', HttpStatus.NOT_FOUND);
     }
 
@@ -177,14 +177,14 @@ export class SourceController {
       throw new HttpException(`Source inactive`, HttpStatus.NOT_FOUND);
     }
 
-    if (req.source._deleted) {
+    if (req.source.deletedAt) {
       throw new HttpException(`Source archivée`, HttpStatus.NOT_FOUND);
     }
 
     this.queueService.pushTask(
       this.harvestingWorker,
-      `Harvesting of source ${req.source._id}`,
-      req.source._id,
+      `Harvesting of source ${req.source.id}`,
+      req.source.id,
     );
 
     res.status(HttpStatus.OK).json(req.source);

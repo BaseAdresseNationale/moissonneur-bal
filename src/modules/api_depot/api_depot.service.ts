@@ -5,8 +5,8 @@ import {
   Publication,
   Revision,
   StatusPublicationEnum,
-} from '../revision/revision.schema';
-import { Organization } from '../organization/organization.schema';
+} from '../revision/revision.entity';
+import { Organization } from '../organization/organization.entity';
 import { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
 import { catchError, firstValueFrom, of } from 'rxjs';
 import hasha from 'hasha';
@@ -117,14 +117,7 @@ export class ApiDepotService {
   }
 
   async publishBal(
-    {
-      sourceId,
-      codeCommune,
-      harvestId,
-      nbRows,
-      nbRowsWithErrors,
-      uniqueErrors,
-    }: Partial<Revision>,
+    { sourceId, codeCommune, harvestId, validation }: Partial<Revision>,
     file: Buffer,
     organization: Organization,
     options: { force?: boolean } = {},

@@ -35,7 +35,7 @@ export class HarvestController {
   @ApiResponse({ status: HttpStatus.OK, type: Revision, isArray: true })
   async findRevisions(@Req() req: CustomRequest, @Res() res: Response) {
     const revisions: Revision[] = await this.revisionService.findMany({
-      harvestId: req.harvest._id,
+      harvestId: req.harvest.id,
     });
     res.status(HttpStatus.OK).json(revisions);
   }
