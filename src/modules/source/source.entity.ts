@@ -45,14 +45,14 @@ export class Source extends DatesEntity {
   enabled: boolean;
 
   @ApiProperty()
-  @Column('date', {
+  @Column('timestamp', {
     name: 'last_harvest',
     nullable: true,
   })
   lastHarvest: Date;
 
   @ApiProperty()
-  @Column('date', { name: 'harvesting_since', nullable: true })
+  @Column('timestamp', { name: 'harvesting_since', nullable: true })
   harvestingSince: Date;
 
   @ApiProperty({ type: () => Organization })

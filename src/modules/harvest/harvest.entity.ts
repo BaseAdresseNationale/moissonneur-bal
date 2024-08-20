@@ -67,11 +67,11 @@ export class Harvest extends IdEntity {
   error: string;
 
   @ApiProperty()
-  @Column('date', { name: 'started_at', nullable: true })
+  @Column('timestamp', { name: 'started_at', nullable: true })
   startedAt: Date;
 
   @ApiProperty()
-  @Column('date', { name: 'finished_at', nullable: true })
+  @Column('timestamp', { name: 'finished_at', nullable: true })
   finishedAt: Date;
 
   @ApiProperty({ type: () => Source })
