@@ -1,4 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { INestApplication } from '@nestjs/common';
 import {
   PostgreSqlContainer,
   StartedPostgreSqlContainer,
@@ -29,7 +30,6 @@ import { ConfigModule } from '@nestjs/config';
 import { Organization } from '../../organization/organization.entity';
 import { Perimeter } from '../../organization/perimeters.entity';
 import { Source } from '../../source/source.entity';
-import { INestApplication } from '@nestjs/common';
 import { Revision } from 'src/modules/revision/revision.entity';
 import { Harvest } from 'src/modules/harvest/harvest.entity';
 

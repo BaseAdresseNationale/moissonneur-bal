@@ -27,8 +27,8 @@ export class HarvestService {
       status: StatusHarvestEnum.ACTIVE,
       startedAt,
     };
-    const entityToSave = await this.harvestsRepository.save(harvest);
-    return this.harvestsRepository.create(entityToSave);
+    const entityToSave = await this.harvestsRepository.create(harvest);
+    return this.harvestsRepository.save(entityToSave);
   }
 
   public async findOneOrFail(harvestId: string): Promise<Harvest> {
@@ -70,7 +70,7 @@ export class HarvestService {
       .select('source_id')
       .distinctOn(['source_id'])
       .orderBy('source_id, start_at', 'DESC')
-      .where('status = :status OR updateStatus = :updateStatus', {
+      .where('status = :status OR update_status = :updateStatus', {
         status: StatusHarvestEnum.FAILED,
         updateStatus: UpdateStatusHarvestEnum.REJECTED,
       })

@@ -16,6 +16,7 @@ import {
   FindOptionsSelect,
   FindOptionsWhere,
   In,
+  IsNull,
   LessThan,
   Not,
   Repository,
@@ -124,7 +125,7 @@ export class SourceService {
     // RECUPERE LES SOURCE QUI N'ONT PAS ETE MOISSONEE DEPUIS 24H
     return this.sourcesRepository.findBy({
       enabled: true,
-      harvestingSince: null,
+      harvestingSince: IsNull(),
       lastHarvest: LessThan(sub(new Date(), { hours: 24 })),
     });
   }
@@ -133,12 +134,11 @@ export class SourceService {
     sourceId: string,
     harvestingSince: Date,
   ): Promise<Source | null> {
-    // On tente de basculer la source en cours de moissonnage
     const { affected }: UpdateResult = await this.sourcesRepository.update(
       {
         id: sourceId,
         enabled: true,
-        harvestingSince: null,
+        harvestingSince: IsNull(),
       },
       { harvestingSince },
     );

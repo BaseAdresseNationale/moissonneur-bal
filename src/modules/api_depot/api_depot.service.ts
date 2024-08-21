@@ -160,17 +160,17 @@ export class ApiDepotService {
         uniqueErrors: validation.uniqueErrors,
       };
       // ON CREER UNE REVISION POUR LA COMMUNE
-      const revision = await this.createRevision(
+      const { _id: revisionId } = await this.createRevision(
         codeCommune,
         extras,
         organization.name,
       );
       // ON ATTACHE LE FICHIER BAL A LA NOUVELLE REVISION
-      await this.uploadFileRevision(revision._id, file);
+      await this.uploadFileRevision(revisionId, file);
       // ON VERIFIE QUE TOUTES LES INFO DE LA REVISION ET DU FICHIER RATTACHE SONT CONFORME
-      await this.computeRevision(revision._id);
+      await this.computeRevision(revisionId);
       // ON PUBLIE LA REVISION
-      const publishedRevision = await this.publishRevision(revision._id);
+      const publishedRevision = await this.publishRevision(revisionId);
       return {
         status: StatusPublicationEnum.PUBLISHED,
         publishedRevisionId: publishedRevision._id,

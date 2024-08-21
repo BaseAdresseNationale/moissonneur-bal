@@ -72,22 +72,20 @@ export class RevisionService {
   }
 
   async findLastUpdated(sourceId: string): Promise<Revision[]> {
-    const revisions: Revision[] = await this.revisionsRepository
+    return this.revisionsRepository
       .createQueryBuilder()
       .select('*')
-      .distinctOn(['codeCommune'])
-      .orderBy('codeCommune, created_at', 'DESC')
+      .distinctOn(['code_commune'])
+      .orderBy('code_commune, created_at', 'DESC')
       .where('source_id = :sourceId', { sourceId })
       .andWhere(
-        '(updateStatus = :updateStatus1 AND publication NOT null) OR updateStatus = :updateStatus2',
+        '((update_status = :updateStatus1 AND publication IS NOT null) OR update_status = :updateStatus2)',
         {
           updateStatus1: UpdateStatusRevisionEnum.UNCHANGED,
           updateStatus2: UpdateStatusRevisionEnum.UNCHANGED,
         },
       )
       .getMany();
-
-    return revisions;
     // const aggregation: PipelineStage[] = [
     //   {
     //     $match: {
@@ -108,9 +106,9 @@ export class RevisionService {
     const sourceIds: { source_id: string }[] = await this.revisionsRepository
       .createQueryBuilder()
       .select('source_id')
-      .distinctOn(['codeCommune'])
-      .orderBy('codeCommune, created_at', 'DESC')
-      .where('status = :status OR updateStatus = :updateStatus', {
+      .distinctOn(['code_commune'])
+      .orderBy('code_commune, created_at', 'DESC')
+      .where('status = :status OR update_status = :updateStatus', {
         status: UpdateStatusRevisionEnum.UNCHANGED,
         updateStatus: UpdateStatusRevisionEnum.UNCHANGED,
       })
@@ -120,7 +118,7 @@ export class RevisionService {
 
   public async createRevision(payload: Partial<Revision>): Promise<Revision> {
     const entityToSave: Revision = this.revisionsRepository.create(payload);
-    return this.revisionsRepository.create(entityToSave);
+    return this.revisionsRepository.save(entityToSave);
   }
 
   public async publish(
