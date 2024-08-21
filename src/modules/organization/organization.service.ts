@@ -61,9 +61,9 @@ export class OrganizationService {
       await this.organizationsRepository.update(
         { id: organization.id },
         {
-          name: organization.name,
-          page: organization.page,
-          logo: organization.logo,
+          name: payload.name,
+          page: payload.page,
+          logo: payload.logo,
         },
       );
     } else {
