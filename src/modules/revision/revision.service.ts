@@ -5,6 +5,12 @@ import {
   Inject,
   forwardRef,
 } from '@nestjs/common';
+import {
+  DataSource,
+  FindOptionsSelect,
+  FindOptionsWhere,
+  Repository,
+} from 'typeorm';
 import { countBy } from 'lodash';
 
 import ValidateurBal from '@ban-team/validateur-bal';
@@ -14,12 +20,12 @@ import { FileService } from '../file/file.service';
 import { ApiDepotService } from '../api_depot/api_depot.service';
 import { OrganizationService } from '../organization/organization.service';
 import { InjectRepository } from '@nestjs/typeorm';
-import { FindOptionsSelect, FindOptionsWhere, Repository } from 'typeorm';
 import { UpdateStatusRevisionEnum } from '../revision/revision.entity';
 
 @Injectable()
 export class RevisionService {
   constructor(
+    private dataSource: DataSource,
     @InjectRepository(Revision)
     private revisionsRepository: Repository<Revision>,
     @Inject(forwardRef(() => SourceService))
@@ -74,44 +80,38 @@ export class RevisionService {
   async findLastUpdated(sourceId: string): Promise<Revision[]> {
     return this.revisionsRepository
       .createQueryBuilder()
-      .select('*')
+      .select()
       .distinctOn(['code_commune'])
       .orderBy('code_commune, created_at', 'DESC')
       .where('source_id = :sourceId', { sourceId })
       .andWhere(
-        '((update_status = :updateStatus1 AND publication IS NOT null) OR update_status = :updateStatus2)',
+        '((update_status = :updateStatus1 AND publication IS NOT null) OR update_status != :updateStatus2)',
         {
           updateStatus1: UpdateStatusRevisionEnum.UNCHANGED,
           updateStatus2: UpdateStatusRevisionEnum.UNCHANGED,
         },
       )
       .getMany();
-    // const aggregation: PipelineStage[] = [
-    //   {
-    //     $match: {
-    //       sourceId,
-    //       $or: [
-    //         {
-    //           updateStatus: StatusUpdateEnum.UNCHANGED,
-    //           publication: { $ne: null },
-    //         },
-    //         { updateStatus: { $ne: StatusUpdateEnum.UNCHANGED } },
-    //       ],
-    //     },
-    //   },
-    // ];
   }
 
   async findErrorBySources(): Promise<Record<string, number>> {
-    const sourceIds: { source_id: string }[] = await this.revisionsRepository
+    const sourceIds: { source_id: string }[] = await this.dataSource
       .createQueryBuilder()
       .select('source_id')
-      .distinctOn(['code_commune'])
-      .orderBy('code_commune, created_at', 'DESC')
-      .where('status = :status OR update_status = :updateStatus', {
-        status: UpdateStatusRevisionEnum.UNCHANGED,
-        updateStatus: UpdateStatusRevisionEnum.UNCHANGED,
-      })
+      .from((subQuery) => {
+        return subQuery
+          .select('*')
+          .from(Revision, 'revision')
+          .distinctOn(['code_commune'])
+          .orderBy('code_commune, created_at', 'DESC');
+      }, 'res')
+      .where(
+        "res.publication->>'status' = :status OR res.update_status = :updateStatus",
+        {
+          status: StatusPublicationEnum.ERROR,
+          updateStatus: UpdateStatusRevisionEnum.REJECTED,
+        },
+      )
       .getRawMany();
     return countBy(sourceIds, ({ source_id }) => source_id);
   }

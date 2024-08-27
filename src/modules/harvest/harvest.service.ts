@@ -1,3 +1,4 @@
+import { DataSource } from 'typeorm';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { sub } from 'date-fns';
 
@@ -17,6 +18,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 @Injectable()
 export class HarvestService {
   constructor(
+    private dataSource: DataSource,
     @InjectRepository(Harvest)
     private harvestsRepository: Repository<Harvest>,
   ) {}
@@ -65,17 +67,21 @@ export class HarvestService {
   }
 
   async findSourcesIdError(): Promise<string[]> {
-    const sourceIds: { source_id: string }[] = await this.harvestsRepository
+    const sourceIds: { source_id: string }[] = await this.dataSource
       .createQueryBuilder()
       .select('source_id')
-      .distinctOn(['source_id'])
-      .orderBy('source_id, start_at', 'DESC')
-      .where('status = :status OR update_status = :updateStatus', {
+      .from((subQuery) => {
+        return subQuery
+          .select('*')
+          .from(Harvest, 'harvest')
+          .distinctOn(['source_id'])
+          .orderBy('source_id, started_at', 'DESC');
+      }, 'res')
+      .where('res.status = :status OR res.update_status = :updateStatus', {
         status: StatusHarvestEnum.FAILED,
         updateStatus: UpdateStatusHarvestEnum.REJECTED,
       })
       .getRawMany();
-
     return sourceIds.map(({ source_id }) => source_id);
   }
 

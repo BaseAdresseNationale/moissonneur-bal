@@ -10,7 +10,7 @@ https://adresse-data-gouv-fr.gitbook.io/bal/moissonneur
 
 - [Node.js](https://nodejs.org) 18+
 - [yarn](https://www.yarnpkg.com)
-- [MongoDB](https://www.mongodb.com) 4+
+- [PostgresSQL](https://www.postgresql.org/)
 
 ## Utilisation
 
@@ -44,7 +44,6 @@ Lancer seulement l'api :
 $ yarn dev:api
 ```
 
-
 ### Production
 
 Créer une version de production :
@@ -58,7 +57,6 @@ Démarrer l'application (port 7000 par défaut) :
 ```
 $ yarn start
 ```
-
 
 ### Test
 
@@ -81,25 +79,23 @@ $ yarn lint
 Cette application utilise des variables d'environnement pour sa configuration.
 Elles peuvent être définies classiquement ou en créant un fichier `.env` sur la base du modèle `.env.sample`.
 
-| Nom de la variable | Description |
-| --- | --- |
-| `MONGODB_URL` | Paramètre de connexion à MongoDB |
-| `MONGODB_DBNAME` | Nom de la base de données à utiliser |
-| `PORT` | Port de l'api |
-| `ADMIN_TOKEN` | Jeton nécessaire au contrôle du moissonneur via l'API |
-| `API_DEPOT_URL` | URL de l'api de depot |
-| `API_DEPOT_CLIENT_ID` | ID du client `moissonneur` de l'api depot |
-| `API_DEPOT_CLIENT_SECRET` | TOKEN du client `moissonneur` de l'api depot |
-| `URL_API_DATA_GOUV` | URL de l'api data.gouv pour récupérer les datasets et organisation |
-|---|---|
-| `S3_ENDPOINT`| URL de base du serveur S3 |
-| `S3_REGION`| région du S3 |
-| `S3_CONTAINER_ID`| Id du container S3 |
-| `S3_USER`| User S3 |
-| `S3_ACCESS_KEY`| Clef d'accès S3 |
-| `S3_SECRET_KEY`| Clef secrete S3 |
-| `S3_DESCRIPTION`| |
-
+| Nom de la variable        | Description                                                        |
+| ------------------------- | ------------------------------------------------------------------ |
+| `POSTGRES_URL`            | Paramètre de connexion à Postgres                                  |
+| `PORT`                    | Port de l'api                                                      |
+| `ADMIN_TOKEN`             | Jeton nécessaire au contrôle du moissonneur via l'API              |
+| `API_DEPOT_URL`           | URL de l'api de depot                                              |
+| `API_DEPOT_CLIENT_ID`     | ID du client `moissonneur` de l'api depot                          |
+| `API_DEPOT_CLIENT_SECRET` | TOKEN du client `moissonneur` de l'api depot                       |
+| `URL_API_DATA_GOUV`       | URL de l'api data.gouv pour récupérer les datasets et organisation |
+| ---                       | ---                                                                |
+| `S3_ENDPOINT`             | URL de base du serveur S3                                          |
+| `S3_REGION`               | région du S3                                                       |
+| `S3_CONTAINER_ID`         | Id du container S3                                                 |
+| `S3_USER`                 | User S3                                                            |
+| `S3_ACCESS_KEY`           | Clef d'accès S3                                                    |
+| `S3_SECRET_KEY`           | Clef secrete S3                                                    |
+| `S3_DESCRIPTION`          |                                                                    |
 
 ## Licence
 
