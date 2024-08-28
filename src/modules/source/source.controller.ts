@@ -120,11 +120,9 @@ export class SourceController {
     isArray: true,
   })
   async findLastRevision(@Req() req: CustomRequest, @Res() res: Response) {
-    console.log(req.source.id);
     const revisions: Revision[] = await this.revisionService.findLastUpdated(
       req.source.id,
     );
-    console.log('RES', revisions);
     res.status(HttpStatus.OK).json(revisions);
   }
 

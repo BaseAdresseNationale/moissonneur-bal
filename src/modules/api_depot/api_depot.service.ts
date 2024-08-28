@@ -142,8 +142,9 @@ export class ApiDepotService {
     if (
       !options.force &&
       currentPublishedRevision?.context?.extras?.sourceId &&
-      currentPublishedRevision?.context?.extras?.sourceId !==
-        sourceId.toString()
+      !currentPublishedRevision?.context?.extras?.sourceId?.includes(
+        sourceId.toString(),
+      )
     ) {
       return {
         status: StatusPublicationEnum.PROVIDED_BY_OTHER_SOURCE,

@@ -30,7 +30,7 @@ export class HarvestingWorker implements Worker {
     const { data, status, headers }: AxiosResponse = await firstValueFrom(
       this.httpService.get<Buffer>(url, options).pipe(
         catchError((error: AxiosError) => {
-          console.error('error', error);
+          console.error('ERROR: fetchfileBal', error.response.data);
           throw error;
         }),
       ),
