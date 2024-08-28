@@ -108,7 +108,7 @@ export class SourceService {
       }
       await this.sourcesRepository.update({ id: source.id }, payload);
     } else {
-      const entityToSave: Source = await this.sourcesRepository.create({
+      const entityToSave: Source = this.sourcesRepository.create({
         ...payload,
         lastHarvest: new Date('1970-01-01'),
         harvestingSince: null,

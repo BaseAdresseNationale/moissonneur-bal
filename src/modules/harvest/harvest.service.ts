@@ -1,4 +1,11 @@
-import { DataSource } from 'typeorm';
+import {
+  DataSource,
+  FindOptionsOrder,
+  FindOptionsWhere,
+  LessThan,
+  Repository,
+} from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { sub } from 'date-fns';
 
@@ -7,13 +14,6 @@ import {
   StatusHarvestEnum,
   UpdateStatusHarvestEnum,
 } from './harvest.entity';
-import {
-  FindOptionsOrder,
-  FindOptionsWhere,
-  LessThan,
-  Repository,
-} from 'typeorm';
-import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class HarvestService {
@@ -29,7 +29,7 @@ export class HarvestService {
       status: StatusHarvestEnum.ACTIVE,
       startedAt,
     };
-    const entityToSave = await this.harvestsRepository.create(harvest);
+    const entityToSave = this.harvestsRepository.create(harvest);
     return this.harvestsRepository.save(entityToSave);
   }
 

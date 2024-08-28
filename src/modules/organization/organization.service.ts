@@ -68,7 +68,7 @@ export class OrganizationService {
       );
     } else {
       const entityToSave: Organization =
-        await this.organizationsRepository.create(payload);
+        this.organizationsRepository.create(payload);
       await this.organizationsRepository.save(entityToSave);
     }
   }

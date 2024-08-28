@@ -1,4 +1,7 @@
 import { Injectable } from '@nestjs/common';
+import { chain } from 'lodash';
+import Papa from 'papaparse';
+
 import { Organization } from '../../../organization/organization.entity';
 import { signData } from 'src/lib/utils/signature';
 import { getCodeCommune } from './utils';
@@ -6,12 +9,10 @@ import { RevisionService } from 'src/modules/revision/revision.service';
 import {
   Revision,
   StatusPublicationEnum,
+  UpdateStatusRevisionEnum,
 } from 'src/modules/revision/revision.entity';
-import { chain } from 'lodash';
-import Papa from 'papaparse';
 import { FileService } from 'src/modules/file/file.service';
 import { ApiDepotService } from 'src/modules/api_depot/api_depot.service';
-import { UpdateStatusRevisionEnum } from 'src/modules/revision/revision.entity';
 
 @Injectable()
 export class HandleCommune {

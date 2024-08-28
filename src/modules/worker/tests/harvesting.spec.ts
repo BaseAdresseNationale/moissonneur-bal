@@ -149,19 +149,19 @@ describe('HARVESTING WORKER', () => {
   }
 
   async function createSource(props: Partial<Source> = {}) {
-    const entityToInsert = await sourceRepository.create(props);
+    const entityToInsert = sourceRepository.create(props);
     const result = await sourceRepository.save(entityToInsert);
     return result.id;
   }
 
   async function createHarvest(props: Partial<Harvest> = {}) {
-    const entityToInsert = await harvestRepository.create(props);
+    const entityToInsert = harvestRepository.create(props);
     const result = await harvestRepository.save(entityToInsert);
     return result.id;
   }
 
   async function createOrga(props: Partial<Organization> = {}) {
-    const entityToInsert = await orgaRepository.create(props);
+    const entityToInsert = orgaRepository.create(props);
     const result = await orgaRepository.save(entityToInsert);
     return result.id;
   }

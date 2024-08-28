@@ -117,300 +117,300 @@ describe('UPDATE SOURCE ORGA WORKER', () => {
   });
 
   async function createSource(props: Partial<Source> = {}) {
-    const entityToInsert = await sourceRepository.create(props);
+    const entityToInsert = sourceRepository.create(props);
     const result = await sourceRepository.save(entityToInsert);
     return result.id;
   }
 
   async function createOrga(props: Partial<Organization> = {}) {
-    const entityToInsert = await orgaRepository.create(props);
+    const entityToInsert = orgaRepository.create(props);
     const result = await orgaRepository.save(entityToInsert);
     return result.id;
   }
 
   describe('RUN UpdateSourceOrganisationWorker ', () => {
-    // it('No create source and organization', async () => {
-    //   // MOCK API DATA GOUV
-    //   const data: any[] = [
-    //     {
-    //       description: 'desc',
-    //       id: '1',
-    //       title: 'title',
-    //       license: '',
-    //       organization: {
-    //         badges: [
-    //           {
-    //             kind: 'public-service',
-    //           },
-    //         ],
-    //         id: 'orgaId',
-    //         logo: 'orgaLogo',
-    //         name: 'orgaName',
-    //         page: 'orgaPage',
-    //       },
-    //       resources: [
-    //         {
-    //           id: 'ressourceId',
-    //           format: 'csv',
-    //           url: 'url',
-    //           last_modified: new Date(),
-    //         },
-    //       ],
-    //       archived: null,
-    //     },
-    //     {
-    //       description: 'desc',
-    //       id: '2',
-    //       title: 'title',
-    //       license: '',
-    //       organization: {
-    //         badges: [
-    //           {
-    //             kind: 'certified',
-    //           },
-    //           {
-    //             kind: 'public-service',
-    //           },
-    //         ],
-    //       },
-    //       resources: [
-    //         {
-    //           id: 'ressourceId',
-    //           format: 'csv',
-    //           url: 'url',
-    //           last_modified: new Date(),
-    //         },
-    //       ],
-    //       archived: null,
-    //     },
-    //     {
-    //       description: 'desc',
-    //       id: '3',
-    //       title: 'title',
-    //       license: '',
-    //       organization: {
-    //         badges: [
-    //           {
-    //             kind: 'certified',
-    //           },
-    //           {
-    //             kind: 'public-service',
-    //           },
-    //         ],
-    //         id: 'orgaId',
-    //         logo: 'orgaLogo',
-    //         name: 'orgaName',
-    //         page: 'orgaPage',
-    //       },
-    //       resources: [],
-    //       archived: null,
-    //     },
-    //   ];
-    //   const page: PageDataGouv = {
-    //     data: data,
-    //     next_page: '',
-    //     page: 1,
-    //     page_size: 1,
-    //     previous_page: '',
-    //     total: 1,
-    //   };
-    //   const url = new RegExp(`${URL_API_DATA_GOUV}/datasets/*`);
-    //   axiosMock.onGet(url).reply(200, page);
-    //   // RUN WORKER
-    //   await updateSourceOrganisationWorker.run();
-    //   // CHECK SOURCE
-    //   const sourceRes = await sourceRepository.find({});
-    //   expect(sourceRes).toEqual([]);
-    // });
-    // it('Create one source and organization', async () => {
-    //   // MOCK API DATA GOUV
-    //   const data: DatasetDataGouv[] = [
-    //     {
-    //       description: 'desc',
-    //       id: '1234',
-    //       title: 'title',
-    //       license: '',
-    //       organization: {
-    //         badges: [
-    //           {
-    //             kind: 'certified',
-    //           },
-    //           {
-    //             kind: 'public-service',
-    //           },
-    //         ],
-    //         id: 'orgaId',
-    //         logo: 'orgaLogo',
-    //         name: 'orgaName',
-    //         page: 'orgaPage',
-    //       },
-    //       resources: [
-    //         {
-    //           id: 'ressourceId',
-    //           format: 'csv',
-    //           url: 'url',
-    //           last_modified: new Date(),
-    //         },
-    //       ],
-    //       archived: null,
-    //     },
-    //     {
-    //       description: 'other',
-    //       id: '1234',
-    //       title: 'other',
-    //       license: '',
-    //       organization: {
-    //         badges: [
-    //           {
-    //             kind: 'certified',
-    //           },
-    //           {
-    //             kind: 'public-service',
-    //           },
-    //         ],
-    //         id: 'orgaId',
-    //         logo: 'other',
-    //         name: 'other',
-    //         page: 'other',
-    //       },
-    //       resources: [
-    //         {
-    //           id: 'ressourceId',
-    //           format: 'tsv',
-    //           url: 'other',
-    //           last_modified: new Date(),
-    //         },
-    //       ],
-    //       archived: null,
-    //     },
-    //   ];
-    //   const page: PageDataGouv = {
-    //     data: data,
-    //     next_page: '',
-    //     page: 1,
-    //     page_size: 1,
-    //     previous_page: '',
-    //     total: 1,
-    //   };
-    //   const url = new RegExp(`${URL_API_DATA_GOUV}/datasets/*`);
-    //   axiosMock.onGet(url).reply(200, page);
-    //   // RUN WORKER
-    //   await updateSourceOrganisationWorker.run();
-    //   // CHECK SOURCE
-    //   const [sourceRes] = await sourceRepository.find({});
-    //   const sourceExpected = {
-    //     id: `1234`,
-    //     title: 'title',
-    //     description: 'desc',
-    //     url: 'url',
-    //     enabled: true,
-    //     license: 'lov2',
-    //     lastHarvest: new Date('1970-01-01'),
-    //     harvestingSince: null,
-    //     organizationId: 'orgaId',
-    //   };
-    //   expect(sourceRes).toMatchObject(sourceExpected);
-    //   // CHECK ORGANIZATION
-    //   const [orgaRes] = await orgaRepository.find({});
-    //   const orgaExpected = {
-    //     id: `orgaId`,
-    //     logo: 'orgaLogo',
-    //     name: 'orgaName',
-    //     page: 'orgaPage',
-    //     perimeters: [],
-    //   };
-    //   expect(orgaRes).toMatchObject(orgaExpected);
-    // });
-    // it('Update one source and organization', async () => {
-    //   const orgaInit = {
-    //     id: `orgaId`,
-    //     logo: 'orgaLogo',
-    //     name: 'orgaName',
-    //     page: 'orgaPage',
-    //     perimeters: [],
-    //   };
-    //   await createOrga(orgaInit);
-    //   const sourceInit = {
-    //     id: `1234`,
-    //     title: 'title',
-    //     description: 'desc',
-    //     url: 'url',
-    //     enabled: true,
-    //     license: 'lov2',
-    //     lastHarvest: new Date('1970-01-01'),
-    //     harvestingSince: null,
-    //     organizationId: 'orgaId',
-    //   };
-    //   await createSource(sourceInit);
-    //   // MOCK API DATA GOUV
-    //   const data: DatasetDataGouv[] = [
-    //     {
-    //       description: 'other',
-    //       id: '1234',
-    //       title: 'other',
-    //       license: '',
-    //       organization: {
-    //         badges: [
-    //           {
-    //             kind: 'certified',
-    //           },
-    //           {
-    //             kind: 'public-service',
-    //           },
-    //         ],
-    //         id: 'orgaId',
-    //         logo: 'other',
-    //         name: 'other',
-    //         page: 'other',
-    //       },
-    //       resources: [
-    //         {
-    //           id: 'ressourceId',
-    //           format: 'csv',
-    //           url: 'other',
-    //           last_modified: new Date(),
-    //         },
-    //       ],
-    //       archived: null,
-    //     },
-    //   ];
-    //   const page: PageDataGouv = {
-    //     data: data,
-    //     next_page: '',
-    //     page: 1,
-    //     page_size: 1,
-    //     previous_page: '',
-    //     total: 1,
-    //   };
-    //   const url = new RegExp(`${URL_API_DATA_GOUV}/datasets/*`);
-    //   axiosMock.onGet(url).reply(200, page);
-    //   // RUN WORKER
-    //   await updateSourceOrganisationWorker.run();
-    //   // CHECK SOURCE
-    //   const [sourceRes] = await sourceRepository.find({});
-    //   const sourceExpected = {
-    //     id: '1234',
-    //     title: 'other',
-    //     description: 'other',
-    //     url: 'other',
-    //     enabled: true,
-    //     license: 'lov2',
-    //     lastHarvest: new Date('1970-01-01'),
-    //     harvestingSince: null,
-    //     organizationId: 'orgaId',
-    //   };
-    //   expect(sourceRes).toMatchObject(sourceExpected);
-    //   // CHECK ORGANIZATION
-    //   const [orgaRes] = await orgaRepository.find({});
-    //   const orgaExpected = {
-    //     id: `orgaId`,
-    //     logo: 'other',
-    //     name: 'other',
-    //     page: 'other',
-    //     perimeters: [],
-    //   };
-    //   expect(orgaRes).toMatchObject(orgaExpected);
-    // });
+    it('No create source and organization', async () => {
+      // MOCK API DATA GOUV
+      const data: any[] = [
+        {
+          description: 'desc',
+          id: '1',
+          title: 'title',
+          license: '',
+          organization: {
+            badges: [
+              {
+                kind: 'public-service',
+              },
+            ],
+            id: 'orgaId',
+            logo: 'orgaLogo',
+            name: 'orgaName',
+            page: 'orgaPage',
+          },
+          resources: [
+            {
+              id: 'ressourceId',
+              format: 'csv',
+              url: 'url',
+              last_modified: new Date(),
+            },
+          ],
+          archived: null,
+        },
+        {
+          description: 'desc',
+          id: '2',
+          title: 'title',
+          license: '',
+          organization: {
+            badges: [
+              {
+                kind: 'certified',
+              },
+              {
+                kind: 'public-service',
+              },
+            ],
+          },
+          resources: [
+            {
+              id: 'ressourceId',
+              format: 'csv',
+              url: 'url',
+              last_modified: new Date(),
+            },
+          ],
+          archived: null,
+        },
+        {
+          description: 'desc',
+          id: '3',
+          title: 'title',
+          license: '',
+          organization: {
+            badges: [
+              {
+                kind: 'certified',
+              },
+              {
+                kind: 'public-service',
+              },
+            ],
+            id: 'orgaId',
+            logo: 'orgaLogo',
+            name: 'orgaName',
+            page: 'orgaPage',
+          },
+          resources: [],
+          archived: null,
+        },
+      ];
+      const page: PageDataGouv = {
+        data: data,
+        next_page: '',
+        page: 1,
+        page_size: 1,
+        previous_page: '',
+        total: 1,
+      };
+      const url = new RegExp(`${URL_API_DATA_GOUV}/datasets/*`);
+      axiosMock.onGet(url).reply(200, page);
+      // RUN WORKER
+      await updateSourceOrganisationWorker.run();
+      // CHECK SOURCE
+      const sourceRes = await sourceRepository.find({});
+      expect(sourceRes).toEqual([]);
+    });
+    it('Create one source and organization', async () => {
+      // MOCK API DATA GOUV
+      const data: DatasetDataGouv[] = [
+        {
+          description: 'desc',
+          id: '1234',
+          title: 'title',
+          license: '',
+          organization: {
+            badges: [
+              {
+                kind: 'certified',
+              },
+              {
+                kind: 'public-service',
+              },
+            ],
+            id: 'orgaId',
+            logo: 'orgaLogo',
+            name: 'orgaName',
+            page: 'orgaPage',
+          },
+          resources: [
+            {
+              id: 'ressourceId',
+              format: 'csv',
+              url: 'url',
+              last_modified: new Date(),
+            },
+          ],
+          archived: null,
+        },
+        {
+          description: 'other',
+          id: '1234',
+          title: 'other',
+          license: '',
+          organization: {
+            badges: [
+              {
+                kind: 'certified',
+              },
+              {
+                kind: 'public-service',
+              },
+            ],
+            id: 'orgaId',
+            logo: 'other',
+            name: 'other',
+            page: 'other',
+          },
+          resources: [
+            {
+              id: 'ressourceId',
+              format: 'tsv',
+              url: 'other',
+              last_modified: new Date(),
+            },
+          ],
+          archived: null,
+        },
+      ];
+      const page: PageDataGouv = {
+        data: data,
+        next_page: '',
+        page: 1,
+        page_size: 1,
+        previous_page: '',
+        total: 1,
+      };
+      const url = new RegExp(`${URL_API_DATA_GOUV}/datasets/*`);
+      axiosMock.onGet(url).reply(200, page);
+      // RUN WORKER
+      await updateSourceOrganisationWorker.run();
+      // CHECK SOURCE
+      const [sourceRes] = await sourceRepository.find({});
+      const sourceExpected = {
+        id: `1234`,
+        title: 'title',
+        description: 'desc',
+        url: 'url',
+        enabled: true,
+        license: 'lov2',
+        lastHarvest: new Date('1970-01-01'),
+        harvestingSince: null,
+        organizationId: 'orgaId',
+      };
+      expect(sourceRes).toMatchObject(sourceExpected);
+      // CHECK ORGANIZATION
+      const [orgaRes] = await orgaRepository.find({});
+      const orgaExpected = {
+        id: `orgaId`,
+        logo: 'orgaLogo',
+        name: 'orgaName',
+        page: 'orgaPage',
+        perimeters: [],
+      };
+      expect(orgaRes).toMatchObject(orgaExpected);
+    });
+    it('Update one source and organization', async () => {
+      const orgaInit = {
+        id: `orgaId`,
+        logo: 'orgaLogo',
+        name: 'orgaName',
+        page: 'orgaPage',
+        perimeters: [],
+      };
+      await createOrga(orgaInit);
+      const sourceInit = {
+        id: `1234`,
+        title: 'title',
+        description: 'desc',
+        url: 'url',
+        enabled: true,
+        license: 'lov2',
+        lastHarvest: new Date('1970-01-01'),
+        harvestingSince: null,
+        organizationId: 'orgaId',
+      };
+      await createSource(sourceInit);
+      // MOCK API DATA GOUV
+      const data: DatasetDataGouv[] = [
+        {
+          description: 'other',
+          id: '1234',
+          title: 'other',
+          license: '',
+          organization: {
+            badges: [
+              {
+                kind: 'certified',
+              },
+              {
+                kind: 'public-service',
+              },
+            ],
+            id: 'orgaId',
+            logo: 'other',
+            name: 'other',
+            page: 'other',
+          },
+          resources: [
+            {
+              id: 'ressourceId',
+              format: 'csv',
+              url: 'other',
+              last_modified: new Date(),
+            },
+          ],
+          archived: null,
+        },
+      ];
+      const page: PageDataGouv = {
+        data: data,
+        next_page: '',
+        page: 1,
+        page_size: 1,
+        previous_page: '',
+        total: 1,
+      };
+      const url = new RegExp(`${URL_API_DATA_GOUV}/datasets/*`);
+      axiosMock.onGet(url).reply(200, page);
+      // RUN WORKER
+      await updateSourceOrganisationWorker.run();
+      // CHECK SOURCE
+      const [sourceRes] = await sourceRepository.find({});
+      const sourceExpected = {
+        id: '1234',
+        title: 'other',
+        description: 'other',
+        url: 'other',
+        enabled: true,
+        license: 'lov2',
+        lastHarvest: new Date('1970-01-01'),
+        harvestingSince: null,
+        organizationId: 'orgaId',
+      };
+      expect(sourceRes).toMatchObject(sourceExpected);
+      // CHECK ORGANIZATION
+      const [orgaRes] = await orgaRepository.find({});
+      const orgaExpected = {
+        id: `orgaId`,
+        logo: 'other',
+        name: 'other',
+        page: 'other',
+        perimeters: [],
+      };
+      expect(orgaRes).toMatchObject(orgaExpected);
+    });
     it('Delete one source and organization with archived', async () => {
       const orgaInit = {
         id: `orgaId`,
