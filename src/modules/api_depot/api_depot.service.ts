@@ -5,8 +5,8 @@ import {
   Publication,
   Revision,
   StatusPublicationEnum,
-} from '../revision/revision.schema';
-import { Organization } from '../organization/organization.schema';
+} from '../revision/revision.entity';
+import { Organization } from '../organization/organization.entity';
 import { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
 import { catchError, firstValueFrom, of } from 'rxjs';
 import hasha from 'hasha';
@@ -117,14 +117,7 @@ export class ApiDepotService {
   }
 
   async publishBal(
-    {
-      sourceId,
-      codeCommune,
-      harvestId,
-      nbRows,
-      nbRowsWithErrors,
-      uniqueErrors,
-    }: Partial<Revision>,
+    { sourceId, codeCommune, harvestId, validation }: Partial<Revision>,
     file: Buffer,
     organization: Organization,
     options: { force?: boolean } = {},
@@ -149,8 +142,9 @@ export class ApiDepotService {
     if (
       !options.force &&
       currentPublishedRevision?.context?.extras?.sourceId &&
-      currentPublishedRevision?.context?.extras?.sourceId !==
-        sourceId.toString()
+      !currentPublishedRevision?.context?.extras?.sourceId?.includes(
+        sourceId.toString(),
+      )
     ) {
       return {
         status: StatusPublicationEnum.PROVIDED_BY_OTHER_SOURCE,
@@ -162,22 +156,22 @@ export class ApiDepotService {
       const extras = {
         sourceId,
         harvestId,
-        nbRows,
-        nbRowsWithErrors,
-        uniqueErrors,
+        nbRows: validation.nbRows,
+        nbRowsWithErrors: validation.nbRowsWithErrors,
+        uniqueErrors: validation.uniqueErrors,
       };
       // ON CREER UNE REVISION POUR LA COMMUNE
-      const revision = await this.createRevision(
+      const { _id: revisionId } = await this.createRevision(
         codeCommune,
         extras,
         organization.name,
       );
       // ON ATTACHE LE FICHIER BAL A LA NOUVELLE REVISION
-      await this.uploadFileRevision(revision._id, file);
+      await this.uploadFileRevision(revisionId, file);
       // ON VERIFIE QUE TOUTES LES INFO DE LA REVISION ET DU FICHIER RATTACHE SONT CONFORME
-      await this.computeRevision(revision._id);
+      await this.computeRevision(revisionId);
       // ON PUBLIE LA REVISION
-      const publishedRevision = await this.publishRevision(revision._id);
+      const publishedRevision = await this.publishRevision(revisionId);
       return {
         status: StatusPublicationEnum.PUBLISHED,
         publishedRevisionId: publishedRevision._id,

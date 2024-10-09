@@ -2,7 +2,7 @@ import { Injectable, NestMiddleware } from '@nestjs/common';
 import { Response, NextFunction } from 'express';
 
 import { HarvestService } from './harvest.service';
-import { Harvest } from './harvest.schema';
+import { Harvest } from './harvest.entity';
 import { CustomRequest } from 'src/lib/types/request.type';
 
 @Injectable()

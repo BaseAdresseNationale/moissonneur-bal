@@ -1,17 +1,17 @@
 import { MiddlewareConsumer, Module, forwardRef } from '@nestjs/common';
-import { MongooseModule } from '@nestjs/mongoose';
 
 import { HarvestService } from './harvest.service';
-import { HarvestSchema, Harvest } from './harvest.schema';
 import { HarvestMiddleware } from './harvest.middleware';
 import { HarvestController } from './harvest.controller';
 import { ConfigModule } from '@nestjs/config';
 import { RevisionModule } from '../revision/revision.module';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { Harvest } from './harvest.entity';
 
 @Module({
   imports: [
     ConfigModule,
-    MongooseModule.forFeature([{ name: Harvest.name, schema: HarvestSchema }]),
+    TypeOrmModule.forFeature([Harvest]),
     forwardRef(() => RevisionModule),
   ],
   providers: [HarvestService],

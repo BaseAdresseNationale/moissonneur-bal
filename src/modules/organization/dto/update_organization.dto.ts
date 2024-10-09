@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { ArrayNotEmpty, IsDefined, ValidateNested } from 'class-validator';
-import { Perimeter } from '../organization.schema';
+import { Perimeter } from '../perimeters.entity';
 import { Type } from 'class-transformer';
 
 export class UpdateOrganizationDTO {
