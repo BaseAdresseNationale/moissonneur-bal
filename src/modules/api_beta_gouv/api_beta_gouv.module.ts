@@ -1,4 +1,4 @@
-import { Logger, Module } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 
 import { ApiBetaGouvService } from './api_beta_gouv.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
