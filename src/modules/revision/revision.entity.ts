@@ -57,16 +57,16 @@ export class Validation {
 export class Revision extends IdEntity {
   @Index('IDX_revisions_source_id')
   @ApiProperty()
-  @Column('varchar', { length: 32, name: 'source_id', nullable: false })
+  @Column('varchar', { length: 24, name: 'source_id', nullable: false })
   sourceId?: string;
 
   @Index('IDX_revisions_harvest_id')
   @ApiProperty()
-  @Column('varchar', { length: 32, name: 'harvest_id', nullable: false })
+  @Column('varchar', { length: 24, name: 'harvest_id', nullable: false })
   harvestId?: string;
 
   @ApiProperty()
-  @Column('varchar', { length: 32, name: 'file_id', nullable: true })
+  @Column('varchar', { length: 24, name: 'file_id', nullable: true })
   fileId?: string;
 
   @ApiProperty()

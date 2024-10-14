@@ -27,11 +27,11 @@ export enum UpdateStatusHarvestEnum {
 export class Harvest extends IdEntity {
   @Index('IDX_harvests_source_id')
   @ApiProperty()
-  @Column('varchar', { length: 32, name: 'source_id', nullable: false })
+  @Column('varchar', { length: 24, name: 'source_id', nullable: false })
   sourceId?: string;
 
   @ApiProperty()
-  @Column('varchar', { length: 32, name: 'file_id', nullable: true })
+  @Column('varchar', { length: 24, name: 'file_id', nullable: true })
   fileId?: string;
 
   @ApiProperty()

@@ -4,7 +4,7 @@ import { BeforeInsert, PrimaryColumn } from 'typeorm';
 
 export class IdEntity {
   @ApiProperty()
-  @PrimaryColumn('varchar', { length: 32 })
+  @PrimaryColumn('varchar', { length: 24 })
   id?: string;
 
   @BeforeInsert()

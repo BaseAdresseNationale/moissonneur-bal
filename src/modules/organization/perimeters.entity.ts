@@ -13,7 +13,7 @@ export enum TypePerimeterEnum {
 export class Perimeter extends IdEntity {
   @Index('IDX_perimeters_organization_id')
   @ApiProperty()
-  @Column('varchar', { length: 32, name: 'organization_id', nullable: false })
+  @Column('varchar', { length: 24, name: 'organization_id', nullable: false })
   organizationId?: string;
 
   @ApiProperty({ enum: TypePerimeterEnum })

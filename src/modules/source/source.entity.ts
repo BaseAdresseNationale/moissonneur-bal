@@ -16,12 +16,12 @@ import { DatesEntity } from '../../lib/class/dates.entity';
 @Entity({ name: 'sources' })
 export class Source extends DatesEntity {
   @ApiProperty()
-  @PrimaryColumn('varchar', { length: 32 })
+  @PrimaryColumn('varchar', { length: 24 })
   id?: string;
 
   @Index('IDX_sources_organization_id')
   @ApiProperty()
-  @Column('varchar', { length: 32, name: 'organization_id', nullable: true })
+  @Column('varchar', { length: 24, name: 'organization_id', nullable: true })
   organizationId?: string;
 
   @ApiProperty()

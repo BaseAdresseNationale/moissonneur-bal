@@ -7,7 +7,7 @@ import { DatesEntity } from '../../lib/class/dates.entity';
 @Entity({ name: 'organizations' })
 export class Organization extends DatesEntity {
   @ApiProperty()
-  @PrimaryColumn('varchar', { length: 32 })
+  @PrimaryColumn('varchar', { length: 24 })
   id?: string;
 
   @ApiProperty()
