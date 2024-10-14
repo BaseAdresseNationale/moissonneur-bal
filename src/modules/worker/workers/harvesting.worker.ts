@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { Source } from '../../source/source.entity';
 import { Organization } from '../../organization/organization.entity';
 import { OrganizationService } from '../../organization/organization.service';
@@ -19,6 +19,7 @@ export class HarvestingWorker implements Worker {
     private organizationService: OrganizationService,
     private sourceService: SourceService,
     private harvestService: HarvestService,
+    private readonly logger: Logger,
   ) {}
 
   async fetchfileBal(url: string): Promise<Buffer> {
@@ -30,8 +31,10 @@ export class HarvestingWorker implements Worker {
     const { data, status, headers }: AxiosResponse = await firstValueFrom(
       this.httpService.get<Buffer>(url, options).pipe(
         catchError((error: AxiosError) => {
-          console.error('ERROR: fetchfileBal', error.response.data);
-          throw error;
+          throw new Error(
+            `Impossible de trouver la BAL sur dataGouv`,
+            error.response?.data || 'No server response',
+          );
         }),
       ),
     );
@@ -71,7 +74,11 @@ export class HarvestingWorker implements Worker {
       );
       return { ...newHarvest, status: StatusHarvestEnum.COMPLETED };
     } catch (error) {
-      console.error(error);
+      this.logger.error(
+        `Impossible de harvest la source ${source.id}`,
+        error,
+        HarvestingWorker.name,
+      );
       return { error: error.message, status: StatusHarvestEnum.FAILED };
     }
   }
@@ -96,7 +103,11 @@ export class HarvestingWorker implements Worker {
       // DELOCK LE HARVESTING ET SET LA DATE DU MOISSONAGE QUI VIENT DAVOIR LIEU
       await this.sourceService.finishHarvesting(sourceId, startedAt);
     } else {
-      console.error(`La source ${sourceId} a deja un moissonnage en cours`);
+      this.logger.error(
+        `La source ${sourceId} a deja un moissonnage en cours`,
+        null,
+        HarvestingWorker.name,
+      );
     }
   }
 

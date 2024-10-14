@@ -77,8 +77,6 @@ export class OrganizationService {
     organizationId: string,
     changes: Partial<Organization>,
   ): Promise<Organization> {
-    console.log(changes);
-
     const numeroToSave: Organization = this.organizationsRepository.create({
       id: organizationId,
       ...changes,

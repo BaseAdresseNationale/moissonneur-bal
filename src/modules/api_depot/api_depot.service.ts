@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { HttpService } from '@nestjs/axios';
 import {
@@ -18,6 +18,7 @@ export class ApiDepotService {
   constructor(
     private configService: ConfigService,
     private readonly httpService: HttpService,
+    private readonly logger: Logger,
   ) {
     this.API_DEPOT_CLIENT_ID = this.configService.get<string>(
       'API_DEPOT_CLIENT_ID',
@@ -33,7 +34,11 @@ export class ApiDepotService {
           if (error.response && error.response.status === 404) {
             return of({ data: null });
           }
-          console.error('error', error);
+          this.logger.error(
+            `Impossible de récupérer la revision courante de la commune ${codeCommune}`,
+            { reponse: error.response?.data || 'No server response' },
+            ApiDepotService.name,
+          );
           throw error;
         }),
       ),
@@ -53,7 +58,6 @@ export class ApiDepotService {
     const { data } = await firstValueFrom(
       this.httpService.post<any>(url, body, options).pipe(
         catchError((error: AxiosError) => {
-          console.error('error', error);
           throw error;
         }),
       ),
@@ -75,7 +79,6 @@ export class ApiDepotService {
     return firstValueFrom(
       this.httpService.put<any>(url, balFile, options).pipe(
         catchError((error: AxiosError) => {
-          console.error('error', error);
           throw error;
         }),
       ),
@@ -84,11 +87,9 @@ export class ApiDepotService {
 
   private async computeRevision(revisionId: string) {
     const url: string = `/revisions/${revisionId}/compute`;
-
     const { data }: AxiosResponse = await firstValueFrom(
       this.httpService.post<any>(url).pipe(
         catchError((error: AxiosError) => {
-          console.error('error', error);
           throw error;
         }),
       ),
@@ -107,7 +108,6 @@ export class ApiDepotService {
     const { data }: AxiosResponse = await firstValueFrom(
       this.httpService.post<Buffer>(url).pipe(
         catchError((error: AxiosError) => {
-          console.error('error', error);
           throw error;
         }),
       ),
@@ -177,7 +177,10 @@ export class ApiDepotService {
         publishedRevisionId: publishedRevision._id,
       };
     } catch (error) {
-      console.error(error);
+      this.logger.error(
+        `Une erreur est survenu pendant la publication pour la commune ${codeCommune} et le harvest ${harvestId}`,
+        error,
+      );
       return {
         status: StatusPublicationEnum.ERROR,
         errorMessage: error.message,
