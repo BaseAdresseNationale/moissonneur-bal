@@ -20,7 +20,9 @@
     "start:prod": "node dist/main",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "test": "jest",
-    "typeorm": "typeorm-ts-node-commonjs"
+    "typeorm": "typeorm-ts-node-commonjs",
+    "typeorm:migration:run": "yarn typeorm migration:run -- -d ./typeorm.config.ts",
+    "typeorm:migration:down": "yarn typeorm migration:revert -- -d ./typeorm.config.ts"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.540.0",
