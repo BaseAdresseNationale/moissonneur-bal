@@ -77,10 +77,14 @@ export class OrganizationService {
     organizationId: string,
     changes: Partial<Organization>,
   ): Promise<Organization> {
-    await this.organizationsRepository.update({ id: organizationId }, changes);
-    return this.organizationsRepository.findOneBy({
+    console.log(changes);
+
+    const numeroToSave: Organization = this.organizationsRepository.create({
       id: organizationId,
+      ...changes,
     });
+
+    return this.organizationsRepository.save(numeroToSave);
   }
 
   public async softDeleteInactive(activeIds: string[]) {
