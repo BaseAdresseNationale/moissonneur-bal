@@ -1,8 +1,8 @@
 import { Request } from 'express';
-import { Source } from '../../modules/source/source.schema';
-import { Organization } from 'src/modules/organization/organization.schema';
-import { Harvest } from 'src/modules/harvest/harvest.schema';
-import { Revision } from 'src/modules/revision/revision.schema';
+import { Harvest } from 'src/modules/harvest/harvest.entity';
+import { Organization } from 'src/modules/organization/organization.entity';
+import { Revision } from 'src/modules/revision/revision.entity';
+import { Source } from 'src/modules/source/source.entity';
 
 export interface CustomRequest extends Request {
   token?: string;

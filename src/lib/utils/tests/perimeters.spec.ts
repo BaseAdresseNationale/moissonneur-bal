@@ -1,7 +1,7 @@
 import {
   Perimeter,
   TypePerimeterEnum,
-} from 'src/modules/organization/organization.schema';
+} from '../../../modules/organization/perimeters.entity';
 import { communeIsInPerimeters } from '../perimeters';
 
 describe('PERIMETERS UTILS', () => {

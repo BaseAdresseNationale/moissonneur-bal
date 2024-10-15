@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 
 export type Worker = {
   run(params: any): Promise<void>;
@@ -15,7 +15,7 @@ export class QueueService {
   private queue: Task[] = [];
   private isTaskRunning: boolean = false;
 
-  constructor() {}
+  constructor(private readonly logger: Logger) {}
 
   public pushTask(worker: Worker, title: string = '', params: any = null) {
     const task: Task = {
@@ -34,13 +34,23 @@ export class QueueService {
 
     while (this.queue.length > 0) {
       const task = this.queue.shift();
-      console.debug(`Task start ${task.title}`);
+      this.logger.log(
+        `[${QueueService.name}] TASK START ${task.title}`,
+        QueueService.name,
+      );
       try {
         await task.worker.run(task.params);
-      } catch (e) {
-        console.debug(`Task error ${task.title}`, e);
+      } catch (error) {
+        this.logger.error(
+          `[${QueueService.name}] TASK ERROR ${task.title}`,
+          error,
+          QueueService.name,
+        );
       }
-      console.debug(`Task end ${task.title}`);
+      this.logger.log(
+        `[${QueueService.name}] TASK END ${task.title}`,
+        QueueService.name,
+      );
     }
 
     this.isTaskRunning = false;

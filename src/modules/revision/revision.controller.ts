@@ -21,7 +21,7 @@ import {
 import { CustomRequest } from 'src/lib/types/request.type';
 import { AdminGuard } from 'src/lib/admin.guard';
 import { RevisionService } from '../revision/revision.service';
-import { Revision } from '../revision/revision.schema';
+import { Revision } from '../revision/revision.entity';
 import { PublishRevisionDTO } from './dto/publish_revision.dto';
 
 @ApiTags('revisions')

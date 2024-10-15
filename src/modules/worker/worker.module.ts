@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Logger, Module } from '@nestjs/common';
 
 import { WorkerService } from './worker.service';
 import { HttpModule } from '@nestjs/axios';
@@ -40,6 +40,7 @@ import { ScheduleModule } from '@nestjs/schedule';
     CleanStalledWorker,
     HandleFile,
     HandleCommune,
+    Logger,
   ],
   exports: [HarvestingWorker],
 })

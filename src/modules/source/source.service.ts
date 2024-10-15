@@ -5,21 +5,29 @@ import {
   Injectable,
   forwardRef,
 } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { FilterQuery, Model, QueryWithHelpers } from 'mongoose';
 import { sub } from 'date-fns';
 
-import { Source } from './source.schema';
-import { StatusHarvestEnum } from '../harvest/harvest.schema';
 import { RevisionService } from '../revision/revision.service';
 import { HarvestService } from '../harvest/harvest.service';
-import { StatusUpdateEnum } from 'src/lib/types/status_update.enum';
 import { ExtendedSourceDTO } from './dto/extended_source.dto';
+import { Source } from './source.entity';
+import { InjectRepository } from '@nestjs/typeorm';
+import {
+  FindOptionsSelect,
+  FindOptionsWhere,
+  In,
+  IsNull,
+  LessThan,
+  Not,
+  Repository,
+  UpdateResult,
+} from 'typeorm';
 
 @Injectable()
 export class SourceService {
   constructor(
-    @InjectModel(Source.name) private sourceModel: Model<Source>,
+    @InjectRepository(Source)
+    private sourcesRepository: Repository<Source>,
     @Inject(forwardRef(() => RevisionService))
     private revisionService: RevisionService,
     @Inject(forwardRef(() => HarvestService))
@@ -27,58 +35,25 @@ export class SourceService {
   ) {}
 
   async findMany(
-    filter?: FilterQuery<Source>,
-    selector: Record<string, number> = null,
-    limit: number = null,
-    offset: number = null,
+    where: FindOptionsWhere<Source>,
+    select?: FindOptionsSelect<Source>,
+    withDeleted: boolean = false,
   ): Promise<Source[]> {
-    const query: QueryWithHelpers<
-      Array<Source>,
-      Source
-    > = this.sourceModel.find(filter);
-
-    if (selector) {
-      query.select(selector);
-    }
-    if (limit) {
-      query.limit(limit);
-    }
-    if (offset) {
-      query.skip(offset);
-    }
-
-    return query.lean().exec();
-  }
-
-  public async extendMany(sources: Source[]): Promise<ExtendedSourceDTO[]> {
-    const harvestsInError: {
-      _id: string;
-      status: StatusHarvestEnum;
-      updateStatus: StatusUpdateEnum;
-    }[] = await this.harvestService.findErrorBySources();
-
-    const nbRevisionsInError: {
-      _id: string;
-      nbErrors: number;
-    }[] = await this.revisionService.findErrorBySources();
-
-    const extendedSources: ExtendedSourceDTO[] = sources.map((s) => {
-      return {
-        ...s,
-        harvestError: harvestsInError.some(({ _id }) => s._id === _id),
-        nbRevisionError:
-          nbRevisionsInError.find(({ _id }) => s._id === _id)?.nbErrors || 0,
-      };
+    return this.sourcesRepository.find({
+      where,
+      ...(select && { select }),
+      withDeleted,
     });
-
-    return extendedSources;
   }
 
   public async findOneOrFail(sourceId: string): Promise<Source> {
-    const source = await this.sourceModel
-      .findOne({ _id: sourceId })
-      .lean()
-      .exec();
+    const where: FindOptionsWhere<Source> = {
+      id: sourceId,
+    };
+    const source = await this.sourcesRepository.findOne({
+      where,
+      withDeleted: true,
+    });
 
     if (!source) {
       throw new HttpException(
@@ -90,93 +65,108 @@ export class SourceService {
     return source;
   }
 
+  public async extendMany(sources: Source[]): Promise<ExtendedSourceDTO[]> {
+    const haverstErrorBySourceId: string[] =
+      await this.harvestService.findSourcesIdError();
+
+    const revisionErrorBySourceId: Record<string, number> =
+      await this.revisionService.findErrorBySources();
+
+    const extendedSources: ExtendedSourceDTO[] = sources.map((s) => {
+      return {
+        ...s,
+        harvestError: haverstErrorBySourceId.includes(s.id),
+        nbRevisionError: revisionErrorBySourceId[s.id] || 0,
+      };
+    });
+
+    return extendedSources;
+  }
+
   public async updateOne(
     sourceId: string,
     changes: Partial<Source>,
   ): Promise<Source> {
-    const source: Source = await this.sourceModel.findOneAndUpdate(
-      { _id: sourceId },
-      { $set: changes },
-      { upsert: true },
-    );
-
-    return source;
-  }
-
-  public async upsert(source: Partial<Source>) {
-    const now = new Date();
-
-    const upsertResult = await this.sourceModel.findOneAndUpdate(
-      { _id: source._id },
-      {
-        $set: {
-          ...source,
-          _deleted: false,
-        },
-        $setOnInsert: {
-          enabled: true,
-          _created: now,
-          'harvesting.lastHarvest': new Date('1970-01-01'),
-          'harvesting.harvestingSince': null,
-        },
-      },
-      { upsert: true },
-    );
-
-    return upsertResult;
-  }
-
-  public async softDeleteInactive(activeIds: string[]) {
-    await this.sourceModel.updateMany(
-      { _id: { $nin: activeIds }, _deleted: false },
-      { $set: { _deleted: true, _updated: new Date() } },
-    );
-  }
-
-  public async findSourcesToHarvest() {
-    // RECUPERE LES SOURCE QUI N'ONT PAS ETE MOISSONEE DEPUIS 24H
-    return this.sourceModel.find({
-      _deleted: false,
-      enabled: true,
-      'harvesting.harvestingSince': null,
-      'harvesting.lastHarvest': { $lt: sub(new Date(), { hours: 24 }) },
+    await this.sourcesRepository.update({ id: sourceId }, changes);
+    return this.sourcesRepository.findOneBy({
+      id: sourceId,
     });
   }
 
-  async startHarvesting(sourceId: string, harvestingSince: Date) {
-    // On tente de basculer la source en cours de moissonnage
-    return await this.sourceModel.findOneAndUpdate(
+  public async upsert(payload: Partial<Source>): Promise<void> {
+    const where: FindOptionsWhere<Source> = {
+      id: payload.id,
+    };
+    const source = await this.sourcesRepository.findOne({
+      where,
+      withDeleted: true,
+    });
+
+    if (source) {
+      if (source.deletedAt) {
+        await this.sourcesRepository.restore({ id: source.id });
+      }
+      await this.sourcesRepository.update({ id: source.id }, payload);
+    } else {
+      const entityToSave: Source = this.sourcesRepository.create({
+        ...payload,
+        lastHarvest: new Date('1970-01-01'),
+        harvestingSince: null,
+      });
+      await this.sourcesRepository.save(entityToSave);
+    }
+  }
+
+  public async softDeleteInactive(activeIds: string[]) {
+    await this.sourcesRepository.softDelete({ id: Not(In(activeIds)) });
+  }
+
+  public async findSourcesToHarvest(): Promise<Source[]> {
+    // RECUPERE LES SOURCE QUI N'ONT PAS ETE MOISSONEE DEPUIS 24H
+    return this.sourcesRepository.findBy({
+      enabled: true,
+      harvestingSince: IsNull(),
+      lastHarvest: LessThan(sub(new Date(), { hours: 24 })),
+    });
+  }
+
+  async startHarvesting(
+    sourceId: string,
+    harvestingSince: Date,
+  ): Promise<Source | null> {
+    const { affected }: UpdateResult = await this.sourcesRepository.update(
       {
-        _id: sourceId,
+        id: sourceId,
         enabled: true,
-        _deleted: false,
-        'harvesting.harvestingSince': null,
+        harvestingSince: IsNull(),
       },
-      { $set: { 'harvesting.harvestingSince': harvestingSince } },
-      { new: true },
+      { harvestingSince },
     );
+    if (affected > 0) {
+      return this.sourcesRepository.findOneBy({ id: sourceId });
+    }
+    return null;
   }
 
-  async finishHarvesting(sourceId: string, lastHarvest: Date) {
+  async finishHarvesting(sourceId: string, lastHarvest: Date): Promise<void> {
     // On tente de basculer la source en cours de moissonnage
-    return await this.sourceModel.findOneAndUpdate(
-      { _id: sourceId },
+    await this.sourcesRepository.update(
+      { id: sourceId },
       {
-        $set: {
-          'harvesting.harvestingSince': null,
-          'harvesting.lastHarvest': lastHarvest,
-        },
+        harvestingSince: null,
+        lastHarvest,
       },
-      { new: true },
     );
   }
 
-  async finishStalledHarvesting() {
-    return this.sourceModel.updateMany(
+  async finishStalledHarvesting(): Promise<void> {
+    await this.sourcesRepository.update(
       {
-        'harvesting.harvestingSince': { $lt: sub(new Date(), { minutes: 30 }) },
+        harvestingSince: LessThan(sub(new Date(), { minutes: 30 })),
       },
-      { $set: { 'harvesting.harvestingSince': null } },
+      {
+        harvestingSince: null,
+      },
     );
   }
 }
