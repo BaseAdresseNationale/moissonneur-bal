@@ -1,7 +1,7 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
-export class Initialization1728913371191 implements MigrationInterface {
-  name = 'Initialization1728913371191';
+export class Initialization1728997793201 implements MigrationInterface {
+  name = 'Initialization1728997793201';
 
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(
@@ -38,7 +38,7 @@ export class Initialization1728913371191 implements MigrationInterface {
       `CREATE INDEX "IDX_harvests_source_id" ON "harvests" ("source_id") `,
     );
     await queryRunner.query(
-      `CREATE TABLE "sources" ("created_at" TIMESTAMP NOT NULL DEFAULT now(), "updated_at" TIMESTAMP NOT NULL DEFAULT now(), "deleted_at" TIMESTAMP, "id" character varying(24) NOT NULL, "organization_id" character varying(24), "title" text NOT NULL, "url" text NOT NULL, "description" text, "license" text, "enabled" boolean DEFAULT true, "last_harvest" TIMESTAMP, "harvesting_since" TIMESTAMP, CONSTRAINT "PK_85523beafe5a2a6b90b02096443" PRIMARY KEY ("id"))`,
+      `CREATE TABLE "sources" ("created_at" TIMESTAMP NOT NULL DEFAULT now(), "updated_at" TIMESTAMP NOT NULL DEFAULT now(), "deleted_at" TIMESTAMP, "id" character varying(24) NOT NULL, "organization_id" character varying(24), "title" text NOT NULL, "url" text, "description" text, "license" text, "enabled" boolean DEFAULT true, "last_harvest" TIMESTAMP, "harvesting_since" TIMESTAMP, CONSTRAINT "PK_85523beafe5a2a6b90b02096443" PRIMARY KEY ("id"))`,
     );
     await queryRunner.query(
       `CREATE INDEX "IDX_7ec8f02c782757b9ea0ea96dcf" ON "sources" ("deleted_at") `,

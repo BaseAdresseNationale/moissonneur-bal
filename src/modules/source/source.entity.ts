@@ -29,7 +29,7 @@ export class Source extends DatesEntity {
   title: string;
 
   @ApiProperty()
-  @Column('text', { nullable: false })
+  @Column('text', { nullable: true })
   url: string;
 
   @ApiProperty()
