@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { INestApplication } from '@nestjs/common';
+import { INestApplication, Logger } from '@nestjs/common';
 import {
   PostgreSqlContainer,
   StartedPostgreSqlContainer,
@@ -91,6 +91,7 @@ describe('UPDATE SOURCE ORGA WORKER', () => {
         RevisionService,
         FileService,
         ApiDepotService,
+        Logger,
       ],
     }).compile();
 

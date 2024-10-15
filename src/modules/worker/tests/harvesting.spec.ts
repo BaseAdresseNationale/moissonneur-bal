@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { INestApplication } from '@nestjs/common';
+import { INestApplication, Logger } from '@nestjs/common';
 import {
   PostgreSqlContainer,
   StartedPostgreSqlContainer,
@@ -110,6 +110,7 @@ describe('HARVESTING WORKER', () => {
         FileService,
         HandleCommune,
         ApiDepotService,
+        Logger,
       ],
     }).compile();
 
