@@ -1,18 +1,19 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { MongoMemoryServer } from 'mongodb-memory-server';
-import { MongooseModule, getModelToken } from '@nestjs/mongoose';
-import { Connection, connect, Model } from 'mongoose';
+import { INestApplication, Logger } from '@nestjs/common';
+import {
+  PostgreSqlContainer,
+  StartedPostgreSqlContainer,
+} from '@testcontainers/postgresql';
+import { Client } from 'pg';
 import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
+import { HttpModule } from '@nestjs/axios';
+import { TypeOrmModule, getRepositoryToken } from '@nestjs/typeorm';
 import dotenv from 'dotenv';
+import { Repository } from 'typeorm';
 dotenv.config();
 
 import { UpdateSourceOrganisationWorker } from '../workers/update_source_organization.worker';
-import { Source, SourceSchema } from 'src/modules/source/source.schema';
-import {
-  Organization,
-  OrganizationSchema,
-} from 'src/modules/organization/organization.schema';
 import {
   DatasetDataGouv,
   PageDataGouv,
@@ -22,22 +23,24 @@ import { SourceService } from 'src/modules/source/source.service';
 import { OrganizationService } from 'src/modules/organization/organization.service';
 import { HarvestService } from 'src/modules/harvest/harvest.service';
 import { RevisionService } from 'src/modules/revision/revision.service';
-import { Harvest, HarvestSchema } from 'src/modules/harvest/harvest.schema';
-import { Revision, RevisionSchema } from 'src/modules/revision/revision.schema';
 import { FileService } from 'src/modules/file/file.service';
 import { ApiDepotService } from 'src/modules/api_depot/api_depot.service';
 import { ConfigModule } from '@nestjs/config';
-import { HttpModule } from '@nestjs/axios';
+
+import { Organization } from '../../organization/organization.entity';
+import { Perimeter } from '../../organization/perimeters.entity';
+import { Source } from '../../source/source.entity';
+import { Revision } from 'src/modules/revision/revision.entity';
+import { Harvest } from 'src/modules/harvest/harvest.entity';
 
 describe('UPDATE SOURCE ORGA WORKER', () => {
-  //
+  let app: INestApplication;
   const URL_API_DATA_GOUV = process.env.URL_API_DATA_GOUV;
   // DB
-  let mongod: MongoMemoryServer;
-  let mongoConnection: Connection;
-  // ORM
-  let sourceModel: Model<Source>;
-  let organizationModel: Model<Organization>;
+  let postgresContainer: StartedPostgreSqlContainer;
+  let postgresClient: Client;
+  let orgaRepository: Repository<Organization>;
+  let sourceRepository: Repository<Source>;
   // SERVICE
   let updateSourceOrganisationWorker: UpdateSourceOrganisationWorker;
   // AXIOS
@@ -45,21 +48,39 @@ describe('UPDATE SOURCE ORGA WORKER', () => {
 
   beforeAll(async () => {
     // INIT DB
-    mongod = await MongoMemoryServer.create();
-    const uri = mongod.getUri();
-    mongoConnection = (await connect(uri)).connection;
+    postgresContainer = await new PostgreSqlContainer(
+      'postgis/postgis:12-3.0',
+    ).start();
+    postgresClient = new Client({
+      host: postgresContainer.getHost(),
+      port: postgresContainer.getPort(),
+      database: postgresContainer.getDatabase(),
+      user: postgresContainer.getUsername(),
+      password: postgresContainer.getPassword(),
+    });
+    await postgresClient.connect();
 
     const moduleRef: TestingModule = await Test.createTestingModule({
       imports: [
         ConfigModule,
         HttpModule,
-        MongooseModule.forRoot(uri),
         ApiBetaGouvModule,
-        MongooseModule.forFeature([
-          { name: Source.name, schema: SourceSchema },
-          { name: Organization.name, schema: OrganizationSchema },
-          { name: Harvest.name, schema: HarvestSchema },
-          { name: Revision.name, schema: RevisionSchema },
+        TypeOrmModule.forRoot({
+          type: 'postgres',
+          host: postgresContainer.getHost(),
+          port: postgresContainer.getPort(),
+          username: postgresContainer.getUsername(),
+          password: postgresContainer.getPassword(),
+          database: postgresContainer.getDatabase(),
+          synchronize: true,
+          entities: [Organization, Source, Perimeter, Revision, Harvest],
+        }),
+        TypeOrmModule.forFeature([
+          Organization,
+          Source,
+          Perimeter,
+          Revision,
+          Harvest,
         ]),
       ],
       providers: [
@@ -70,30 +91,43 @@ describe('UPDATE SOURCE ORGA WORKER', () => {
         RevisionService,
         FileService,
         ApiDepotService,
+        Logger,
       ],
     }).compile();
 
-    updateSourceOrganisationWorker =
-      moduleRef.get<UpdateSourceOrganisationWorker>(
-        UpdateSourceOrganisationWorker,
-      );
-    // INIT MODEL
-    sourceModel = moduleRef.get<Model<Source>>(getModelToken(Source.name));
-    organizationModel = moduleRef.get<Model<Organization>>(
-      getModelToken(Organization.name),
+    app = moduleRef.createNestApplication();
+    await app.init();
+
+    updateSourceOrganisationWorker = app.get<UpdateSourceOrganisationWorker>(
+      UpdateSourceOrganisationWorker,
     );
+    // INIT REPOSITORY
+    orgaRepository = app.get(getRepositoryToken(Organization));
+    sourceRepository = app.get(getRepositoryToken(Source));
   });
 
   afterAll(async () => {
-    await mongoConnection.dropDatabase();
-    await mongoConnection.close();
-    await mongod.stop();
+    await postgresClient.end();
+    await postgresContainer.stop();
+    await app.close();
   });
 
   afterEach(async () => {
-    await sourceModel.deleteMany({});
-    await organizationModel.deleteMany({});
+    await orgaRepository.delete({});
+    await sourceRepository.delete({});
   });
+
+  async function createSource(props: Partial<Source> = {}) {
+    const entityToInsert = sourceRepository.create(props);
+    const result = await sourceRepository.save(entityToInsert);
+    return result.id;
+  }
+
+  async function createOrga(props: Partial<Organization> = {}) {
+    const entityToInsert = orgaRepository.create(props);
+    const result = await orgaRepository.save(entityToInsert);
+    return result.id;
+  }
 
   describe('RUN UpdateSourceOrganisationWorker ', () => {
     it('No create source and organization', async () => {
@@ -173,7 +207,6 @@ describe('UPDATE SOURCE ORGA WORKER', () => {
           archived: null,
         },
       ];
-
       const page: PageDataGouv = {
         data: data,
         next_page: '',
@@ -187,10 +220,9 @@ describe('UPDATE SOURCE ORGA WORKER', () => {
       // RUN WORKER
       await updateSourceOrganisationWorker.run();
       // CHECK SOURCE
-      const sourceRes = await sourceModel.find({});
+      const sourceRes = await sourceRepository.find({});
       expect(sourceRes).toEqual([]);
     });
-
     it('Create one source and organization', async () => {
       // MOCK API DATA GOUV
       const data: DatasetDataGouv[] = [
@@ -253,7 +285,6 @@ describe('UPDATE SOURCE ORGA WORKER', () => {
           archived: null,
         },
       ];
-
       const page: PageDataGouv = {
         data: data,
         next_page: '',
@@ -267,25 +298,23 @@ describe('UPDATE SOURCE ORGA WORKER', () => {
       // RUN WORKER
       await updateSourceOrganisationWorker.run();
       // CHECK SOURCE
-      const sourceRes = await sourceModel.findOne({});
+      const [sourceRes] = await sourceRepository.find({});
       const sourceExpected = {
-        _id: `datagouv-1234`,
+        id: `1234`,
         title: 'title',
         description: 'desc',
         url: 'url',
         enabled: true,
         license: 'lov2',
-        harvesting: {
-          lastHarvest: new Date('1970-01-01'),
-          harvestingSince: null,
-        },
+        lastHarvest: new Date('1970-01-01'),
+        harvestingSince: null,
         organizationId: 'orgaId',
       };
       expect(sourceRes).toMatchObject(sourceExpected);
       // CHECK ORGANIZATION
-      const orgaRes = await organizationModel.findOne({});
+      const [orgaRes] = await orgaRepository.find({});
       const orgaExpected = {
-        _id: `orgaId`,
+        id: `orgaId`,
         logo: 'orgaLogo',
         name: 'orgaName',
         page: 'orgaPage',
@@ -293,30 +322,27 @@ describe('UPDATE SOURCE ORGA WORKER', () => {
       };
       expect(orgaRes).toMatchObject(orgaExpected);
     });
-
     it('Update one source and organization', async () => {
-      const sourceInit = {
-        _id: `datagouv-1234`,
-        title: 'title',
-        description: 'desc',
-        url: 'url',
-        enabled: true,
-        license: 'lov2',
-        harvesting: {
-          lastHarvest: new Date('1970-01-01'),
-          harvestingSince: null,
-        },
-        organizationId: 'orgaId',
-      };
-      await sourceModel.create(sourceInit);
       const orgaInit = {
-        _id: `orgaId`,
+        id: `orgaId`,
         logo: 'orgaLogo',
         name: 'orgaName',
         page: 'orgaPage',
         perimeters: [],
       };
-      await organizationModel.create(orgaInit);
+      await createOrga(orgaInit);
+      const sourceInit = {
+        id: `1234`,
+        title: 'title',
+        description: 'desc',
+        url: 'url',
+        enabled: true,
+        license: 'lov2',
+        lastHarvest: new Date('1970-01-01'),
+        harvestingSince: null,
+        organizationId: 'orgaId',
+      };
+      await createSource(sourceInit);
       // MOCK API DATA GOUV
       const data: DatasetDataGouv[] = [
         {
@@ -349,7 +375,6 @@ describe('UPDATE SOURCE ORGA WORKER', () => {
           archived: null,
         },
       ];
-
       const page: PageDataGouv = {
         data: data,
         next_page: '',
@@ -363,25 +388,23 @@ describe('UPDATE SOURCE ORGA WORKER', () => {
       // RUN WORKER
       await updateSourceOrganisationWorker.run();
       // CHECK SOURCE
-      const sourceRes = await sourceModel.findOne({});
+      const [sourceRes] = await sourceRepository.find({});
       const sourceExpected = {
-        _id: `datagouv-1234`,
+        id: '1234',
         title: 'other',
         description: 'other',
         url: 'other',
         enabled: true,
         license: 'lov2',
-        harvesting: {
-          lastHarvest: new Date('1970-01-01'),
-          harvestingSince: null,
-        },
+        lastHarvest: new Date('1970-01-01'),
+        harvestingSince: null,
         organizationId: 'orgaId',
       };
       expect(sourceRes).toMatchObject(sourceExpected);
       // CHECK ORGANIZATION
-      const orgaRes = await organizationModel.findOne({});
+      const [orgaRes] = await orgaRepository.find({});
       const orgaExpected = {
-        _id: `orgaId`,
+        id: `orgaId`,
         logo: 'other',
         name: 'other',
         page: 'other',
@@ -389,18 +412,27 @@ describe('UPDATE SOURCE ORGA WORKER', () => {
       };
       expect(orgaRes).toMatchObject(orgaExpected);
     });
-
-    it('Delete one source and organization', async () => {
-      const sourceInit = {
-        _id: `datagouv-1234`,
-        _deleted: false,
-      };
-      await sourceModel.create(sourceInit);
+    it('Delete one source and organization with archived', async () => {
       const orgaInit = {
-        _id: `orgaId`,
-        _deleted: false,
+        id: `orgaId`,
+        logo: 'orgaLogo',
+        name: 'orgaName',
+        page: 'orgaPage',
+        perimeters: [],
       };
-      await organizationModel.create(orgaInit);
+      await createOrga(orgaInit);
+      const sourceInit = {
+        id: `1234`,
+        title: 'title',
+        description: 'desc',
+        url: 'url',
+        enabled: true,
+        license: 'lov2',
+        lastHarvest: new Date('1970-01-01'),
+        harvestingSince: null,
+        organizationId: 'orgaId',
+      };
+      await createSource(sourceInit);
       // MOCK API DATA GOUV
       const data: DatasetDataGouv[] = [
         {
@@ -433,7 +465,6 @@ describe('UPDATE SOURCE ORGA WORKER', () => {
           archived: true,
         },
       ];
-
       const page: PageDataGouv = {
         data: data,
         next_page: '',
@@ -447,11 +478,53 @@ describe('UPDATE SOURCE ORGA WORKER', () => {
       // RUN WORKER
       await updateSourceOrganisationWorker.run();
       // CHECK SOURCE
-      const sourceRes: Source = await sourceModel.findOne({});
-      expect(sourceRes._deleted).toBeTruthy();
+      const [sourceRes] = await sourceRepository.find({ withDeleted: true });
+      expect(sourceRes.deletedAt).not.toBeNull();
       // CHECK ORGANIZATION
-      const orgaRes = await organizationModel.findOne({});
-      expect(orgaRes._deleted).toBeTruthy();
+      const [orgaRes] = await orgaRepository.find({ withDeleted: true });
+      expect(orgaRes.deletedAt).not.toBeNull();
+    });
+
+    it('Delete one source and organization', async () => {
+      const orgaInit = {
+        id: `orgaId`,
+        logo: 'orgaLogo',
+        name: 'orgaName',
+        page: 'orgaPage',
+        perimeters: [],
+      };
+      await createOrga(orgaInit);
+      const sourceInit = {
+        id: `1234`,
+        title: 'title',
+        description: 'desc',
+        url: 'url',
+        enabled: true,
+        license: 'lov2',
+        lastHarvest: new Date('1970-01-01'),
+        harvestingSince: null,
+        organizationId: 'orgaId',
+      };
+      await createSource(sourceInit);
+      // MOCK API DATA GOUV
+      const page: PageDataGouv = {
+        data: [],
+        next_page: '',
+        page: 1,
+        page_size: 1,
+        previous_page: '',
+        total: 1,
+      };
+      const url = new RegExp(`${URL_API_DATA_GOUV}/datasets/*`);
+      axiosMock.onGet(url).reply(200, page);
+      // RUN WORKER
+      await updateSourceOrganisationWorker.run();
+      // CHECK SOURCE
+      const [sourceRes] = await sourceRepository.find({ withDeleted: true });
+      expect(sourceRes.deletedAt).not.toBeNull();
+      // CHECK ORGANIZATION
+      const [orgaRes] = await orgaRepository.find({ withDeleted: true });
+      expect(orgaRes.deletedAt).not.toBeNull();
     });
   });
 });

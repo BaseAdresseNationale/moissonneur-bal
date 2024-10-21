@@ -5,21 +5,29 @@ import {
   Inject,
   forwardRef,
 } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { FilterQuery, Model, PipelineStage, QueryWithHelpers } from 'mongoose';
+import {
+  DataSource,
+  FindOptionsSelect,
+  FindOptionsWhere,
+  Repository,
+} from 'typeorm';
+import { countBy } from 'lodash';
 
 import ValidateurBal from '@ban-team/validateur-bal';
-import { Revision, StatusPublicationEnum } from './revision.schema';
+import { Revision, StatusPublicationEnum } from './revision.entity';
 import { SourceService } from '../source/source.service';
 import { FileService } from '../file/file.service';
 import { ApiDepotService } from '../api_depot/api_depot.service';
 import { OrganizationService } from '../organization/organization.service';
-import { StatusUpdateEnum } from 'src/lib/types/status_update.enum';
+import { InjectRepository } from '@nestjs/typeorm';
+import { UpdateStatusRevisionEnum } from '../revision/revision.entity';
 
 @Injectable()
 export class RevisionService {
   constructor(
-    @InjectModel(Revision.name) private revisionModel: Model<Revision>,
+    private dataSource: DataSource,
+    @InjectRepository(Revision)
+    private revisionsRepository: Repository<Revision>,
     @Inject(forwardRef(() => SourceService))
     private sourceService: SourceService,
     @Inject(forwardRef(() => OrganizationService))
@@ -31,14 +39,17 @@ export class RevisionService {
   ) {}
 
   public async findOneOrFail(revisionId: string): Promise<Revision> {
-    const revision = await this.revisionModel
-      .findOne({ _id: revisionId })
-      .lean()
-      .exec();
+    const where: FindOptionsWhere<Revision> = {
+      id: revisionId,
+    };
+    const revision = await this.revisionsRepository.findOne({
+      where,
+      withDeleted: true,
+    });
 
     if (!revision) {
       throw new HttpException(
-        `Source ${revisionId} not found`,
+        `Revision ${revisionId} not found`,
         HttpStatus.NOT_FOUND,
       );
     }
@@ -47,116 +58,67 @@ export class RevisionService {
   }
 
   async findMany(
-    filter?: FilterQuery<Revision>,
-    selector: Record<string, number> = null,
-    limit: number = null,
-    offset: number = null,
+    where: FindOptionsWhere<Revision>,
+    select?: FindOptionsSelect<Revision>,
   ): Promise<Revision[]> {
-    const query: QueryWithHelpers<
-      Array<Revision>,
-      Revision
-    > = this.revisionModel.find(filter);
-
-    if (selector) {
-      query.select(selector);
-    }
-    if (limit) {
-      query.limit(limit);
-    }
-    if (offset) {
-      query.skip(offset);
-    }
-
-    return query.lean().exec();
+    return this.revisionsRepository.find({
+      where,
+      ...(select && { select }),
+    });
   }
 
   public async updateOne(
     revisionId: string,
     changes: Partial<Revision>,
   ): Promise<Revision> {
-    const revision: Revision = await this.revisionModel.findOneAndUpdate(
-      { _id: revisionId },
-      { $set: changes },
-      { upsert: true },
-    );
-
-    return revision;
+    await this.revisionsRepository.update({ id: revisionId }, changes);
+    return this.revisionsRepository.findOneBy({
+      id: revisionId,
+    });
   }
 
   async findLastUpdated(sourceId: string): Promise<Revision[]> {
-    const aggregation: PipelineStage[] = [
-      {
-        $match: {
-          sourceId,
-          $or: [
-            {
-              updateStatus: StatusUpdateEnum.UNCHANGED,
-              publication: { $ne: null },
-            },
-            { updateStatus: { $ne: StatusUpdateEnum.UNCHANGED } },
-          ],
+    return this.revisionsRepository
+      .createQueryBuilder()
+      .select()
+      .distinctOn(['code_commune'])
+      .orderBy('code_commune, created_at', 'DESC')
+      .where('source_id = :sourceId', { sourceId })
+      .andWhere(
+        '((update_status = :updateStatus1 AND publication IS NOT null) OR update_status != :updateStatus2)',
+        {
+          updateStatus1: UpdateStatusRevisionEnum.UNCHANGED,
+          updateStatus2: UpdateStatusRevisionEnum.UNCHANGED,
         },
-      },
-      { $sort: { _created: 1 } },
-      {
-        $group: {
-          _id: '$codeCommune',
-          id: { $last: '$_id' },
-          codeCommune: { $last: '$codeCommune' },
-          sourceId: { $last: '$sourceId' },
-          harvestId: { $last: '$harvestId' },
-          updateStatus: { $last: '$updateStatus' },
-          updateRejectionReason: { $last: '$updateRejectionReason' },
-          fileId: { $last: '$fileId' },
-          dataHash: { $last: '$dataHash' },
-          nbRows: { $last: '$nbRows' },
-          nbRowsWithErrors: { $last: '$nbRowsWithErrors' },
-          uniqueErrors: { $last: '$uniqueErrors' },
-          publication: { $last: '$publication' },
-          _created: { $last: '$_created' },
-        },
-      },
-    ];
-    const sourceAgg: any[] = await this.revisionModel.aggregate(aggregation);
-    return sourceAgg.map((r) => ({ ...r, _id: r.id }));
+      )
+      .getMany();
   }
 
-  async findErrorBySources(): Promise<
-    {
-      _id: string;
-      nbErrors: number;
-    }[]
-  > {
-    const aggregation: PipelineStage[] = [
-      {
-        $group: {
-          _id: '$codeCommune',
-          sourceId: { $last: '$sourceId' },
-          updateStatus: { $last: '$updateStatus' },
-          status: { $last: '$publication.status' },
+  async findErrorBySources(): Promise<Record<string, number>> {
+    const sourceIds: { source_id: string }[] = await this.dataSource
+      .createQueryBuilder()
+      .select('source_id')
+      .from((subQuery) => {
+        return subQuery
+          .select('*')
+          .from(Revision, 'revision')
+          .distinctOn(['code_commune'])
+          .orderBy('code_commune, created_at', 'DESC');
+      }, 'res')
+      .where(
+        "res.publication->>'status' = :status OR res.update_status = :updateStatus",
+        {
+          status: StatusPublicationEnum.ERROR,
+          updateStatus: UpdateStatusRevisionEnum.REJECTED,
         },
-      },
-      { $sort: { startedAt: 1 } },
-      {
-        $match: {
-          $or: [
-            { status: StatusPublicationEnum.ERROR },
-            { updateStatus: StatusUpdateEnum.REJECTED },
-          ],
-        },
-      },
-      {
-        $group: {
-          _id: '$sourceId',
-          nbErrors: { $count: {} },
-        },
-      },
-    ];
-    return this.revisionModel.aggregate(aggregation);
+      )
+      .getRawMany();
+    return countBy(sourceIds, ({ source_id }) => source_id);
   }
 
-  public async createRevision(revision: Partial<Revision>): Promise<Revision> {
-    return this.revisionModel.create(revision);
+  public async createRevision(payload: Partial<Revision>): Promise<Revision> {
+    const entityToSave: Revision = this.revisionsRepository.create(payload);
+    return this.revisionsRepository.save(entityToSave);
   }
 
   public async publish(
@@ -182,7 +144,7 @@ export class RevisionService {
       );
     }
 
-    if (!source.enabled || source._deleted) {
+    if (!source.enabled || source.deletedAt) {
       throw new HttpException(
         'La source associée n’est plus active',
         HttpStatus.CONFLICT,
@@ -191,7 +153,7 @@ export class RevisionService {
 
     let file = null;
     try {
-      file = await this.fileService.getFile(revision.fileId.toHexString());
+      file = await this.fileService.getFile(revision.fileId);
     } catch {
       throw new HttpException(
         'Le fichier BAL associé n’est plus disponible',
@@ -205,7 +167,7 @@ export class RevisionService {
 
     if (
       !validationResult.parseOk ||
-      validationResult.rows.length !== revision.nbRows
+      validationResult.rows.length !== revision.validation.nbRows
     ) {
       throw new HttpException(
         'Problème de cohérence des données : investigation nécessaire',
@@ -228,7 +190,7 @@ export class RevisionService {
       };
     }
 
-    const result: Revision = await this.updateOne(revision._id.toHexString(), {
+    const result: Revision = await this.updateOne(revision.id, {
       publication: revision.publication,
     });
 

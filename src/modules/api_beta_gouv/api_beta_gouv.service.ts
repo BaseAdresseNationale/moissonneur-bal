@@ -52,7 +52,6 @@ export class ApiBetaGouvService {
     const { data } = await firstValueFrom(
       this.httpService.get<PageDataGouv>(url, options).pipe(
         catchError((error: AxiosError) => {
-          console.error('error', error);
           throw error;
         }),
       ),

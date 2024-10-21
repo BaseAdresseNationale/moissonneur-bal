@@ -2,7 +2,7 @@ import { Injectable, NestMiddleware } from '@nestjs/common';
 import { Response, NextFunction } from 'express';
 
 import { SourceService } from './source.service';
-import { Source } from './source.schema';
+import { Source } from './source.entity';
 import { CustomRequest } from 'src/lib/types/request.type';
 
 @Injectable()

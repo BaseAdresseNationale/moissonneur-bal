@@ -1,13 +1,13 @@
-import { Injectable } from '@nestjs/common';
-import { Source } from '../../source/source.schema';
-import { Organization } from '../../organization/organization.schema';
+import { Injectable, Logger } from '@nestjs/common';
+import { Source } from '../../source/source.entity';
+import { Organization } from '../../organization/organization.entity';
 import { OrganizationService } from '../../organization/organization.service';
 import { SourceService } from '../../source/source.service';
 import { HarvestService } from 'src/modules/harvest/harvest.service';
 import { HttpService } from '@nestjs/axios';
 import { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
 import { catchError, firstValueFrom } from 'rxjs';
-import { Harvest, StatusHarvestEnum } from 'src/modules/harvest/harvest.schema';
+import { Harvest, StatusHarvestEnum } from 'src/modules/harvest/harvest.entity';
 import { HandleFile } from './harvesting/handle_file';
 import { Worker } from 'src/modules/queue/queue.service';
 
@@ -19,6 +19,7 @@ export class HarvestingWorker implements Worker {
     private organizationService: OrganizationService,
     private sourceService: SourceService,
     private harvestService: HarvestService,
+    private readonly logger: Logger,
   ) {}
 
   async fetchfileBal(url: string): Promise<Buffer> {
@@ -30,8 +31,10 @@ export class HarvestingWorker implements Worker {
     const { data, status, headers }: AxiosResponse = await firstValueFrom(
       this.httpService.get<Buffer>(url, options).pipe(
         catchError((error: AxiosError) => {
-          console.error('error', error);
-          throw error;
+          throw new Error(
+            `Impossible de trouver la BAL sur dataGouv`,
+            error.response?.data || 'No server response',
+          );
         }),
       ),
     );
@@ -55,7 +58,7 @@ export class HarvestingWorker implements Worker {
     try {
       // RECUPERE LE DERNIER MOISSONAGE COMPLET
       const lastCompletedHarvest: Partial<Harvest> =
-        (await this.harvestService.getLastCompletedHarvest(source._id)) || {};
+        (await this.harvestService.getLastCompletedHarvest(source.id)) || {};
       // RECUPERE L'ORGANIZATION
       const organization: Organization =
         await this.organizationService.findOneOrFail(source.organizationId);
@@ -64,14 +67,18 @@ export class HarvestingWorker implements Worker {
       // CHECK LE FICHIER ET CREER LES DIFFERENTES REVISIONS
       const newHarvest: Partial<Harvest> = await this.handleFile.handleNewFile(
         file,
-        source._id,
-        activeHarvest._id,
+        source.id,
+        activeHarvest.id,
         lastCompletedHarvest,
         organization,
       );
       return { ...newHarvest, status: StatusHarvestEnum.COMPLETED };
     } catch (error) {
-      console.error(error);
+      this.logger.error(
+        `Impossible de harvest la source ${source.id}`,
+        error,
+        HarvestingWorker.name,
+      );
       return { error: error.message, status: StatusHarvestEnum.FAILED };
     }
   }
@@ -92,11 +99,15 @@ export class HarvestingWorker implements Worker {
       // DOWNLOAD DU FICHIER ET CREATION DES DIFFERENTES REVISIONS
       const changes = await this.harvestingSource(source, newHarvest);
       // SET SI LE HARVEST A REUSSI OU ECHOUE ET SET finishedAt
-      await this.harvestService.finishOne(newHarvest._id, changes);
+      await this.harvestService.finishOne(newHarvest.id, changes);
       // DELOCK LE HARVESTING ET SET LA DATE DU MOISSONAGE QUI VIENT DAVOIR LIEU
       await this.sourceService.finishHarvesting(sourceId, startedAt);
     } else {
-      console.error(`La source ${sourceId} a deja un moissonnage en cours`);
+      this.logger.error(
+        `La source ${sourceId} a deja un moissonnage en cours`,
+        null,
+        HarvestingWorker.name,
+      );
     }
   }
 
@@ -105,8 +116,8 @@ export class HarvestingWorker implements Worker {
     const sourcesToHarvest: Source[] =
       await this.sourceService.findSourcesToHarvest();
 
-    for (const { _id } of sourcesToHarvest) {
-      await this.harvestingOneSource(_id);
+    for (const { id } of sourcesToHarvest) {
+      await this.harvestingOneSource(id);
     }
   }
 
