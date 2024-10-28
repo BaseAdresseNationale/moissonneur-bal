@@ -204,6 +204,7 @@ describe('HARVESTING WORKER', () => {
       };
       expect(harvestRes).toMatchObject(harvestExpected);
     });
+
     it('First harvesting', async () => {
       // CREATE ORGA
       const orgaInit = {
@@ -239,14 +240,14 @@ describe('HARVESTING WORKER', () => {
       const revisionId = new ObjectId().toHexString();
       axiosMock
         .onPost(`/communes/31591/revisions`)
-        .replyOnce(200, { _id: revisionId });
+        .replyOnce(200, { id: revisionId });
       axiosMock.onPut(`/revisions/${revisionId}/files/bal`).replyOnce(200);
       axiosMock
         .onPost(`/revisions/${revisionId}/compute`)
         .replyOnce(200, { validation: { valid: true } });
       axiosMock
         .onPost(`/revisions/${revisionId}/publish`)
-        .replyOnce(200, { _id: revisionId });
+        .replyOnce(200, { id: revisionId });
       // RUN WORKER
       await harvestingWorker.run();
       // CHECK HARVEST
@@ -277,6 +278,7 @@ describe('HARVESTING WORKER', () => {
       expect(revisionRes).toMatchObject(revisionExpected);
       expect(revisionRes.createdAt).toBeInstanceOf(Date);
     });
+
     it('Harvesting with last harvest', async () => {
       // CREATE ORGA
       const orgaInit = {
@@ -317,16 +319,16 @@ describe('HARVESTING WORKER', () => {
       const revisionId = new ObjectId().toHexString();
       axiosMock
         .onPost(`/communes/31591/revisions`)
-        .replyOnce(200, { _id: revisionId });
+        .replyOnce(200, { id: revisionId });
       axiosMock.onPut(`/revisions/${revisionId}/files/bal`).replyOnce(200);
       axiosMock
         .onPost(`/revisions/${revisionId}/compute`)
         .replyOnce(200, { validation: { valid: true } });
       axiosMock
         .onPost(`/revisions/${revisionId}/publish`)
-        .replyOnce(200, { _id: revisionId });
+        .replyOnce(200, { id: revisionId });
       axiosMock.onGet(`/communes/31591/current-revision`).replyOnce(200, {
-        client: { _id: '_moissonneur-bal', id: 'moissonneur-bal' },
+        client: { id: 'id_moissonneur-bal', specId: 'moissonneur-bal' },
       });
       // RUN WORKER
       await harvestingWorker.run();
@@ -360,6 +362,7 @@ describe('HARVESTING WORKER', () => {
       expect(revisionRes).toMatchObject(revisionExpected);
       expect(revisionRes.createdAt).toBeInstanceOf(Date);
     });
+
     it('Harvesting with last harvest (file no change)', async () => {
       // CREATE ORGA
       const orgaInit = {
@@ -497,7 +500,7 @@ describe('HARVESTING WORKER', () => {
       axiosMock.onGet(url).replyOnce(200, readFile('1.3-valid.csv'));
       // MOCK PUBLICATION API DEPOT
       axiosMock.onGet(`/communes/31591/current-revision`).replyOnce(200, {
-        client: { _id: '_other-client', id: 'other-client' },
+        client: { id: 'id_other-client', specId: 'spec-other-client' },
       });
       // RUN WORKER
       await harvestingWorker.run();
@@ -523,7 +526,7 @@ describe('HARVESTING WORKER', () => {
         },
         publication: {
           status: StatusPublicationEnum.PROVIDED_BY_OTHER_CLIENT,
-          currentClientId: '_other-client',
+          currentClientId: 'id_other-client',
         },
       };
       expect(revisionRes).toMatchObject(revisionExpected);
@@ -636,14 +639,14 @@ describe('HARVESTING WORKER', () => {
       const revisionId = new ObjectId().toHexString();
       axiosMock
         .onPost(`/communes/31591/revisions`)
-        .replyOnce(200, { _id: revisionId });
+        .replyOnce(200, { id: revisionId });
       axiosMock.onPut(`/revisions/${revisionId}/files/bal`).replyOnce(200);
       axiosMock
         .onPost(`/revisions/${revisionId}/compute`)
         .replyOnce(200, { validation: { valid: true } });
       axiosMock
         .onPost(`/revisions/${revisionId}/publish`)
-        .replyOnce(200, { _id: revisionId });
+        .replyOnce(200, { id: revisionId });
       // MOCK PUBLICATION API DEPOT
       axiosMock
         .onGet(`/communes/67482/current-revision`)
@@ -651,14 +654,14 @@ describe('HARVESTING WORKER', () => {
       const revisionId2 = new ObjectId().toHexString();
       axiosMock
         .onPost(`/communes/67482/revisions`)
-        .replyOnce(200, { _id: revisionId2 });
+        .replyOnce(200, { id: revisionId2 });
       axiosMock.onPut(`/revisions/${revisionId2}/files/bal`).replyOnce(200);
       axiosMock
         .onPost(`/revisions/${revisionId2}/compute`)
         .replyOnce(200, { validation: { valid: true } });
       axiosMock
         .onPost(`/revisions/${revisionId2}/publish`)
-        .replyOnce(200, { _id: revisionId2 });
+        .replyOnce(200, { id: revisionId2 });
       // RUN WORKER
       await harvestingWorker.run();
       // CHECK HARVEST
