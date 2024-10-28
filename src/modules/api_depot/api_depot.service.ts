@@ -6,6 +6,7 @@ import {
   Revision,
   StatusPublicationEnum,
 } from '../revision/revision.entity';
+import { Revision as RevisionApiDepot } from '../../lib/types/api-depot.types';
 import { Organization } from '../organization/organization.entity';
 import { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
 import { catchError, firstValueFrom, of } from 'rxjs';
@@ -25,7 +26,9 @@ export class ApiDepotService {
     );
   }
 
-  private async getCurrentRevision(codeCommune: string) {
+  private async getCurrentRevision(
+    codeCommune: string,
+  ): Promise<RevisionApiDepot> {
     const url: string = `/communes/${codeCommune}/current-revision`;
     const options: AxiosRequestConfig = { responseType: 'json' };
     const { data: revision } = await firstValueFrom(
@@ -50,7 +53,7 @@ export class ApiDepotService {
     codeCommune: string,
     extras: any,
     organisation: string,
-  ) {
+  ): Promise<RevisionApiDepot> {
     const url: string = `/communes/${codeCommune}/revisions`;
     const options: AxiosRequestConfig = { responseType: 'json' };
     const body = { context: { extras, organisation } };
@@ -102,7 +105,7 @@ export class ApiDepotService {
     }
   }
 
-  private async publishRevision(revisionId: string) {
+  private async publishRevision(revisionId: string): Promise<RevisionApiDepot> {
     const url: string = `/revisions/${revisionId}/publish`;
 
     const { data }: AxiosResponse = await firstValueFrom(
@@ -131,11 +134,11 @@ export class ApiDepotService {
     if (
       !options.force &&
       currentPublishedRevision?.client &&
-      currentPublishedRevision?.client?.id !== this.API_DEPOT_CLIENT_ID
+      currentPublishedRevision?.client?.specId !== this.API_DEPOT_CLIENT_ID
     ) {
       return {
         status: StatusPublicationEnum.PROVIDED_BY_OTHER_CLIENT,
-        currentClientId: currentPublishedRevision.client._id,
+        currentClientId: currentPublishedRevision.client.id,
       };
     }
     // CHECK SI IL EXISTE UNE AUTRE SOURCE QUI MOISSONE CETTE COMMUNE
@@ -161,7 +164,7 @@ export class ApiDepotService {
         uniqueErrors: validation.uniqueErrors,
       };
       // ON CREER UNE REVISION POUR LA COMMUNE
-      const { _id: revisionId } = await this.createRevision(
+      const { id: revisionId } = await this.createRevision(
         codeCommune,
         extras,
         organization.name,
@@ -174,7 +177,7 @@ export class ApiDepotService {
       const publishedRevision = await this.publishRevision(revisionId);
       return {
         status: StatusPublicationEnum.PUBLISHED,
-        publishedRevisionId: publishedRevision._id,
+        publishedRevisionId: publishedRevision.id,
       };
     } catch (error) {
       this.logger.error(
