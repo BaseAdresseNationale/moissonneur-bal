@@ -328,7 +328,7 @@ describe('HARVESTING WORKER', () => {
         .onPost(`/revisions/${revisionId}/publish`)
         .replyOnce(200, { id: revisionId });
       axiosMock.onGet(`/communes/31591/current-revision`).replyOnce(200, {
-        client: { id: 'id_moissonneur-bal', specId: 'moissonneur-bal' },
+        client: { id: 'id_moissonneur-bal', legacyId: 'moissonneur-bal' },
       });
       // RUN WORKER
       await harvestingWorker.run();
@@ -500,7 +500,7 @@ describe('HARVESTING WORKER', () => {
       axiosMock.onGet(url).replyOnce(200, readFile('1.3-valid.csv'));
       // MOCK PUBLICATION API DEPOT
       axiosMock.onGet(`/communes/31591/current-revision`).replyOnce(200, {
-        client: { id: 'id_other-client', specId: 'spec-other-client' },
+        client: { id: 'id_other-client', legacyId: 'spec-other-client' },
       });
       // RUN WORKER
       await harvestingWorker.run();
