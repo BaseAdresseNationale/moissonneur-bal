@@ -66,12 +66,12 @@ export enum StatusRevisionEnum {
 
 // REVISION
 
-export interface ParseError {
+export type ParseError = {
   type: string;
   code: string;
   message: string;
   row: number;
-}
+};
 
 export type Validation = {
   valid: boolean;
@@ -91,7 +91,7 @@ export type Context = {
 
 export type PublicClient = {
   id: string;
-  specId?: string;
+  legacyId?: string;
   nom: string;
   mandataire: string;
   chefDeFile?: string;
@@ -102,8 +102,8 @@ export type Revision = {
   id?: string;
   clientId?: string;
   codeCommune: string;
-  ready: boolean;
-  current: boolean;
+  isReady: boolean;
+  isCurrent: boolean;
   status: StatusRevisionEnum;
   context?: Context;
   validation?: Validation | null;
@@ -123,19 +123,52 @@ export enum TypePerimeterEnum {
   EPCI = 'epci',
 }
 
-export class Perimeter {
+export type Perimeter = {
   id?: string;
   chefDeFileId?: string;
   type: TypePerimeterEnum;
   code: string;
-}
+};
 
 export type ChefDeFile = {
   id?: string;
-  nom: string;
+  nom?: string;
   email?: string;
-  isEmailPublic: boolean;
+  isEmailPublic?: boolean;
+  isSignataireCharte?: boolean;
   perimeters?: Perimeter[];
+  createdAt?: Date;
+  updatedAt?: Date;
+};
+
+// MANDATAIRE
+
+export type Mandataire = {
+  id?: string;
+  nom: string;
+  email: string;
+  createdAt: Date;
+  updatedAt: Date;
+};
+
+// CLIENT
+
+export enum AuthorizationStrategyEnum {
+  INTERNAL = 'internal',
+  CHEF_DE_FILE = 'chef-de-file',
+  HABILITATION = 'habilitation',
+}
+
+export type Client = {
+  id?: string;
+  mandataireId?: string;
+  chefDeFileId?: string;
+  legacyId: string;
+  nom: string;
+  isActive: boolean;
+  isRelaxMode: boolean;
+  token?: string;
+  authorizationStrategy: AuthorizationStrategyEnum;
   createdAt: Date;
   updatedAt: Date;
 };

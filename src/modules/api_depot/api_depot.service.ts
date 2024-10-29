@@ -134,7 +134,7 @@ export class ApiDepotService {
     if (
       !options.force &&
       currentPublishedRevision?.client &&
-      currentPublishedRevision?.client?.specId !== this.API_DEPOT_CLIENT_ID
+      currentPublishedRevision?.client?.legacyId !== this.API_DEPOT_CLIENT_ID
     ) {
       return {
         status: StatusPublicationEnum.PROVIDED_BY_OTHER_CLIENT,
