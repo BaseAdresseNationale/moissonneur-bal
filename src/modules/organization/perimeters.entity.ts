@@ -30,6 +30,7 @@ export class Perimeter extends IdEntity {
   @ApiProperty({ type: () => Organization })
   @ManyToOne(() => Organization, (orga) => orga.perimeters, {
     onDelete: 'CASCADE',
+    orphanedRowAction: 'delete',
   })
   @JoinColumn({ name: 'organization_id' })
   organization?: Organization;
