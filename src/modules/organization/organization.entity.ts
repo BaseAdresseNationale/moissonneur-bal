@@ -11,6 +11,10 @@ export class Organization extends DatesEntity {
   id?: string;
 
   @ApiProperty()
+  @Column('text', { nullable: true })
+  email: string;
+
+  @ApiProperty()
   @Column('text', { nullable: false })
   name: string;
 
