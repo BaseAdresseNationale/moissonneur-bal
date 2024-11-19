@@ -16,7 +16,7 @@ import {
 } from '@nestjs/swagger';
 import { AdminGuard } from 'src/lib/admin.guard';
 import { RevisionService } from '../revision/revision.service';
-import { Revision } from '../revision/revision.schema';
+import { Revision } from '../revision/revision.entity';
 
 @ApiTags('communes')
 @Controller('communes')

@@ -1,12 +1,12 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { HttpService } from '@nestjs/axios';
 import {
   Publication,
   Revision,
   StatusPublicationEnum,
-} from '../revision/revision.schema';
-import { Organization } from '../organization/organization.schema';
+} from '../revision/revision.entity';
+import { Organization } from '../organization/organization.entity';
 import { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
 import { catchError, firstValueFrom, of } from 'rxjs';
 import hasha from 'hasha';
@@ -18,6 +18,7 @@ export class ApiDepotService {
   constructor(
     private configService: ConfigService,
     private readonly httpService: HttpService,
+    private readonly logger: Logger,
   ) {
     this.API_DEPOT_CLIENT_ID = this.configService.get<string>(
       'API_DEPOT_CLIENT_ID',
@@ -33,7 +34,11 @@ export class ApiDepotService {
           if (error.response && error.response.status === 404) {
             return of({ data: null });
           }
-          console.error('error', error);
+          this.logger.error(
+            `Impossible de récupérer la revision courante de la commune ${codeCommune}`,
+            { reponse: error.response?.data || 'No server response' },
+            ApiDepotService.name,
+          );
           throw error;
         }),
       ),
@@ -53,7 +58,6 @@ export class ApiDepotService {
     const { data } = await firstValueFrom(
       this.httpService.post<any>(url, body, options).pipe(
         catchError((error: AxiosError) => {
-          console.error('error', error);
           throw error;
         }),
       ),
@@ -75,7 +79,6 @@ export class ApiDepotService {
     return firstValueFrom(
       this.httpService.put<any>(url, balFile, options).pipe(
         catchError((error: AxiosError) => {
-          console.error('error', error);
           throw error;
         }),
       ),
@@ -84,11 +87,9 @@ export class ApiDepotService {
 
   private async computeRevision(revisionId: string) {
     const url: string = `/revisions/${revisionId}/compute`;
-
     const { data }: AxiosResponse = await firstValueFrom(
       this.httpService.post<any>(url).pipe(
         catchError((error: AxiosError) => {
-          console.error('error', error);
           throw error;
         }),
       ),
@@ -107,7 +108,6 @@ export class ApiDepotService {
     const { data }: AxiosResponse = await firstValueFrom(
       this.httpService.post<Buffer>(url).pipe(
         catchError((error: AxiosError) => {
-          console.error('error', error);
           throw error;
         }),
       ),
@@ -117,14 +117,7 @@ export class ApiDepotService {
   }
 
   async publishBal(
-    {
-      sourceId,
-      codeCommune,
-      harvestId,
-      nbRows,
-      nbRowsWithErrors,
-      uniqueErrors,
-    }: Partial<Revision>,
+    { sourceId, codeCommune, harvestId, validation }: Partial<Revision>,
     file: Buffer,
     organization: Organization,
     options: { force?: boolean } = {},
@@ -137,7 +130,7 @@ export class ApiDepotService {
     // CHECK SI IL EXISTE DEJA UN AUTRE CLIENT DE L API DEPOT POUR LA COMMUNE
     if (
       !options.force &&
-      currentPublishedRevision?.client?.id &&
+      currentPublishedRevision?.client &&
       currentPublishedRevision?.client?.id !== this.API_DEPOT_CLIENT_ID
     ) {
       return {
@@ -149,8 +142,9 @@ export class ApiDepotService {
     if (
       !options.force &&
       currentPublishedRevision?.context?.extras?.sourceId &&
-      currentPublishedRevision?.context?.extras?.sourceId !==
-        sourceId.toString()
+      !currentPublishedRevision?.context?.extras?.sourceId?.includes(
+        sourceId.toString(),
+      )
     ) {
       return {
         status: StatusPublicationEnum.PROVIDED_BY_OTHER_SOURCE,
@@ -162,28 +156,31 @@ export class ApiDepotService {
       const extras = {
         sourceId,
         harvestId,
-        nbRows,
-        nbRowsWithErrors,
-        uniqueErrors,
+        nbRows: validation.nbRows,
+        nbRowsWithErrors: validation.nbRowsWithErrors,
+        uniqueErrors: validation.uniqueErrors,
       };
       // ON CREER UNE REVISION POUR LA COMMUNE
-      const revision = await this.createRevision(
+      const { _id: revisionId } = await this.createRevision(
         codeCommune,
         extras,
         organization.name,
       );
       // ON ATTACHE LE FICHIER BAL A LA NOUVELLE REVISION
-      await this.uploadFileRevision(revision._id, file);
+      await this.uploadFileRevision(revisionId, file);
       // ON VERIFIE QUE TOUTES LES INFO DE LA REVISION ET DU FICHIER RATTACHE SONT CONFORME
-      await this.computeRevision(revision._id);
+      await this.computeRevision(revisionId);
       // ON PUBLIE LA REVISION
-      const publishedRevision = await this.publishRevision(revision._id);
+      const publishedRevision = await this.publishRevision(revisionId);
       return {
         status: StatusPublicationEnum.PUBLISHED,
         publishedRevisionId: publishedRevision._id,
       };
     } catch (error) {
-      console.error(error);
+      this.logger.error(
+        `Une erreur est survenu pendant la publication pour la commune ${codeCommune} et le harvest ${harvestId}`,
+        error,
+      );
       return {
         status: StatusPublicationEnum.ERROR,
         errorMessage: error.message,

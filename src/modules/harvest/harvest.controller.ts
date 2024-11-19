@@ -11,8 +11,8 @@ import { Response } from 'express';
 import { ApiParam, ApiTags, ApiResponse, ApiOperation } from '@nestjs/swagger';
 import { CustomRequest } from 'src/lib/types/request.type';
 import { RevisionService } from '../revision/revision.service';
-import { Revision } from '../revision/revision.schema';
-import { Harvest } from '../harvest/harvest.schema';
+import { Revision } from '../revision/revision.entity';
+import { Harvest } from '../harvest/harvest.entity';
 
 @ApiTags('harvests')
 @Controller('harvests')
@@ -35,7 +35,7 @@ export class HarvestController {
   @ApiResponse({ status: HttpStatus.OK, type: Revision, isArray: true })
   async findRevisions(@Req() req: CustomRequest, @Res() res: Response) {
     const revisions: Revision[] = await this.revisionService.findMany({
-      harvestId: req.harvest._id,
+      harvestId: req.harvest.id,
     });
     res.status(HttpStatus.OK).json(revisions);
   }

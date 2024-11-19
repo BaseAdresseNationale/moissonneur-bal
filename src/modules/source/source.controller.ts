@@ -11,6 +11,7 @@ import {
   forwardRef,
   Query,
   HttpException,
+  Body,
 } from '@nestjs/common';
 import { Response } from 'express';
 import {
@@ -23,13 +24,12 @@ import {
   ApiQuery,
 } from '@nestjs/swagger';
 import { SourceService } from './source.service';
-import { Source } from './source.schema';
 import { CustomRequest } from 'src/lib/types/request.type';
 import { AdminGuard } from 'src/lib/admin.guard';
 import { UpdateSourceDTO } from './dto/update_source.dto';
 import { RevisionService } from '../revision/revision.service';
 import { HarvestService } from '../harvest/harvest.service';
-import { Harvest } from '../harvest/harvest.schema';
+import { Harvest } from '../harvest/harvest.entity';
 import { PageDTO } from 'src/lib/class/page.dto';
 import { SourceHarvestsQuery } from './dto/source_harvests.query';
 import {
@@ -39,7 +39,8 @@ import {
 import { QueueService } from '../queue/queue.service';
 import { HarvestingWorker } from '../worker/workers/harvesting.worker';
 import { ExtendedSourceDTO } from './dto/extended_source.dto';
-import { Revision } from '../revision/revision.schema';
+import { Revision } from '../revision/revision.entity';
+import { Source } from './source.entity';
 
 @ApiTags('sources')
 @Controller('sources')
@@ -65,7 +66,14 @@ export class SourceController {
   async findMany(@Res() res: Response) {
     const sources: Source[] = await this.sourceService.findMany(
       {},
-      { _id: 1, _updated: 1, _deleted: 1, title: 1, enabled: 1 },
+      {
+        id: true,
+        updatedAt: true,
+        deletedAt: true,
+        title: true,
+        enabled: true,
+      },
+      true,
     );
     const extendedSources: ExtendedSourceDTO[] =
       await this.sourceService.extendMany(sources);
@@ -88,10 +96,14 @@ export class SourceController {
   @ApiResponse({ status: HttpStatus.OK, type: Source })
   @ApiBearerAuth('admin-token')
   @UseGuards(AdminGuard)
-  async updateOne(@Req() req: CustomRequest, @Res() res: Response) {
+  async updateOne(
+    @Req() req: CustomRequest,
+    @Body() body: UpdateSourceDTO,
+    @Res() res: Response,
+  ) {
     const source: Source = await this.sourceService.updateOne(
-      req.source._id,
-      req.body,
+      req.source.id,
+      body,
     );
     res.status(HttpStatus.OK).json(source);
   }
@@ -109,7 +121,7 @@ export class SourceController {
   })
   async findLastRevision(@Req() req: CustomRequest, @Res() res: Response) {
     const revisions: Revision[] = await this.revisionService.findLastUpdated(
-      req.source._id,
+      req.source.id,
     );
     res.status(HttpStatus.OK).json(revisions);
   }
@@ -130,15 +142,14 @@ export class SourceController {
   ) {
     const harvests: Harvest[] = await this.harvestService.findMany(
       {
-        sourceId: req.source._id,
+        sourceId: req.source.id,
       },
-      null,
-      { startedAt: 'desc' },
       limit,
       offset,
+      { startedAt: 'DESC' },
     );
     const count: number = await this.harvestService.count({
-      sourceId: req.source._id,
+      sourceId: req.source.id,
     });
     const page: PageDTO<Harvest> = {
       results: harvests,
@@ -159,7 +170,7 @@ export class SourceController {
   @ApiBearerAuth('admin-token')
   @UseGuards(AdminGuard)
   async askHarvest(@Req() req: CustomRequest, @Res() res: Response) {
-    if (req.source.harvesting.harvestingSince !== null) {
+    if (req.source.harvestingSince !== null) {
       throw new HttpException('Moissonnage en cours', HttpStatus.NOT_FOUND);
     }
 
@@ -167,14 +178,14 @@ export class SourceController {
       throw new HttpException(`Source inactive`, HttpStatus.NOT_FOUND);
     }
 
-    if (req.source._deleted) {
+    if (req.source.deletedAt) {
       throw new HttpException(`Source archivée`, HttpStatus.NOT_FOUND);
     }
 
     this.queueService.pushTask(
       this.harvestingWorker,
-      `Harvesting of source ${req.source._id}`,
-      req.source._id,
+      `Harvesting of source ${req.source.id}`,
+      req.source.id,
     );
 
     res.status(HttpStatus.OK).json(req.source);

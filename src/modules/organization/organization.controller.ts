@@ -8,6 +8,7 @@ import {
   HttpStatus,
   Inject,
   forwardRef,
+  Body,
 } from '@nestjs/common';
 import { Response } from 'express';
 import {
@@ -22,10 +23,10 @@ import { SourceService } from '../source/source.service';
 import { CustomRequest } from 'src/lib/types/request.type';
 import { AdminGuard } from 'src/lib/admin.guard';
 import { OrganizationService } from './organization.service';
-import { Organization } from './organization.schema';
 import { UpdateOrganizationDTO } from './dto/update_organization.dto';
-import { Source } from '../source/source.schema';
+import { Source } from '../source/source.entity';
 import { ExtendedSourceDTO } from '../source/dto/extended_source.dto';
+import { Organization } from './organization.entity';
 
 @ApiTags('organizations')
 @Controller('organizations')
@@ -69,10 +70,14 @@ export class OrganizationController {
   @ApiResponse({ status: HttpStatus.OK, type: Organization })
   @ApiBearerAuth('admin-token')
   @UseGuards(AdminGuard)
-  async updateOne(@Req() req: CustomRequest, @Res() res: Response) {
+  async updateOne(
+    @Req() req: CustomRequest,
+    @Body() body: UpdateOrganizationDTO,
+    @Res() res: Response,
+  ) {
     const organization: Organization = await this.organizationService.updateOne(
-      req.organization._id,
-      req.body,
+      req.organization.id,
+      body,
     );
     res.status(HttpStatus.OK).json(organization);
   }
@@ -90,8 +95,15 @@ export class OrganizationController {
   })
   async findSources(@Req() req: CustomRequest, @Res() res: Response) {
     const sources: Source[] = await this.sourceService.findMany(
-      { organizationId: req.organization._id },
-      { _id: 1, _updated: 1, _deleted: 1, title: 1, enabled: 1 },
+      { organizationId: req.organization.id },
+      {
+        id: true,
+        updatedAt: true,
+        deletedAt: true,
+        title: true,
+        enabled: true,
+      },
+      true,
     );
     const extendedSources: ExtendedSourceDTO[] =
       await this.sourceService.extendMany(sources);

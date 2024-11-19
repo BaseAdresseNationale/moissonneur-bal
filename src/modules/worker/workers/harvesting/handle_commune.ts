@@ -1,16 +1,16 @@
 import { Injectable } from '@nestjs/common';
-import { Organization } from '../../../organization/organization.schema';
+import { chain } from 'lodash';
+import Papa from 'papaparse';
+
+import { Organization } from '../../../organization/organization.entity';
 import { signData } from 'src/lib/utils/signature';
 import { getCodeCommune } from './utils';
 import { RevisionService } from 'src/modules/revision/revision.service';
-import { Types } from 'mongoose';
 import {
   Revision,
   StatusPublicationEnum,
-} from 'src/modules/revision/revision.schema';
-import { chain } from 'lodash';
-import { StatusUpdateEnum } from 'src/lib/types/status_update.enum';
-import Papa from 'papaparse';
+  UpdateStatusRevisionEnum,
+} from 'src/modules/revision/revision.entity';
 import { FileService } from 'src/modules/file/file.service';
 import { ApiDepotService } from 'src/modules/api_depot/api_depot.service';
 
@@ -26,7 +26,7 @@ export class HandleCommune {
     codeCommune: string,
     currentRevision: Revision,
     sourceId: string,
-    harvestId: Types.ObjectId,
+    harvestId: string,
     rows: Record<string, any>,
     organization: Organization,
   ) {
@@ -45,13 +45,15 @@ export class HandleCommune {
       sourceId,
       codeCommune,
       harvestId,
-      nbRows,
-      nbRowsWithErrors,
-      uniqueErrors,
+      validation: {
+        nbRows,
+        nbRowsWithErrors,
+        uniqueErrors,
+      },
     };
     // CHECK QU'IL Y A MOINS DE 5% DES LIGNES EN ERREUR
     if (validRows.length / rows.length < 0.95) {
-      newRevision.updateStatus = StatusUpdateEnum.REJECTED;
+      newRevision.updateStatus = UpdateStatusRevisionEnum.REJECTED;
       newRevision.updateRejectionReason =
         'Le fichier contient trop d’erreurs de validation';
       // CREER UNE REVISION REJETER
@@ -60,7 +62,7 @@ export class HandleCommune {
     // CHECK QUE LE HASH DE LA DATA EST DIFFERNT DE CELUI DE LA DERNIERE REVISION
     const dataHash: string = signData(rows.map((r) => r.rawValues));
     if (currentRevision && currentRevision.dataHash === dataHash) {
-      newRevision.updateStatus = StatusUpdateEnum.UNCHANGED;
+      newRevision.updateStatus = UpdateStatusRevisionEnum.UNCHANGED;
       newRevision.fileId = currentRevision.fileId;
       newRevision.dataHash = dataHash;
       // CREER UNE REVISION INCHANGE
@@ -75,7 +77,7 @@ export class HandleCommune {
     // ON UPLOAD LE FICHIER SUR S3
     const fileId = await this.fileService.writeFile(file);
     // ON SET DES METAS DE LA REVISION EN PLUS
-    newRevision.updateStatus = StatusUpdateEnum.UPDATED;
+    newRevision.updateStatus = UpdateStatusRevisionEnum.UPDATED;
     newRevision.fileId = fileId;
     newRevision.dataHash = dataHash;
 
@@ -99,7 +101,7 @@ export class HandleCommune {
 
   async handleCommunesData(
     sourceId: string,
-    harvestId: Types.ObjectId,
+    harvestId: string,
     rows: Record<string, any>,
     organization: Organization,
   ) {

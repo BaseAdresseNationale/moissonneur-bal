@@ -3,15 +3,24 @@ import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { ValidationPipe } from '@nestjs/common';
 
+import { Logger } from './lib/utils/logger.utils';
+import { WinstonLogger } from './modules/logger/logger.service';
+
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     cors: true,
+    logger: new WinstonLogger(Logger),
   });
 
   const config = new DocumentBuilder()
     .setTitle('Moissonneur API')
     .setDescription('API permettant la gestion du moissonneur')
+    .setExternalDoc(
+      'Documentation technique',
+      'https://adresse-data-gouv-fr.gitbook.io/bal/moissonneur',
+    )
     .setVersion('1.0')
+    .addServer(process.env.MOISSONNEUR_URL)
     .addBearerAuth(
       {
         description: `Please enter the authentication token`,
