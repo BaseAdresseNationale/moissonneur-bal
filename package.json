@@ -46,7 +46,6 @@
     "hasha": "^5.2.2",
     "lodash": "^4.17.21",
     "mongodb": "^6.8.0",
-    "mysql2": "^3.11.0",
     "papaparse": "^5.4.1",
     "pg": "^8.12.0",
     "reflect-metadata": "^0.2.0",
