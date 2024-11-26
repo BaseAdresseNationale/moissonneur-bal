@@ -31,7 +31,7 @@ export type Strategy = {
 };
 
 export type Habilitation = {
-  id?: string;
+  id: string;
   clientId?: string;
   codeCommune: string;
   emailCommune: string;
@@ -51,7 +51,7 @@ export enum TypeFileEnum {
   BAL = 'bal',
 }
 export type File = {
-  id?: string;
+  id: string;
   revisionId?: string;
   size?: number;
   hash?: string;
@@ -99,7 +99,7 @@ export type PublicClient = {
 };
 
 export type Revision = {
-  id?: string;
+  id: string;
   clientId?: string;
   codeCommune: string;
   isReady: boolean;
@@ -131,7 +131,7 @@ export type Perimeter = {
 };
 
 export type ChefDeFile = {
-  id?: string;
+  id: string;
   nom?: string;
   email?: string;
   isEmailPublic?: boolean;
@@ -144,7 +144,7 @@ export type ChefDeFile = {
 // MANDATAIRE
 
 export type Mandataire = {
-  id?: string;
+  id: string;
   nom: string;
   email: string;
   createdAt: Date;
@@ -160,7 +160,7 @@ export enum AuthorizationStrategyEnum {
 }
 
 export type Client = {
-  id?: string;
+  id: string;
   mandataireId?: string;
   chefDeFileId?: string;
   legacyId: string;
