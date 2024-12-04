@@ -12,7 +12,7 @@ import {
 const PAGE_SIZE = 100;
 const TAG = 'base-adresse-locale';
 const FORMAT = 'csv';
-const BADGES_CERTIFIED = 'certified';
+const BADGE_CERTIFIED = 'certified';
 const BADGES_ONE_OF_REQUIRED = ['local-authority', 'public-service'];
 
 @Injectable()
@@ -23,7 +23,7 @@ export class ApiBetaGouvService {
     const { badges } = organization;
 
     return (
-      badges.some(({ kind }) => kind === BADGES_CERTIFIED) &&
+      badges.some(({ kind }) => kind === BADGE_CERTIFIED) &&
       BADGES_ONE_OF_REQUIRED.some((badge: string) =>
         badges.some(({ kind }) => kind === badge),
       )
