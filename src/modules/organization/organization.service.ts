@@ -19,10 +19,12 @@ export class OrganizationService {
   async findMany(
     where: FindOptionsWhere<Organization>,
     select?: FindOptionsSelect<Organization>,
+    withDeleted: boolean = false,
   ): Promise<Organization[]> {
     return this.organizationsRepository.find({
       where,
       ...(select && { select }),
+      withDeleted,
     });
   }
 

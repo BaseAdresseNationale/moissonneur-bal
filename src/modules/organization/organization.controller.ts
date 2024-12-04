@@ -45,7 +45,7 @@ export class OrganizationController {
   @ApiResponse({ status: HttpStatus.OK, type: Organization, isArray: true })
   async findMany(@Req() req: CustomRequest, @Res() res: Response) {
     const organizations: Organization[] =
-      await this.organizationService.findMany({});
+      await this.organizationService.findMany({}, null, true);
     res.status(HttpStatus.OK).json(organizations);
   }
 
