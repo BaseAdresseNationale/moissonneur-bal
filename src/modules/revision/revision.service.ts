@@ -13,7 +13,10 @@ import {
 } from 'typeorm';
 import { countBy } from 'lodash';
 
-import ValidateurBal from '@ban-team/validateur-bal';
+import ValidateurBal, {
+  PrevalidateType,
+  ValidateProfile,
+} from '@ban-team/validateur-bal';
 import { Revision, StatusPublicationEnum } from './revision.entity';
 import { SourceService } from '../source/source.service';
 import { FileService } from '../file/file.service';
@@ -161,9 +164,10 @@ export class RevisionService {
       );
     }
 
-    const validationResult = await ValidateurBal.validate(file, {
-      profile: '1.3-relax',
-    });
+    const validationResult: PrevalidateType | ValidateProfile =
+      await ValidateurBal.validate(file, {
+        profile: '1.3-relax',
+      });
 
     if (
       !validationResult.parseOk ||
