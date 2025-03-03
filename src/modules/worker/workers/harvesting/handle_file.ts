@@ -5,7 +5,12 @@ import {
   UpdateStatusHarvestEnum,
 } from 'src/modules/harvest/harvest.entity';
 import hasha from 'hasha';
-import { validate } from '@ban-team/validateur-bal';
+import {
+  PrevalidateType,
+  validate,
+  ValidateProfile,
+  ValidateRowType,
+} from '@ban-team/validateur-bal';
 import { signData } from 'src/lib/utils/signature';
 import { communeIsInPerimeters } from 'src/lib/utils/perimeters';
 import { FileService } from '../../../file/file.service';
@@ -42,7 +47,7 @@ export class HandleFile {
       };
     }
     // ON PASSE LE VALIDATEUR AVEC LA VERSION 1.3 RELAX
-    const result = await validate(newFile, {
+    const result: PrevalidateType | ValidateProfile = await validate(newFile, {
       profile: '1.3-relax',
     });
     // ON CHECK ON MINIMUM QUE LE PARSING DU FICHIER BAL SOIT BON
@@ -57,7 +62,7 @@ export class HandleFile {
       };
     }
     // ON CHECK QUE 95% DE LIGNES SOIENT CORRECT
-    const validRows = result.rows.filter((r) => r.isValid);
+    const validRows: ValidateRowType[] = result.rows.filter((r) => r.isValid);
     if (validRows.length / result.rows.length < 0.95) {
       return {
         updateStatus: UpdateStatusHarvestEnum.REJECTED,
