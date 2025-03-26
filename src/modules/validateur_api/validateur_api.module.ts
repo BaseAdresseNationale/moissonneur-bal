@@ -10,7 +10,7 @@ import { ValidateurApiService } from './validateur_api.service';
     HttpModule.registerAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
-        baseURL: configService.get('API_VALIDATEUR_URL'),
+        baseURL: configService.get('VALIDATEUR_API_URL'),
       }),
       inject: [ConfigService],
     }),
