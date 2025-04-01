@@ -67,7 +67,8 @@ export class HandleCommune {
     } catch (error) {
       newRevision.publication = {
         status: StatusPublicationEnum.ERROR,
-        errorMessage: error.message,
+        errorMessage:
+          error.message || 'Erreur durant la publication sur api-depot',
       };
     }
 

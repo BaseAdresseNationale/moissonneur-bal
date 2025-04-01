@@ -5,7 +5,6 @@ import Papa, { ParseResult } from 'papaparse';
 import { isCodeCommune } from 'src/lib/utils/cog';
 
 export function getCodeCommune(row: Record<string, string>): string {
-  console.log(row);
   let codeCommune = '';
   if (row.commune_insee) {
     codeCommune = row.commune_insee.toUpperCase();

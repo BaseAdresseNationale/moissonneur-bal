@@ -99,7 +99,7 @@ export class ApiDepotService {
     );
     if (!data.validation.valid) {
       throw new HttpException(
-        'Fichier BAL rejeté par api-depot',
+        'Fichier BAL rejeté par le validateur de api-depot',
         HttpStatus.EXPECTATION_FAILED,
       );
     }
@@ -159,8 +159,6 @@ export class ApiDepotService {
       const extras = {
         sourceId,
         harvestId,
-        nbRows: validation.nbRows,
-        nbRowsWithErrors: validation.nbRowsWithErrors,
         uniqueErrors: validation.uniqueErrors,
       };
       // ON CREER UNE REVISION POUR LA COMMUNE
@@ -181,8 +179,9 @@ export class ApiDepotService {
       };
     } catch (error) {
       this.logger.error(
-        `Une erreur est survenu pendant la publication pour la commune ${codeCommune} et le harvest ${harvestId}`,
+        `Une erreur est survenu pendant la publication pour la commune ${codeCommune} avec le harvest ${harvestId}`,
         error,
+        ApiDepotService.name,
       );
       return {
         status: StatusPublicationEnum.ERROR,
