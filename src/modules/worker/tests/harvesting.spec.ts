@@ -45,7 +45,6 @@ import {
 } from 'src/modules/harvest/harvest.entity';
 import { TypeOrmModule, getRepositoryToken } from '@nestjs/typeorm';
 import { Not, Repository } from 'typeorm';
-import { ValidateurApiModule } from 'src/modules/validateur_api/validateur_api.module';
 
 process.env.API_DEPOT_CLIENTid = 'moissonneur-bal';
 
@@ -83,7 +82,6 @@ describe('HARVESTING WORKER', () => {
         ConfigModule,
         ApiBetaGouvModule,
         HttpModule,
-        ValidateurApiModule,
         TypeOrmModule.forRoot({
           type: 'postgres',
           host: postgresContainer.getHost(),

@@ -103,6 +103,7 @@ export class ApiDepotService {
         HttpStatus.EXPECTATION_FAILED,
       );
     }
+    return data;
   }
 
   private async publishRevision(revisionId: string): Promise<RevisionApiDepot> {
@@ -120,7 +121,7 @@ export class ApiDepotService {
   }
 
   async publishBal(
-    { sourceId, codeCommune, harvestId, validation }: Partial<Revision>,
+    revision: Partial<Revision>,
     file: Buffer,
     organization: Organization,
     options: { force?: boolean } = {},
@@ -129,7 +130,9 @@ export class ApiDepotService {
       return { status: StatusPublicationEnum.NOT_CONFIGURED };
     }
     // RECUPERE LA REVISION COURANTE DE L API-DEPOT
-    const currentPublishedRevision = await this.getCurrentRevision(codeCommune);
+    const currentPublishedRevision = await this.getCurrentRevision(
+      revision.codeCommune,
+    );
     // CHECK SI IL EXISTE DEJA UN AUTRE CLIENT DE L API DEPOT POUR LA COMMUNE
     if (
       !options.force &&
@@ -146,7 +149,7 @@ export class ApiDepotService {
       !options.force &&
       currentPublishedRevision?.context?.extras?.sourceId &&
       !currentPublishedRevision?.context?.extras?.sourceId?.includes(
-        sourceId.toString(),
+        revision.sourceId,
       )
     ) {
       return {
@@ -157,20 +160,20 @@ export class ApiDepotService {
     // POUR PUBLIER SUR L API_DEPOT IL Y A UN ENSSEMBLE DE 4 REQUETES
     try {
       const extras = {
-        sourceId,
-        harvestId,
-        uniqueErrors: validation.uniqueErrors,
+        sourceId: revision.sourceId,
+        harvestId: revision.harvestId,
       };
       // ON CREER UNE REVISION POUR LA COMMUNE
       const { id: revisionId } = await this.createRevision(
-        codeCommune,
+        revision.codeCommune,
         extras,
         organization.name,
       );
       // ON ATTACHE LE FICHIER BAL A LA NOUVELLE REVISION
       await this.uploadFileRevision(revisionId, file);
       // ON VERIFIE QUE TOUTES LES INFO DE LA REVISION ET DU FICHIER RATTACHE SONT CONFORME
-      await this.computeRevision(revisionId);
+      const { validation } = await this.computeRevision(revisionId);
+      revision.validation = validation;
       // ON PUBLIE LA REVISION
       const publishedRevision = await this.publishRevision(revisionId);
       return {
@@ -179,7 +182,7 @@ export class ApiDepotService {
       };
     } catch (error) {
       this.logger.error(
-        `Une erreur est survenu pendant la publication pour la commune ${codeCommune} avec le harvest ${harvestId}`,
+        `Une erreur est survenu pendant la publication pour la commune ${revision.codeCommune} avec le harvest ${revision.harvestId}`,
         error,
         ApiDepotService.name,
       );

@@ -20,8 +20,6 @@ import { ApiDepotService } from '../api_depot/api_depot.service';
 import { OrganizationService } from '../organization/organization.service';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UpdateStatusRevisionEnum } from '../revision/revision.entity';
-import { ValidateurApiService } from '../validateur_api/validateur_api.service';
-import { FileUploadDTO, ValidateProfileDTO } from '../validateur_api/type';
 
 @Injectable()
 export class RevisionService {
@@ -37,7 +35,6 @@ export class RevisionService {
     private fileService: FileService,
     @Inject(forwardRef(() => ApiDepotService))
     private apiDepotService: ApiDepotService,
-    private validateurApiService: ValidateurApiService,
   ) {}
 
   public async findOneOrFail(revisionId: string): Promise<Revision> {
@@ -159,22 +156,6 @@ export class RevisionService {
     } catch {
       throw new HttpException(
         'Le fichier BAL associé n’est plus disponible',
-        HttpStatus.CONFLICT,
-      );
-    }
-
-    const validationResult: ValidateProfileDTO =
-      await this.validateurApiService.validateFile(
-        file,
-        FileUploadDTO.profile._1_3_RELAX,
-      );
-
-    if (
-      !validationResult.parseOk ||
-      validationResult.rows.length !== revision.validation.nbRows
-    ) {
-      throw new HttpException(
-        'Problème de cohérence des données : investigation nécessaire',
         HttpStatus.CONFLICT,
       );
     }

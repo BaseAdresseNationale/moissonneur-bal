@@ -34,9 +34,6 @@ export class HandleCommune {
       sourceId,
       codeCommune,
       harvestId,
-      validation: {
-        nbRows: rows.length,
-      },
     };
     // CHECK QUE LE HASH DE LA DATA EST DIFFERNT DE CELUI DE LA DERNIERE REVISION
     const dataHash: string = signData(rows);

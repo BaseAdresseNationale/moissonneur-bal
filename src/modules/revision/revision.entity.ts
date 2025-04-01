@@ -10,6 +10,7 @@ import {
 import { IdEntity } from '../../lib/class/id.entity';
 import { Source } from '../source/source.entity';
 import { Harvest } from '../harvest/harvest.entity';
+import { ParseError } from 'papaparse';
 
 export enum UpdateStatusRevisionEnum {
   REJECTED = 'rejected',
@@ -43,14 +44,23 @@ export class Publication {
 }
 
 export class Validation {
-  @ApiProperty({ required: false })
-  nbRows?: number;
+  @ApiProperty({ type: Boolean, required: false })
+  valid: boolean;
 
-  @ApiProperty({ required: false })
-  nbRowsWithErrors?: number;
+  @ApiProperty()
+  parseErrors?: ParseError[];
 
-  @ApiProperty({ required: false })
-  uniqueErrors?: string[];
+  @ApiProperty({ type: String, required: false, isArray: true })
+  errors?: string[];
+
+  @ApiProperty({ type: String, required: false, isArray: true })
+  warnings?: string[];
+
+  @ApiProperty({ type: String, required: false, isArray: true })
+  infos?: string[];
+
+  @ApiProperty({ type: Number, required: false })
+  rowsCount?: number;
 }
 
 @Entity({ name: 'revisions' })

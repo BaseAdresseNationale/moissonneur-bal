@@ -17,7 +17,6 @@ import { HandleCommune } from './workers/harvesting/handle_commune';
 import { QueueModule } from '../queue/queue.module';
 import { CleanStalledWorker } from './workers/clean_stalled_harvests.worker';
 import { ScheduleModule } from '@nestjs/schedule';
-import { ValidateurApiModule } from '../validateur_api/validateur_api.module';
 
 @Module({
   imports: [
@@ -31,7 +30,6 @@ import { ValidateurApiModule } from '../validateur_api/validateur_api.module';
     ApiDepotModule,
     ApiBetaGouvModule,
     QueueModule,
-    ValidateurApiModule,
     ScheduleModule.forRoot(),
   ],
   controllers: [],
