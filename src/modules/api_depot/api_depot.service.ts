@@ -97,12 +97,6 @@ export class ApiDepotService {
         }),
       ),
     );
-    if (!data.validation.valid) {
-      throw new HttpException(
-        'Fichier BAL rejeté par le validateur de api-depot',
-        HttpStatus.EXPECTATION_FAILED,
-      );
-    }
     return data;
   }
 
@@ -174,6 +168,12 @@ export class ApiDepotService {
       // ON VERIFIE QUE TOUTES LES INFO DE LA REVISION ET DU FICHIER RATTACHE SONT CONFORME
       const { validation } = await this.computeRevision(revisionId);
       revision.validation = validation;
+      if (!validation.valid) {
+        throw new HttpException(
+          'Fichier BAL rejeté par le validateur de api-depot',
+          HttpStatus.EXPECTATION_FAILED,
+        );
+      }
       // ON PUBLIE LA REVISION
       const publishedRevision = await this.publishRevision(revisionId);
       return {
