@@ -1,7 +1,7 @@
 import stringify from 'fast-json-stable-stringify';
 import hasha from 'hasha';
 
-export function signData(data: any[]): string {
+export function signData(data: Record<string, string>[]): string {
   const signedRows: string[] = data.map((row) =>
     hasha(stringify(row), { algorithm: 'md5' }),
   );

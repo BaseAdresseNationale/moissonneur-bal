@@ -1,4 +1,6 @@
 import { Injectable } from '@nestjs/common';
+import { uniq } from 'lodash';
+
 import { Organization } from '../../../organization/organization.entity';
 import {
   Harvest,
@@ -8,24 +10,40 @@ import hasha from 'hasha';
 import { signData } from 'src/lib/utils/signature';
 import { communeIsInPerimeters } from 'src/lib/utils/perimeters';
 import { FileService } from '../../../file/file.service';
-import { getCodeCommune } from './utils';
+import { decodeBuffer, getCodeCommunes, parseCsv } from './utils';
 import { HandleCommune } from './handle_commune';
-import { ValidateurApiService } from 'src/modules/validateur_api/validateur_api.service';
-import {
-  FileUploadDTO,
-  ValidateProfileDTO,
-  ValidateRowDTO,
-} from 'src/modules/validateur_api/type';
+import { ParseError, ParseResult } from 'papaparse';
 
 const MAX_ALLOWED_FILE_SIZE = 100_000_000;
+const FATAL_PARSE_ERRORS = new Set([
+  'MissingQuotes',
+  'UndetectableDelimiter',
+  'TooFewFields',
+  'TooManyFields',
+]);
 
 @Injectable()
 export class HandleFile {
   constructor(
     private fileService: FileService,
     private handleCommune: HandleCommune,
-    private validateurApiService: ValidateurApiService,
   ) {}
+
+  async csvToJson(buffer: Buffer): Promise<{
+    rows: Record<string, string>[];
+    isFatalError: boolean;
+    errors: ParseError[];
+  }> {
+    const file = decodeBuffer(buffer);
+    const { data, errors }: ParseResult<Record<string, string>> =
+      await parseCsv(file);
+    const errorsKinds: string[] = uniq(errors.map((e: ParseError) => e.code));
+    const isFatalError: boolean = errorsKinds.some((e) =>
+      FATAL_PARSE_ERRORS.has(e),
+    );
+
+    return { rows: data, isFatalError, errors };
+  }
 
   async handleNewFile(
     newFile: Buffer,
@@ -47,37 +65,18 @@ export class HandleFile {
         fileHash: newFileHash,
       };
     }
-    // ON PASSE LE VALIDATEUR AVEC LA VERSION 1.3 RELAX
-    const result: ValidateProfileDTO =
-      await this.validateurApiService.validateFile(
-        newFile,
-        FileUploadDTO.profile._1_3_RELAX,
-      );
+    const { rows, isFatalError, errors } = await this.csvToJson(newFile);
     // ON CHECK ON MINIMUM QUE LE PARSING DU FICHIER BAL SOIT BON
-    if (!result.parseOk) {
-      const parseErrors = [
-        ...new Set(result.parseErrors.map(({ code }) => code)),
-      ];
+    if (isFatalError) {
+      const parseErrors = [...new Set(errors.map(({ code }) => code))];
       return {
         updateStatus: UpdateStatusHarvestEnum.REJECTED,
         updateRejectionReason: `Impossible de lire le fichier CSV : ${parseErrors.join(', ')}`,
         fileHash: newFileHash, // On garde fileHash mais on ne stocke pas le fichier problématique
       };
     }
-    // ON CHECK QUE 95% DE LIGNES SOIENT CORRECT
-    const validRows: ValidateRowDTO[] = result.rows.filter((r) => r.isValid);
-    if (validRows.length / result.rows.length < 0.95) {
-      return {
-        updateStatus: UpdateStatusHarvestEnum.REJECTED,
-        updateRejectionReason:
-          'Le fichier contient trop d’erreurs de validation',
-        fileHash: newFileHash,
-      };
-    }
     // ON CHECK LES CODE COMMUNES DU FICHIER SOIT DANS LE PERIMETER DE L'ORGANISATION
-    const codesCommunes: string[] = [
-      ...new Set<string>(validRows.map((r) => getCodeCommune(r))),
-    ];
+    const codesCommunes = getCodeCommunes(rows);
     const communeOutOfPerimeters = codesCommunes.filter(
       (codeCommune) =>
         !communeIsInPerimeters(codeCommune, organization.perimeters || []),
@@ -98,7 +97,7 @@ export class HandleFile {
       };
     }
     // ON CHECK SI LE HASH DE LA DONNEE EST LE MEME QUE L'ANCIEN
-    const dataHash = signData(result.rows.map((r) => r.rawValues));
+    const dataHash = signData(rows);
     if (currentDataHash && currentDataHash === dataHash) {
       return {
         updateStatus: UpdateStatusHarvestEnum.UNCHANGED,
@@ -113,8 +112,9 @@ export class HandleFile {
     await this.handleCommune.handleCommunesData(
       sourceId,
       harvestId,
-      result.rows,
+      rows,
       organization,
+      codesCommunes,
     );
 
     return {

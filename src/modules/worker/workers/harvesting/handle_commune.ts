@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { chain } from 'lodash';
 import Papa from 'papaparse';
 
 import { Organization } from '../../../organization/organization.entity';
@@ -27,40 +26,20 @@ export class HandleCommune {
     currentRevision: Revision,
     sourceId: string,
     harvestId: string,
-    rows: Record<string, any>,
+    rows: Record<string, string>[],
     organization: Organization,
   ) {
     // ON CREER LE SQUELETTE DE LA REVISION
-    const validRows: Record<string, any> = rows.filter((r) => r.isValid);
-    const nbRows: number = rows.length;
-    const nbRowsWithErrors: number = rows.length - validRows.length;
-    const uniqueErrors: string[] = chain(rows)
-      .map('errors')
-      .flatten()
-      .filter((e) => e.level === 'E')
-      .map('code')
-      .uniq()
-      .value();
     const newRevision: Partial<Revision> = {
       sourceId,
       codeCommune,
       harvestId,
       validation: {
-        nbRows,
-        nbRowsWithErrors,
-        uniqueErrors,
+        nbRows: rows.length,
       },
     };
-    // CHECK QU'IL Y A MOINS DE 5% DES LIGNES EN ERREUR
-    if (validRows.length / rows.length < 0.95) {
-      newRevision.updateStatus = UpdateStatusRevisionEnum.REJECTED;
-      newRevision.updateRejectionReason =
-        'Le fichier contient trop d’erreurs de validation';
-      // CREER UNE REVISION REJETER
-      return this.revisionService.createRevision(newRevision);
-    }
     // CHECK QUE LE HASH DE LA DATA EST DIFFERNT DE CELUI DE LA DERNIERE REVISION
-    const dataHash: string = signData(rows.map((r) => r.rawValues));
+    const dataHash: string = signData(rows);
     if (currentRevision && currentRevision.dataHash === dataHash) {
       newRevision.updateStatus = UpdateStatusRevisionEnum.UNCHANGED;
       newRevision.fileId = currentRevision.fileId;
@@ -69,10 +48,7 @@ export class HandleCommune {
       return this.revisionService.createRevision(newRevision);
     }
     // ON CREER LE FICHIER
-    const csvData = Papa.unparse(
-      rows.map((r) => r.rawValues),
-      { delimiter: ';' },
-    );
+    const csvData = Papa.unparse(rows, { delimiter: ';' });
     const file: Buffer = Buffer.from(csvData);
     // ON UPLOAD LE FICHIER SUR S3
     const fileId = await this.fileService.writeFile(file);
@@ -102,25 +78,21 @@ export class HandleCommune {
   async handleCommunesData(
     sourceId: string,
     harvestId: string,
-    rows: Record<string, any>,
+    rows: Record<string, string>[],
     organization: Organization,
+    codesCommunes: string[],
   ) {
     // ON RECUPERE TOUTES LES REVISION COURANTE DE LA SOURCE
     const currentRevisions: Revision[] =
       await this.revisionService.findLastUpdated(sourceId);
     // ON RECUPERE LES CODES COMMUNES TROUVE DANS LE FICHIER
-    const validRows: Record<string, any> = rows.filter((r) => r.isValid);
-    const codesCommunes: string[] = [
-      ...new Set<string>(validRows.map((r) => getCodeCommune(r))),
-    ];
 
     for (const codeCommune of codesCommunes) {
       // POUR CHAQUE CODE COMMUNE ON RECUPERE SA REVISION COURANTE
       const currentRevision: Revision = currentRevisions.find(
         (r) => r.codeCommune === codeCommune,
       );
-      // ON RECUPERE LES LIGNE AVEC LE CODE COMMUNE
-      const rowsCommune: Record<string, any> = rows.filter(
+      const rowsCommune: Record<string, string>[] = rows.filter(
         (r) => getCodeCommune(r) === codeCommune,
       );
       // CONSTRUIT UNE REVISION PAR COMMUNE
