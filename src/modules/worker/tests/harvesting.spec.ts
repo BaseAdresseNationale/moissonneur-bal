@@ -45,7 +45,6 @@ import {
 } from 'src/modules/harvest/harvest.entity';
 import { TypeOrmModule, getRepositoryToken } from '@nestjs/typeorm';
 import { Not, Repository } from 'typeorm';
-import { ValidateurApiModule } from 'src/modules/validateur_api/validateur_api.module';
 
 process.env.API_DEPOT_CLIENTid = 'moissonneur-bal';
 
@@ -83,7 +82,6 @@ describe('HARVESTING WORKER', () => {
         ConfigModule,
         ApiBetaGouvModule,
         HttpModule,
-        ValidateurApiModule,
         TypeOrmModule.forRoot({
           type: 'postgres',
           host: postgresContainer.getHost(),
@@ -129,22 +127,6 @@ describe('HARVESTING WORKER', () => {
     jest
       .spyOn(fileService, 'writeFile')
       .mockImplementation(() => Promise.resolve(new ObjectId().toHexString()));
-  });
-
-  beforeEach(async () => {
-    axiosMock.onPost(`/validate/file`).reply(200, {
-      parseOk: true,
-      parseErrors: [],
-      profilErrors: [],
-      rows: [
-        {
-          isValid: true,
-          rawValues: {},
-          errors: [],
-          parsedValues: { commune_insee: '31591' },
-        },
-      ],
-    });
   });
 
   afterAll(async () => {
@@ -441,7 +423,6 @@ describe('HARVESTING WORKER', () => {
       const revisionRes: Revision[] = await revisionRepository.find({});
       expect(revisionRes).toEqual([]);
     });
-
     it('Harvesting with not valide bal', async () => {
       // CREATE ORGA
       const orgaInit = {
@@ -473,12 +454,6 @@ describe('HARVESTING WORKER', () => {
       const file = readFile('1.3-not-valid.csv');
       const fileHash = hasha(file, { algorithm: 'sha256' });
       axiosMock.onGet(url).replyOnce(200, file);
-      axiosMock.onPost(`/validate/file`).reply(200, {
-        parseOk: true,
-        parseErrors: [],
-        profilErrors: [],
-        rows: [{ isValid: false }],
-      });
       // RUN WORKER
       await harvestingWorker.run();
       // CHECK HARVEST
@@ -494,7 +469,6 @@ describe('HARVESTING WORKER', () => {
       const revisionRes: Revision[] = await revisionRepository.find({});
       expect(revisionRes).toEqual([]);
     });
-
     it('Harvesting provide other client', async () => {
       // CREATE ORGA
       const orgaInit = {
@@ -622,7 +596,6 @@ describe('HARVESTING WORKER', () => {
       expect(revisionRes.createdAt).toBeInstanceOf(Date);
     });
   });
-
   describe('RUN HarvestingWorker multi commune', () => {
     it('Harvesting multi communes', async () => {
       // CREATE ORGA
@@ -654,25 +627,7 @@ describe('HARVESTING WORKER', () => {
         organizationId: 'orgaId',
       };
       await createSource(sourceInit);
-      axiosMock.onPost(`/validate/file`).reply(200, {
-        parseOk: true,
-        parseErrors: [],
-        profilErrors: [],
-        rows: [
-          {
-            isValid: true,
-            rawValues: {},
-            errors: [],
-            parsedValues: { commune_insee: '31591' },
-          },
-          {
-            isValid: true,
-            rawValues: {},
-            errors: [],
-            parsedValues: { commune_insee: '67482' },
-          },
-        ],
-      });
+
       // MOCK URL SOURCE
       axiosMock
         .onGet(url)
@@ -721,7 +676,6 @@ describe('HARVESTING WORKER', () => {
       const nbRevisions: number = await revisionRepository.count({});
       expect(nbRevisions).toBe(2);
     });
-
     it('Harvesting multi communes', async () => {
       // CREATE ORGA
       const orgaInit = {
@@ -752,25 +706,7 @@ describe('HARVESTING WORKER', () => {
         organizationId: 'orgaId',
       };
       await createSource(sourceInit);
-      axiosMock.onPost(`/validate/file`).reply(200, {
-        parseOk: true,
-        parseErrors: [],
-        profilErrors: [],
-        rows: [
-          {
-            isValid: false,
-            rawValues: {},
-            errors: [],
-            parsedValues: { commune_insee: '31591' },
-          },
-          {
-            isValid: true,
-            rawValues: {},
-            errors: [],
-            parsedValues: { commune_insee: '67482' },
-          },
-        ],
-      });
+
       // MOCK URL SOURCE
       axiosMock
         .onGet(url)

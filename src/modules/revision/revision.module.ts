@@ -11,13 +11,11 @@ import { FileModule } from '../file/file.module';
 import { ApiDepotModule } from '../api_depot/api_depot.module';
 import { CommuneController } from './commune.controller';
 import { Revision } from './revision.entity';
-import { ValidateurApiModule } from '../validateur_api/validateur_api.module';
 
 @Module({
   imports: [
     ConfigModule,
     TypeOrmModule.forFeature([Revision]),
-    ValidateurApiModule,
     forwardRef(() => SourceModule),
     forwardRef(() => OrganizationModule),
     forwardRef(() => FileModule),

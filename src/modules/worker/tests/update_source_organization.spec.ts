@@ -32,7 +32,6 @@ import { Perimeter } from '../../organization/perimeters.entity';
 import { Source } from '../../source/source.entity';
 import { Revision } from 'src/modules/revision/revision.entity';
 import { Harvest } from 'src/modules/harvest/harvest.entity';
-import { ValidateurApiModule } from 'src/modules/validateur_api/validateur_api.module';
 
 describe('UPDATE SOURCE ORGA WORKER', () => {
   let app: INestApplication;
@@ -66,7 +65,6 @@ describe('UPDATE SOURCE ORGA WORKER', () => {
         ConfigModule,
         HttpModule,
         ApiBetaGouvModule,
-        ValidateurApiModule,
         TypeOrmModule.forRoot({
           type: 'postgres',
           host: postgresContainer.getHost(),

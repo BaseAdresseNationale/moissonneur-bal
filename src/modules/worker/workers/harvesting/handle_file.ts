@@ -5,17 +5,17 @@ import {
   UpdateStatusHarvestEnum,
 } from 'src/modules/harvest/harvest.entity';
 import hasha from 'hasha';
+import {
+  PrevalidateType,
+  validate,
+  ValidateProfile,
+  ValidateRowType,
+} from '@ban-team/validateur-bal';
 import { signData } from 'src/lib/utils/signature';
 import { communeIsInPerimeters } from 'src/lib/utils/perimeters';
 import { FileService } from '../../../file/file.service';
 import { getCodeCommune } from './utils';
 import { HandleCommune } from './handle_commune';
-import { ValidateurApiService } from 'src/modules/validateur_api/validateur_api.service';
-import {
-  FileUploadDTO,
-  ValidateProfileDTO,
-  ValidateRowDTO,
-} from 'src/modules/validateur_api/type';
 
 const MAX_ALLOWED_FILE_SIZE = 100_000_000;
 
@@ -24,7 +24,6 @@ export class HandleFile {
   constructor(
     private fileService: FileService,
     private handleCommune: HandleCommune,
-    private validateurApiService: ValidateurApiService,
   ) {}
 
   async handleNewFile(
@@ -48,11 +47,9 @@ export class HandleFile {
       };
     }
     // ON PASSE LE VALIDATEUR AVEC LA VERSION 1.3 RELAX
-    const result: ValidateProfileDTO =
-      await this.validateurApiService.validateFile(
-        newFile,
-        FileUploadDTO.profile._1_3_RELAX,
-      );
+    const result: PrevalidateType | ValidateProfile = await validate(newFile, {
+      profile: '1.3-relax',
+    });
     // ON CHECK ON MINIMUM QUE LE PARSING DU FICHIER BAL SOIT BON
     if (!result.parseOk) {
       const parseErrors = [
@@ -65,7 +62,7 @@ export class HandleFile {
       };
     }
     // ON CHECK QUE 95% DE LIGNES SOIENT CORRECT
-    const validRows: ValidateRowDTO[] = result.rows.filter((r) => r.isValid);
+    const validRows: ValidateRowType[] = result.rows.filter((r) => r.isValid);
     if (validRows.length / result.rows.length < 0.95) {
       return {
         updateStatus: UpdateStatusHarvestEnum.REJECTED,
