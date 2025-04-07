@@ -15,8 +15,8 @@ import { countBy } from 'lodash';
 
 import {
   validate,
-  PrevalidateType,
-  ValidateProfile,
+  ParseFileType,
+  ValidateType,
 } from '@ban-team/validateur-bal';
 import { Revision, StatusPublicationEnum } from './revision.entity';
 import { SourceService } from '../source/source.service';
@@ -165,7 +165,7 @@ export class RevisionService {
       );
     }
 
-    const validationResult: PrevalidateType | ValidateProfile = await validate(
+    const validationResult: ParseFileType | ValidateType = await validate(
       file,
       {
         profile: '1.3-relax',
@@ -174,7 +174,8 @@ export class RevisionService {
 
     if (
       !validationResult.parseOk ||
-      validationResult.rows.length !== revision.validation.nbRows
+      (validationResult as ValidateType).rows.length !==
+        revision.validation.nbRows
     ) {
       throw new HttpException(
         'Problème de cohérence des données : investigation nécessaire',
