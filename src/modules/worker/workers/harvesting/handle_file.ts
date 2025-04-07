@@ -6,10 +6,10 @@ import {
 } from 'src/modules/harvest/harvest.entity';
 import hasha from 'hasha';
 import {
-  PrevalidateType,
+  ParseFileType,
   validate,
-  ValidateProfile,
-  ValidateRowType,
+  ValidateType,
+  ValidateRowFullType,
 } from '@ban-team/validateur-bal';
 import { signData } from 'src/lib/utils/signature';
 import { communeIsInPerimeters } from 'src/lib/utils/perimeters';
@@ -47,7 +47,7 @@ export class HandleFile {
       };
     }
     // ON PASSE LE VALIDATEUR AVEC LA VERSION 1.3 RELAX
-    const result: PrevalidateType | ValidateProfile = await validate(newFile, {
+    const result: ParseFileType | ValidateType = await validate(newFile, {
       profile: '1.3-relax',
     });
     // ON CHECK ON MINIMUM QUE LE PARSING DU FICHIER BAL SOIT BON
@@ -62,8 +62,9 @@ export class HandleFile {
       };
     }
     // ON CHECK QUE 95% DE LIGNES SOIENT CORRECT
-    const validRows: ValidateRowType[] = result.rows.filter((r) => r.isValid);
-    if (validRows.length / result.rows.length < 0.95) {
+    const rows = (result as ValidateType).rows;
+    const validRows: ValidateRowFullType[] = rows.filter((r) => r.isValid);
+    if (validRows.length / rows.length < 0.95) {
       return {
         updateStatus: UpdateStatusHarvestEnum.REJECTED,
         updateRejectionReason:
@@ -95,7 +96,7 @@ export class HandleFile {
       };
     }
     // ON CHECK SI LE HASH DE LA DONNEE EST LE MEME QUE L'ANCIEN
-    const dataHash = signData(result.rows.map((r) => r.rawValues));
+    const dataHash = signData(rows.map((r) => r.rawValues));
     if (currentDataHash && currentDataHash === dataHash) {
       return {
         updateStatus: UpdateStatusHarvestEnum.UNCHANGED,
@@ -110,7 +111,7 @@ export class HandleFile {
     await this.handleCommune.handleCommunesData(
       sourceId,
       harvestId,
-      result.rows,
+      rows,
       organization,
     );
 
