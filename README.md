@@ -2,9 +2,9 @@
 
 Service de moissonnage des Bases Adresses Locales
 
-## Documentation
+## 📚 Documentation
 
-https://adresse-data-gouv-fr.gitbook.io/bal/moissonneur
+Une documentation plus complète et des guides d’utilisation sont disponibles dans le [Wiki](https://github.com/BaseAdresseNationale/moissonneur-bal/wiki).
 
 ## Pré-requis
 
