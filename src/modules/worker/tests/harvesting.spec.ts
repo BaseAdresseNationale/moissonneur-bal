@@ -137,10 +137,10 @@ describe('HARVESTING WORKER', () => {
   });
 
   afterEach(async () => {
-    await revisionRepository.deleteAll();
-    await harvestRepository.deleteAll();
-    await sourceRepository.deleteAll();
-    await orgaRepository.deleteAll();
+    await revisionRepository.delete({});
+    await harvestRepository.delete({});
+    await sourceRepository.delete({});
+    await orgaRepository.delete({});
     await axiosMock.resetHandlers();
   });
 

@@ -113,8 +113,8 @@ describe('UPDATE SOURCE ORGA WORKER', () => {
   });
 
   afterEach(async () => {
-    await orgaRepository.deleteAll();
-    await sourceRepository.deleteAll();
+    await orgaRepository.delete({});
+    await sourceRepository.delete({});
   });
 
   async function createSource(props: Partial<Source> = {}) {

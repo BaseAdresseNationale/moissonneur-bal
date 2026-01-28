@@ -99,6 +99,6 @@
     "testEnvironment": "node"
   },
   "engines": {
-    "node": ">=22"
+    "node": "22"
   }
 }
