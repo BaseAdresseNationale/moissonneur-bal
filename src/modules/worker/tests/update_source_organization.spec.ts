@@ -25,7 +25,15 @@ import { HarvestService } from 'src/modules/harvest/harvest.service';
 import { RevisionService } from 'src/modules/revision/revision.service';
 import { FileService } from 'src/modules/file/file.service';
 import { ApiDepotService } from 'src/modules/api_depot/api_depot.service';
+import { BalAdminService } from 'src/modules/bal_admin/bal_admin.service';
 import { ConfigModule } from '@nestjs/config';
+
+const mockBalAdminService = {
+  createClient: jest.fn().mockResolvedValue(undefined),
+  updateClientPerimeters: jest.fn().mockResolvedValue(undefined),
+  deleteClient: jest.fn().mockResolvedValue(undefined),
+  restoreClient: jest.fn().mockResolvedValue(undefined),
+};
 
 import { Organization } from '../../organization/organization.entity';
 import { Perimeter } from '../../organization/perimeters.entity';
@@ -92,6 +100,7 @@ describe('UPDATE SOURCE ORGA WORKER', () => {
         FileService,
         ApiDepotService,
         Logger,
+        { provide: BalAdminService, useValue: mockBalAdminService },
       ],
     }).compile();
 
@@ -113,6 +122,7 @@ describe('UPDATE SOURCE ORGA WORKER', () => {
   });
 
   afterEach(async () => {
+    jest.clearAllMocks();
     await orgaRepository.delete({});
     await sourceRepository.delete({});
   });
@@ -321,6 +331,17 @@ describe('UPDATE SOURCE ORGA WORKER', () => {
         perimeters: [],
       };
       expect(orgaRes).toMatchObject(orgaExpected);
+
+      expect(mockBalAdminService.createClient).toHaveBeenCalledWith(
+        expect.objectContaining({
+          id: 'orgaId',
+          name: 'orgaName',
+          logo: 'orgaLogo',
+          page: 'orgaPage',
+        }),
+      );
+      expect(mockBalAdminService.deleteClient).not.toHaveBeenCalled();
+      expect(mockBalAdminService.restoreClient).not.toHaveBeenCalled();
     });
     it('Update one source and organization', async () => {
       const orgaInit = {
@@ -483,6 +504,10 @@ describe('UPDATE SOURCE ORGA WORKER', () => {
       // CHECK ORGANIZATION
       const [orgaRes] = await orgaRepository.find({ withDeleted: true });
       expect(orgaRes.deletedAt).not.toBeNull();
+
+      expect(mockBalAdminService.deleteClient).toHaveBeenCalledWith('orgaId');
+      expect(mockBalAdminService.createClient).not.toHaveBeenCalled();
+      expect(mockBalAdminService.restoreClient).not.toHaveBeenCalled();
     });
 
     it('Delete one source and organization', async () => {
@@ -525,6 +550,10 @@ describe('UPDATE SOURCE ORGA WORKER', () => {
       // CHECK ORGANIZATION
       const [orgaRes] = await orgaRepository.find({ withDeleted: true });
       expect(orgaRes.deletedAt).not.toBeNull();
+
+      expect(mockBalAdminService.deleteClient).toHaveBeenCalledWith('orgaId');
+      expect(mockBalAdminService.createClient).not.toHaveBeenCalled();
+      expect(mockBalAdminService.restoreClient).not.toHaveBeenCalled();
     });
   });
 });
