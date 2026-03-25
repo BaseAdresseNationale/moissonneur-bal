@@ -8,12 +8,14 @@ import {
   Repository,
 } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
+import { BalAdminService } from '../bal_admin/bal_admin.service';
 
 @Injectable()
 export class OrganizationService {
   constructor(
     @InjectRepository(Organization)
     private organizationsRepository: Repository<Organization>,
+    private balAdminService: BalAdminService,
   ) {}
 
   async findMany(
@@ -59,6 +61,7 @@ export class OrganizationService {
     if (organization) {
       if (organization.deletedAt) {
         await this.organizationsRepository.restore({ id: organization.id });
+        await this.balAdminService.restoreClient(organization.id);
       }
       await this.organizationsRepository.update(
         { id: organization.id },
@@ -72,6 +75,7 @@ export class OrganizationService {
       const entityToSave: Organization =
         this.organizationsRepository.create(payload);
       await this.organizationsRepository.save(entityToSave);
+      await this.balAdminService.createClient(entityToSave);
     }
   }
 
@@ -84,10 +88,23 @@ export class OrganizationService {
       ...changes,
     });
 
-    return this.organizationsRepository.save(numeroToSave);
+    const saved = await this.organizationsRepository.save(numeroToSave);
+    await this.balAdminService.updateClientPerimeters(saved);
+    return saved;
   }
 
-  public async softDeleteInactive(activeIds: string[]) {
-    await this.organizationsRepository.softDelete({ id: Not(In(activeIds)) });
+  public async softDeleteInactive(activeIds: string[]): Promise<string[]> {
+    const toDelete = await this.organizationsRepository.find({
+      where: { id: Not(In(activeIds)) },
+      select: { id: true },
+    });
+    const ids = toDelete.map((o) => o.id);
+    if (ids.length > 0) {
+      await this.organizationsRepository.softDelete({ id: In(ids) });
+    }
+    for (const id of ids) {
+      await this.balAdminService.deleteClient(id);
+    }
+    return ids;
   }
 }

@@ -1,6 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
-  ArrayNotEmpty,
   IsDefined,
   IsEmail,
   IsOptional,
@@ -16,7 +15,6 @@ export class UpdateOrganizationDTO {
 
   @IsDefined()
   @ValidateNested({ each: true })
-  @ArrayNotEmpty()
   @Type(() => Perimeter)
   @ApiProperty({
     type: () => Perimeter,

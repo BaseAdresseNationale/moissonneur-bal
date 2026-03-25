@@ -1,6 +1,7 @@
 import { MiddlewareConsumer, Module, forwardRef } from '@nestjs/common';
 
 import { OrganizationService } from './organization.service';
+import { BalAdminModule } from '../bal_admin/bal_admin.module';
 import { SourceModule } from '../source/source.module';
 import { OrganizationController } from './organization.controller';
 import { ConfigModule } from '@nestjs/config';
@@ -13,6 +14,7 @@ import { Organization } from './organization.entity';
     ConfigModule,
     TypeOrmModule.forFeature([Organization]),
     forwardRef(() => SourceModule),
+    BalAdminModule,
   ],
   providers: [OrganizationService],
   controllers: [OrganizationController],

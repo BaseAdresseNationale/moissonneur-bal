@@ -26,6 +26,14 @@ import { ConfigModule } from '@nestjs/config';
 import { RevisionService } from 'src/modules/revision/revision.service';
 import { ApiDepotService } from 'src/modules/api_depot/api_depot.service';
 import { FileService } from 'src/modules/file/file.service';
+import { BalAdminService } from 'src/modules/bal_admin/bal_admin.service';
+
+const mockBalAdminService = {
+  createClient: jest.fn().mockResolvedValue(undefined),
+  updateClientPerimeters: jest.fn().mockResolvedValue(undefined),
+  deleteClient: jest.fn().mockResolvedValue(undefined),
+  restoreClient: jest.fn().mockResolvedValue(undefined),
+};
 
 import { Organization } from '../../organization/organization.entity';
 import {
@@ -111,6 +119,7 @@ describe('HARVESTING WORKER', () => {
         HandleCommune,
         ApiDepotService,
         Logger,
+        { provide: BalAdminService, useValue: mockBalAdminService },
       ],
     }).compile();
 
