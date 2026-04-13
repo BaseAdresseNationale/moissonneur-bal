@@ -165,12 +165,7 @@ export class RevisionService {
       );
     }
 
-    const validationResult: ParseFileType | ValidateType = await validate(
-      file,
-      {
-        profile: '1.3-relax',
-      },
-    );
+    const validationResult: ParseFileType | ValidateType = await validate(file);
 
     if (
       !validationResult.parseOk ||

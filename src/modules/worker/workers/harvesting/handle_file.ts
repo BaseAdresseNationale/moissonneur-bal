@@ -47,9 +47,7 @@ export class HandleFile {
       };
     }
     // ON PASSE LE VALIDATEUR AVEC LA VERSION 1.3 RELAX
-    const result: ParseFileType | ValidateType = await validate(newFile, {
-      profile: '1.3-relax',
-    });
+    const result: ParseFileType | ValidateType = await validate(newFile);
     // ON CHECK ON MINIMUM QUE LE PARSING DU FICHIER BAL SOIT BON
     if (!result.parseOk) {
       const parseErrors = [
