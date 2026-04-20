@@ -55,7 +55,7 @@ export class HandleCommune {
     if (validRows.length / rows.length < 0.95) {
       newRevision.updateStatus = UpdateStatusRevisionEnum.REJECTED;
       newRevision.updateRejectionReason =
-        'Le fichier contient trop d’erreurs de validation';
+        'Le fichier de la commune contient trop d’erreurs de validation';
       // CREER UNE REVISION REJETER
       return this.revisionService.createRevision(newRevision);
     }

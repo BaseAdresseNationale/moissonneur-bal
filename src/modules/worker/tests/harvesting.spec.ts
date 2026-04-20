@@ -641,7 +641,7 @@ describe('HARVESTING WORKER', () => {
       axiosMock
         .onGet(url)
         .replyOnce(200, readFile('1.3-valid-multi-commune.csv'));
-      // MOCK PUBLICATION API DEPOT
+      // MOCK PUBLICATION API DEPOT 31591
       axiosMock
         .onGet(`/communes/31591/current-revision`)
         .replyOnce(404, 'Aucune révision connue pour cette commune');
@@ -656,7 +656,7 @@ describe('HARVESTING WORKER', () => {
       axiosMock
         .onPost(`/revisions/${revisionId}/publish`)
         .replyOnce(200, { id: revisionId });
-      // MOCK PUBLICATION API DEPOT
+      // MOCK PUBLICATION API DEPOT 67482
       axiosMock
         .onGet(`/communes/67482/current-revision`)
         .replyOnce(404, 'Aucune révision connue pour cette commune');
