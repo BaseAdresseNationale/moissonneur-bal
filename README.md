@@ -95,7 +95,3 @@ Elles peuvent être définies classiquement ou en créant un fichier `.env` sur 
 | `S3_ACCESS_KEY`           | Clef d'accès S3                                                    |
 | `S3_SECRET_KEY`           | Clef secrete S3                                                    |
 | `S3_DESCRIPTION`          |                                                                    |
-
-## Licence
-
-MIT
